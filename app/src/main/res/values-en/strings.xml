@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">Wazzaby</string>
-
+    <string name="app_name">WazzabySama</string>
     <string name="youremail">Your Email</string>
     <string name="yourpassword">Your Password</string>
     <string name="passwordforget">Password Forget</string>
