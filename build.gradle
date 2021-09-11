@@ -6,7 +6,6 @@ buildscript {
         navVersion = '2.4.0-alpha08'
         lifecycle_version  = "2.3.1"
         coroutines_version = "1.5.2"
-        roomVersion = "2.1.0-rc01"
         preferences_version = '1.1.1'
         retrofitVersion = '2.3.0'
         converter_gson_version = '2.9.0'
