@@ -33,4 +33,11 @@ fun LaunchView() {
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "©WazzabySama 2021 version 1.0")
     }
+
+
+
+/*{
+        delay(100)
+        navController?.navigate("connexion_view")
+    }*/
 }
