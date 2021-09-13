@@ -81,6 +81,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-coil:$coil_version"
     implementation "androidx.navigation:navigation-compose:$navVersion"
     implementation "com.google.dagger:hilt-android:$dagger_hilt_version"
+    implementation "androidx.test.espresso:espresso-core:3.4.0@aar"
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.1'
     testImplementation "androidx.room:room-testing:$room_version"
     testImplementation 'com.google.truth:truth:1.1.3'

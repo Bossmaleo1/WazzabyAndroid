@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
@@ -31,13 +32,7 @@ fun LaunchView() {
                            .padding(60.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "©WazzabySama 2021 version 1.0")
+        Text(text = "©WazzabySama 2021 version 1.0",
+            color = colorResource(R.color.colorPrimary))
     }
-
-
-
-/*{
-        delay(100)
-        navController?.navigate("connexion_view")
-    }*/
 }
