@@ -40,8 +40,25 @@ class MainActivity : ComponentActivity() {
             composable("launch_view") {
                 LaunchView()
             }
+
             composable(route = "connexion_view") {
-                Connexion()
+                Connexion(navController)
+            }
+
+            composable(route = "home") {
+                HomeApp()
+            }
+
+            composable(route = "inscription_step_first") {
+                FormStepFirstView(navController)
+            }
+
+            composable(route = "inscription_step_second") {
+                FormStepSecondView(navController)
+            }
+
+            composable(route = "inscription_step_done") {
+                FormStepDoneView(navController)
             }
         }
 

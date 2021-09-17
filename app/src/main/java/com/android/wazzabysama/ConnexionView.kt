@@ -2,6 +2,7 @@ package com.android.wazzabysama
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.ui.Alignment
@@ -21,20 +22,24 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 
 @Composable
-fun Connexion() {
+fun Connexion(navController: NavHostController) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordHidden  by rememberSaveable { mutableStateOf(true) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +51,7 @@ fun Connexion() {
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center) {
             Image(
-                painter = painterResource(id = R.drawable.wazzabysama) ,
+                painter = painterResource(id = R.drawable.wazzabysama),
                 contentDescription = "The Application Launcher",
                 modifier = Modifier
                     .padding(0.dp, 30.dp, 0.dp, 0.dp)
@@ -87,10 +92,10 @@ fun Connexion() {
             trailingIcon = {
                 IconButton(onClick = { passwordHidden = !passwordHidden }) {
                     val visibilityIcon =
-                        if (passwordHidden) Icons.Filled.Check else Icons.Filled.Done
-                    // Please provide localized description for accessibility services
+                        if (passwordHidden) painterResource(id = R.drawable.outline_visibility_24)
+                        else painterResource(id = R.drawable.outline_visibility_off_24)
                     val description = if (passwordHidden) "Show password" else "Hide password"
-                    Icon(imageVector = visibilityIcon, contentDescription = description)
+                    Icon(painter = visibilityIcon, contentDescription = description)
                 }
             },
 
@@ -103,7 +108,7 @@ fun Connexion() {
                 .width(280.dp)
                 .padding(top = 30.dp),
             onClick = {
-                    /* Do something! */
+                navController.navigate("home")
             }) {
             Text(stringResource(R.string.connexion))
         }
@@ -121,18 +126,49 @@ fun Connexion() {
             .padding(10.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.Start) {
-        Text(text = stringResource(id = R.string.password_forget),
-            color = colorResource(R.color.colorPrimary))
+        ClickableText(
+            buildAnnotatedString {
+                pushStringAnnotation(tag = "",
+                    annotation = "")
+                withStyle(style = SpanStyle(color =  colorResource(R.color.colorPrimary),
+                    fontWeight = FontWeight.Bold, textDecoration=TextDecoration.Underline,
+                    fontSize = 15.sp
+                )
+                ) {
+                    append(stringResource(id = R.string.password_forget))
+                }
+
+                pop()
+            },
+            onClick = {
+
+            })
     }
 
     Column(
-        modifier = Modifier
+    modifier = Modifier
             .fillMaxSize()
             .padding(10.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.End) {
-        Text(text = stringResource(R.string.inscription),
-             color = colorResource(R.color.colorPrimary))
+        ClickableText(
+            buildAnnotatedString {
+                pushStringAnnotation(tag = "",
+                    annotation = "")
+                withStyle(style = SpanStyle(color =  colorResource(R.color.colorPrimary),
+                    fontWeight = FontWeight.Bold, textDecoration=TextDecoration.Underline,
+                    fontSize = 15.sp
+                )
+                ) {
+                    append(stringResource(R.string.inscription))
+                }
+
+                pop()
+            },
+            onClick = {
+                navController.navigate("inscription_step_first")
+            })
     }
 
 }
+

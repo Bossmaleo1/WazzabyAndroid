@@ -2,7 +2,7 @@
     <string name="app_name">WazzabySama</string>
     <string name="your_email">Votre Email</string>
     <string name="your_password">Votre Password</string>
-    <string name="password_forget">Mot de Passe oublié</string>
-    <string name="inscription">S\'Inscrire</string>
+    <string name="password_forget">Mot de passe oublié</string>
+    <string name="inscription">S\'inscrire</string>
     <string name="connexion">Connexion</string>
 </resources>
