@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">WazzabySama</string>
-    <string name="youremail">Votre Email</string>
-    <string name="yourpassword">Votre Password</string>
-    <string name="passwordforget">Password Forget</string>
-    <string name="inscript">Register</string>
+    <string name="your_email">Correo electrónico</string>
+    <string name="your_password">su contraseña</string>
+    <string name="password_forget">contraseña olvidada</string>
+    <string name="inscription">Inscribirse</string>
+    <string name="connexion">conexión</string>
 </resources>

@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 
 
 @Composable
@@ -60,14 +61,13 @@ fun Connexion() {
                 .padding(30.dp))
 
         TextField(
-            value = "",
-            onValueChange = { },
-            label = { Text("Email") },
+            value = email,
+            onValueChange = {email = it },
+            label = { Text(stringResource(id = R.string.your_email)) },
             placeholder = { Text("") },
             leadingIcon = {
                 IconButton(onClick = {  }) {
-                    val visibilityIcon =Icons.Filled.Email
-                    Icon(imageVector = visibilityIcon, contentDescription = "")
+                    Icon(imageVector = Icons.Filled.Email, contentDescription = "", tint = colorResource(R.color.colorPrimary))
                 }
             },
         )
@@ -75,14 +75,13 @@ fun Connexion() {
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Enter password") },
+            label = { Text(stringResource(id = R.string.your_password)) },
             visualTransformation =
             if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             leadingIcon = {
                 IconButton(onClick = {  }) {
-                    val visibilityIcon =Icons.Filled.Lock
-                    Icon(imageVector = visibilityIcon, contentDescription = "")
+                    Icon(imageVector = Icons.Filled.Lock, contentDescription = "", tint = colorResource(R.color.colorPrimary))
                 }
             },
             trailingIcon = {
@@ -100,12 +99,13 @@ fun Connexion() {
         )
 
         Button(
-            modifier = Modifier.width(280.dp)
-            .padding(top = 30.dp),
+            modifier = Modifier
+                .width(280.dp)
+                .padding(top = 30.dp),
             onClick = {
                     /* Do something! */
             }) {
-            Text("CONNEXION")
+            Text(stringResource(R.string.connexion))
         }
 
         Divider(color = colorResource(R.color.colorPrimary),
@@ -116,20 +116,22 @@ fun Connexion() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(10.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.Start) {
-        Text(text = "Mot de passe oublié ?",
+        Text(text = stringResource(id = R.string.password_forget),
             color = colorResource(R.color.colorPrimary))
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(10.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.End) {
-        Text(text = "S'inscrire",
+        Text(text = stringResource(R.string.inscription),
              color = colorResource(R.color.colorPrimary))
     }
 

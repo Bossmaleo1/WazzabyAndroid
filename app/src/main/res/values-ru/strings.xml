@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">WazzabySama</string>
-    <string name="youremail">Votre Email</string>
-    <string name="yourpassword">Votre Password</string>
-    <string name="passwordforget">Password Forget</string>
-    <string name="inscript">Register</string>
+    <string name="your_email">ваш адрес электронной почты</string>
+    <string name="your_password">Ваш пароль</string>
+    <string name="password_forget">Забыли свой пароль</string>
+    <string name="inscription">Зарегистрируйтесь сейчас</string>
+    <string name="connexion">Авторизоваться</string>
 </resources>
