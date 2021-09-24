@@ -23,6 +23,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
@@ -39,7 +40,7 @@ import androidx.navigation.NavHostController
 fun Connexion(navController: NavHostController) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    var passwordHidden  by rememberSaveable { mutableStateOf(true) }
+    var passwordHidden by rememberSaveable { mutableStateOf(true) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,8 +49,10 @@ fun Connexion(navController: NavHostController) {
         verticalArrangement = Arrangement.Top
     ) {
 
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.wazzabysama),
                 contentDescription = "The Application Launcher",
@@ -60,19 +63,25 @@ fun Connexion(navController: NavHostController) {
             )
         }
 
-        Divider(color = colorResource(R.color.colorPrimary),
+        Divider(
+            color = colorResource(R.color.colorPrimary),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(30.dp))
+                .padding(30.dp)
+        )
 
         TextField(
             value = email,
-            onValueChange = {email = it },
+            onValueChange = { email = it },
             label = { Text(stringResource(id = R.string.your_email)) },
             placeholder = { Text("") },
             leadingIcon = {
-                IconButton(onClick = {  }) {
-                    Icon(imageVector = Icons.Filled.Email, contentDescription = "", tint = colorResource(R.color.colorPrimary))
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.Filled.Email,
+                        contentDescription = "",
+                        tint = colorResource(R.color.colorPrimary)
+                    )
                 }
             },
         )
@@ -85,8 +94,12 @@ fun Connexion(navController: NavHostController) {
             if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             leadingIcon = {
-                IconButton(onClick = {  }) {
-                    Icon(imageVector = Icons.Filled.Lock, contentDescription = "", tint = colorResource(R.color.colorPrimary))
+                IconButton(onClick = { }) {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "",
+                        tint = colorResource(R.color.colorPrimary)
+                    )
                 }
             },
             trailingIcon = {
@@ -110,30 +123,23 @@ fun Connexion(navController: NavHostController) {
             onClick = {
                 navController.navigate("home")
             }) {
-            Text(stringResource(R.string.connexion))
+            Text(stringResource(R.string.connexion), color = colorResource(R.color.white))
         }
 
-        Divider(color = colorResource(R.color.colorPrimary),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp))
+        Spacer(Modifier.size(20.dp))
 
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.Start) {
         ClickableText(
             buildAnnotatedString {
-                pushStringAnnotation(tag = "",
-                    annotation = "")
-                withStyle(style = SpanStyle(color =  colorResource(R.color.colorPrimary),
-                    fontWeight = FontWeight.Bold, textDecoration=TextDecoration.Underline,
-                    fontSize = 15.sp
+                pushStringAnnotation(
+                    tag = "",
+                    annotation = ""
                 )
+                withStyle(
+                    style = SpanStyle(
+                        color = colorResource(R.color.colorPrimary),
+                        fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline,
+                        fontSize = 15.sp
+                    )
                 ) {
                     append(stringResource(id = R.string.password_forget))
                 }
@@ -143,31 +149,34 @@ fun Connexion(navController: NavHostController) {
             onClick = {
 
             })
+
+        Divider(
+            color = colorResource(R.color.colorPrimary),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        )
+
     }
 
     Column(
-    modifier = Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(10.dp),
         verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.End) {
-        ClickableText(
-            buildAnnotatedString {
-                pushStringAnnotation(tag = "",
-                    annotation = "")
-                withStyle(style = SpanStyle(color =  colorResource(R.color.colorPrimary),
-                    fontWeight = FontWeight.Bold, textDecoration=TextDecoration.Underline,
-                    fontSize = 15.sp
-                )
-                ) {
-                    append(stringResource(R.string.inscription))
-                }
+        horizontalAlignment = Alignment.End
+    ) {
 
-                pop()
-            },
-            onClick = {
-                navController.navigate("inscription_step_first")
-            })
+        Button(onClick = {  navController.navigate("inscription_step_first") }) {
+            Icon(
+                painterResource(id = R.drawable.baseline_edit_note_black_24),
+                contentDescription = null,
+                tint = colorResource(R.color.white)
+            )
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            Text(stringResource(id = R.string.inscription), color = colorResource(R.color.white))
+        }
+
     }
 
 }

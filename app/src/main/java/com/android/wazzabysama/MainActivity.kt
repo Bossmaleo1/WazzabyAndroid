@@ -3,9 +3,12 @@ package com.android.wazzabysama
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.DrawerValue
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -36,6 +39,8 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun MainView(navController: NavHostController) {
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
         NavHost(navController = navController, startDestination = "launch_view" ) {
             composable("launch_view") {
                 LaunchView()
@@ -46,7 +51,7 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(route = "home") {
-                HomeApp()
+                HomeApp(navController,scope, drawerState)
             }
 
             composable(route = "inscription_step_first") {
@@ -60,6 +65,8 @@ class MainActivity : ComponentActivity() {
             composable(route = "inscription_step_done") {
                 FormStepDoneView(navController)
             }
+
+
         }
 
     }
