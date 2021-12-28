@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -64,7 +65,7 @@ fun Connexion(navController: NavHostController) {
         }
 
         Divider(
-            color = colorResource(R.color.colorPrimary),
+            color = colorResource(R.color.Purple700),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(30.dp)
@@ -80,7 +81,7 @@ fun Connexion(navController: NavHostController) {
                     Icon(
                         imageVector = Icons.Filled.Email,
                         contentDescription = "",
-                        tint = colorResource(R.color.colorPrimary)
+                        tint = colorResource(R.color.Purple700)
                     )
                 }
             },
@@ -98,15 +99,15 @@ fun Connexion(navController: NavHostController) {
                     Icon(
                         imageVector = Icons.Filled.Lock,
                         contentDescription = "",
-                        tint = colorResource(R.color.colorPrimary)
+                        tint = colorResource(R.color.Purple700)
                     )
                 }
             },
             trailingIcon = {
                 IconButton(onClick = { passwordHidden = !passwordHidden }) {
                     val visibilityIcon =
-                        if (passwordHidden) painterResource(id = R.drawable.outline_visibility_24)
-                        else painterResource(id = R.drawable.outline_visibility_off_24)
+                        if (passwordHidden) painterResource(id = R.drawable.baseline_visibility_24)
+                        else painterResource(id = R.drawable.baseline_visibility_off_24)
                     val description = if (passwordHidden) "Show password" else "Hide password"
                     Icon(painter = visibilityIcon, contentDescription = description)
                 }
@@ -123,7 +124,7 @@ fun Connexion(navController: NavHostController) {
             onClick = {
                 navController.navigate("home")
             }) {
-            Text(stringResource(R.string.connexion), color = colorResource(R.color.white))
+            Text(stringResource(R.string.connexion), color = Color.White)
         }
 
         Spacer(Modifier.size(20.dp))
@@ -136,7 +137,7 @@ fun Connexion(navController: NavHostController) {
                 )
                 withStyle(
                     style = SpanStyle(
-                        color = colorResource(R.color.colorPrimary),
+                        color = colorResource(R.color.Purple700),
                         fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline,
                         fontSize = 15.sp
                     )
@@ -151,7 +152,7 @@ fun Connexion(navController: NavHostController) {
             })
 
         Divider(
-            color = colorResource(R.color.colorPrimary),
+            color = colorResource(R.color.Purple700),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
@@ -169,12 +170,12 @@ fun Connexion(navController: NavHostController) {
 
         Button(onClick = {  navController.navigate("inscription_step_first") }) {
             Icon(
-                painterResource(id = R.drawable.baseline_edit_note_black_24),
+                painterResource(id = R.drawable.baseline_question_answer_24),
                 contentDescription = null,
-                tint = colorResource(R.color.white)
+                tint = Color.White
             )
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            Text(stringResource(id = R.string.inscription), color = colorResource(R.color.white))
+            Text(stringResource(id = R.string.inscription), color = Color.White)
         }
 
     }

@@ -2,25 +2,27 @@
 buildscript {
 
     ext {
-        compose_version = '1.0.2'
-        navVersion = '2.4.0-alpha08'
-        lifecycle_version  = "2.3.1"
+        compose_version = '1.1.0-rc01'
+        navVersion = '2.4.0-rc01'
+        lifecycle_version  = "2.4.0"
         coroutines_version = "1.5.2"
         preferences_version = '1.1.1'
         retrofitVersion = '2.3.0'
         converter_gson_version = '2.9.0'
-        room_version = '2.3.0'
+        room_version = '2.4.0'
         dagger_hilt_version = '2.38.1'
         coil_version = '0.11.1'
         multidex_version = '2.0.1'
+        kotlin_version = '1.6.0'
+        accompanist_version = '0.22.0-rc'
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
+        classpath "com.android.tools.build:gradle:7.0.4"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
 
         // NOTE: Do not place your application dependencies here; they belong

@@ -47,7 +47,7 @@ fun FormStepFirstView(navController: NavHostController) {
             placeholder = { Text("") },
             leadingIcon = {
                 IconButton(onClick = {  }) {
-                    Icon(imageVector = Icons.Filled.Email, contentDescription = "", tint = colorResource(R.color.colorPrimary))
+                    Icon(imageVector = Icons.Filled.Email, contentDescription = "", tint = colorResource(R.color.Purple700))
                 }
             },
             isError = isError,
@@ -67,7 +67,7 @@ fun FormStepFirstView(navController: NavHostController) {
             }
         }
 
-        Divider(color = colorResource(R.color.colorPrimary),
+        Divider(color = colorResource(R.color.Purple700),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(30.dp))
@@ -82,9 +82,9 @@ fun FormStepFirstView(navController: NavHostController) {
 
         IconButton(onClick = { }){
             Icon(
-                painter = painterResource(id = R.drawable.baseline_east_black_24),
+                painter = painterResource(id = R.drawable.baseline_east_24),
                 "contentDescription",
-                tint = colorResource(R.color.colorPrimary)
+                tint = colorResource(R.color.Purple700)
             )
         }
 

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">WazzabySama</string>
-    <string name="your_email">seu email</string>
+    <string name="your_email">Seu email</string>
+    <string name="home_app">Casa</string>
+    <string name="problematic_app">Problema</string>
     <string name="your_password">Sua senha</string>
     <string name="password_forget">Esqueceu sua senha</string>
     <string name="inscription">Registrar agora</string>
