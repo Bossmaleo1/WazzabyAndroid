@@ -1,4 +1,4 @@
-package com.android.wazzabysama
+package com.android.wazzabysama.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.android.wazzabysama.R
 
 @Composable
 fun LaunchView() {

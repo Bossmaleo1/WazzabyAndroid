@@ -1,6 +1,5 @@
-package com.android.wazzabysama
+package com.android.wazzabysama.ui.view
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,15 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.android.wazzabysama.R
 import com.android.wazzabysama.ui.model.BottomNavigationItem
+import com.android.wazzabysama.ui.view.bottomnavigationviews.PrivateMessage
+import com.android.wazzabysama.ui.view.bottomnavigationviews.PublicMessageView
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState) {
-
-    var switch = true
-    var maleo: Number = 0
-    var switchMaleo by rememberSaveable { mutableStateOf(true) }
+    var switch by rememberSaveable { mutableStateOf(true) }
     val context = LocalContext.current
     var selectedItem by remember { mutableStateOf(0) }
     val items = listOf(
@@ -35,9 +34,7 @@ fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState) {
                     selected = selectedItem == index,
                     onClick = {
                         selectedItem = index
-                        //switch = selectedItem === 0?true:false
-                        switchMaleo = index !== 1
-                        //Toast.makeText(context,"maleo sama ${maleo}",Toast.LENGTH_LONG).show()
+                        switch = index != 1
                     }
                 )
             }
@@ -50,25 +47,13 @@ fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState) {
             color = Color.Yellow
         ) {
 
-            Column() {
-                if(switchMaleo) {
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Green)) {
-                        Text("View 1")
-                    }
+            Column {
+                if (switch) {
+                    PublicMessageView()
                 } else {
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Red)) {
-                        Text("View 2")
-                    }
+                    PrivateMessage()
                 }
-
-
-
             }
-
 
 
         }

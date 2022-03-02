@@ -1,22 +1,19 @@
-package com.android.wazzabysama
+package com.android.wazzabysama.ui.view
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.android.wazzabysama.R
 
 @Composable
 fun FormStepFirstView(navController: NavHostController) {
@@ -47,7 +44,9 @@ fun FormStepFirstView(navController: NavHostController) {
             placeholder = { Text("") },
             leadingIcon = {
                 IconButton(onClick = {  }) {
-                    Icon(imageVector = Icons.Filled.Email, contentDescription = "", tint = colorResource(R.color.Purple700))
+                    Icon(imageVector = Icons.Filled.Email, contentDescription = "", tint = colorResource(
+                        R.color.Purple700
+                    ))
                 }
             },
             isError = isError,
