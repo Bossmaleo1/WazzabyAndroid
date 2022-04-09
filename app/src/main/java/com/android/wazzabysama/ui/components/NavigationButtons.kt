@@ -1,7 +1,9 @@
 package com.android.wazzabysama.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.material.MaterialTheme
+
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,16 +15,18 @@ import androidx.compose.ui.res.painterResource
 import com.android.wazzabysama.R
 
 @Composable
+@ExperimentalMaterial3Api
 fun wazzabySamaIcon(modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(R.drawable.baseline_menu_18),
         contentDescription = null, // decorative
-        colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
         modifier = modifier
     )
 }
 
 @Composable
+@ExperimentalMaterial3Api
 fun NavigationIcon(
     icon: Painter,
     isSelected: Boolean,
@@ -37,11 +41,10 @@ fun NavigationIcon(
     }
 
     val iconTintColor = tintColor ?: if (isSelected) {
-        MaterialTheme.colors.primary
+        MaterialTheme.colorScheme.outline
     } else {
-        MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
     }
-
     Image(
         modifier = modifier,
         painter = icon,

@@ -7,4 +7,7 @@
     <string name="password_forget">Contraseña olvidada</string>
     <string name="inscription">Inscribirse</string>
     <string name="connexion">conexión</string>
+    <!-- Untranslate zone-->
+    <string name="private_message">Private Message</string>
+    <string name="public_message">Public Message</string>
 </resources>

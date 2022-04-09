@@ -1,0 +1,60 @@
+package com.android.wazzabysama.ui.views
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.android.wazzabysama.R
+import com.android.wazzabysama.ui.model.BottomNavigationItem
+import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessage
+import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
+import kotlinx.coroutines.CoroutineScope
+
+@Composable
+@ExperimentalMaterial3Api
+fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState) {
+    var switch by rememberSaveable { mutableStateOf(true) }
+    val context = LocalContext.current
+    var selectedItem by remember { mutableStateOf(0) }
+    val items = listOf(
+        BottomNavigationItem(R.drawable.baseline_question_answer_24, stringResource(R.string.public_message),"view_public_message"),
+        BottomNavigationItem(R.drawable.baseline_chat_bubble_24, stringResource(R.string.private_message),"view_public_message")
+    )
+
+    Scaffold(topBar = { DrawerAppBar(scope, drawerState, "Wazzaby") }, bottomBar = {
+        NavigationBar {
+            items.forEachIndexed { index, item ->
+                NavigationBarItem(
+                    icon = { Icon(painter = painterResource(id = item.id), contentDescription = null) },
+                    label = { Text(item.title) },
+                    selected = selectedItem == index,
+                    onClick = {
+                        selectedItem = index
+                        switch = index != 1
+                    }
+                )
+            }
+        }
+    }) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Column {
+                if (switch) {
+                    PublicMessageView()
+                } else {
+                    PrivateMessage()
+                }
+            }
+        }
+    }
+
+
+}

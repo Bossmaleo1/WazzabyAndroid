@@ -7,4 +7,7 @@
     <string name="password_forget">Забыли свой пароль</string>
     <string name="inscription">Зарегистрируйтесь сейчас</string>
     <string name="connexion">Авторизоваться</string>
+    <!-- Untranslate zone-->
+    <string name="private_message">Private Message</string>
+    <string name="public_message">Public Message</string>
 </resources>
