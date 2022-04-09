@@ -1,6 +1,7 @@
 package com.android.wazzabysama.ui.views
 
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
@@ -17,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.android.wazzabysama.ui.components.MenuHome
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
@@ -39,29 +41,39 @@ fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String)
                     }
                 },
                 actions = {
-
-                        // RowScope here, so these icons will be placed horizontally
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            //We add our badges
-                            BadgedBox(badge = { Badge { Text("8") } }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Notifications,
-                                    contentDescription = "Localized description"
-                                )
-                            }
-                        }
-
+                    var expanded by remember { mutableStateOf(false) }
+                    // RowScope here, so these icons will be placed horizontally
                     IconButton(onClick = { /* doSomething() */ }) {
+                        //We add our badges
+                        BadgedBox(badge = { Badge { Text("8") } }) {
+                            Icon(
+                                imageVector = Icons.Filled.Notifications,
+                                contentDescription = "Localized description"
+                            )
+                        }
+                    }
+
+                    IconButton(onClick = {
+                        expanded = true
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.MoreVert,
                             contentDescription = "Localized description"
                         )
                     }
+
+                    //we create our Dropdown Menu Item
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+
+                    }
                 },
                 scrollBehavior = scrollBehavior,
                 title = { Text(title) }
             )
-        }){}
+        }) {}
 
 }
 
