@@ -2,7 +2,7 @@ package com.android.wazzabysama.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Image(
-    @SerializedName("imageName")
-    val imageName: String
+data class ApiUserResponse(
+    @SerializedName("hydra:member")
+    val Users: List<User>
 )
