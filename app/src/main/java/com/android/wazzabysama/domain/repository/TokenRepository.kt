@@ -7,4 +7,10 @@ interface TokenRepository {
 
     suspend fun getToken(): Resource<ApiTokenResponse>
 
+    suspend fun saveToken(token: String)
+
+    suspend fun deleteToken(token: String)
+
+    fun getSavedToken(): String
+
 }

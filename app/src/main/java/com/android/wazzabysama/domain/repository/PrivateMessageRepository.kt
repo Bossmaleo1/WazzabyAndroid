@@ -1,3 +1,7 @@
 package com.android.wazzabysama.domain.repository
 
-interface PrivateMessageRepository
+import com.android.wazzabysama.data.util.Resource
+
+interface PrivateMessageRepository {
+    //suspend fun getPrivateMessages(): Resource<A
+}
