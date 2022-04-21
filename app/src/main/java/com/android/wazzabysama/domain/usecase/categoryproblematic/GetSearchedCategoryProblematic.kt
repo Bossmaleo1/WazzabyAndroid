@@ -1,0 +1,5 @@
+package com.android.wazzabysama.domain.usecase.categoryproblematic
+
+import com.android.wazzabysama.domain.repository.CategoryProblematicRepository
+
+class GetSearchedCategoryProblematic(private val categoryProblematicRepository: CategoryProblematicRepository)

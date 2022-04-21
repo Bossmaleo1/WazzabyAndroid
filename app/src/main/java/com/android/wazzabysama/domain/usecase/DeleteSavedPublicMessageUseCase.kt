@@ -1,5 +1,0 @@
-package com.android.wazzabysama.domain.usecase
-
-import com.android.wazzabysama.domain.repository.PublicMessageRepository
-
-class DeleteSavedPublicMessageUseCase(private val publicMessageRepository: PublicMessageRepository)
