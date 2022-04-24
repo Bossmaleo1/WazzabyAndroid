@@ -2,8 +2,10 @@ package com.android.wazzabysama
 
 import android.app.Application
 import com.google.android.material.color.DynamicColors
+import dagger.hilt.android.HiltAndroidApp
 
-class WazzabySama: Application() {
+@HiltAndroidApp
+class WazzabySamaApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
