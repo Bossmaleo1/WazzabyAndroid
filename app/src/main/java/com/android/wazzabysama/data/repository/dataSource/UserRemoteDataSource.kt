@@ -5,6 +5,6 @@ import com.android.wazzabysama.data.model.api.ApiUserResponse
 import retrofit2.Response
 
 interface UserRemoteDataSource {
-    suspend fun getToken(): Response<ApiTokenResponse>
-    suspend fun getUser(): Response<ApiUserResponse>
+    suspend fun getToken(userName: String, password: String): Response<ApiTokenResponse>
+    suspend fun getUser(userName: String): Response<ApiUserResponse>
 }

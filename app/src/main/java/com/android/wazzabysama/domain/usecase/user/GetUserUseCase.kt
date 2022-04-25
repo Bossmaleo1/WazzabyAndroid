@@ -6,7 +6,7 @@ import com.android.wazzabysama.domain.repository.UserRepository
 
 class GetUserUseCase(private val userRepository: UserRepository) {
 
-    suspend fun execute(): Resource<ApiUserResponse> {
-        return userRepository.getUsers()
+    suspend fun execute(userName: String): Resource<ApiUserResponse> {
+        return userRepository.getUsers(userName)
     }
 }
