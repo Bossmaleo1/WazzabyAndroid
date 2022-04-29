@@ -1,25 +1,23 @@
-package com.android.wazzabysama.data.api
+package com.android.wazzabysama.data.api.service
 
+import com.android.wazzabysama.data.model.api.ApiLogin
 import com.android.wazzabysama.data.model.api.ApiTokenResponse
 import com.android.wazzabysama.data.model.api.ApiUserResponse
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface UserAPIService {
     @POST("/api/login_check")
     suspend fun getToken(
-        @Query("username")
-        userName: String,
-        @Query("password")
-        password: String
+        @Body apiLogin: ApiLogin
     ): Response<ApiTokenResponse>
 
     @GET("/api/users")
     suspend fun getUser(
         @Query("username")
-        userName: String
+        userName: String,
+        @Header("Authorization")
+        token: String
     ): Response<ApiUserResponse>
 
 }

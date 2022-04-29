@@ -1,6 +1,6 @@
 package com.android.wazzabysama.presentation.di
 
-import com.android.wazzabysama.data.api.UserAPIService
+import com.android.wazzabysama.data.api.service.UserAPIService
 import com.android.wazzabysama.data.repository.dataSource.UserRemoteDataSource
 import com.android.wazzabysama.data.repository.dataSourceImpl.UserRemoteDataSourceImpl
 import dagger.Module

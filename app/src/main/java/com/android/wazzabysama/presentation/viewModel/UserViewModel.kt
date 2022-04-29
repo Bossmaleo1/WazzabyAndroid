@@ -5,7 +5,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.android.wazzabysama.data.model.api.ApiTokenResponse
@@ -13,11 +15,15 @@ import com.android.wazzabysama.data.model.api.ApiUserResponse
 import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.domain.usecase.user.GetTokenUseCase
 import com.android.wazzabysama.domain.usecase.user.GetUserUseCase
+import com.android.wazzabysama.presentation.util.Event
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class UserViewModel(
+@HiltViewModel
+class UserViewModel @Inject constructor(
     private val app: Application,
     private val getUserUseCase: GetUserUseCase,
     private val getTokenUseCase: GetTokenUseCase
@@ -25,6 +31,13 @@ class UserViewModel(
 
     val token : MutableLiveData<Resource<ApiTokenResponse>> = MutableLiveData()
     val user : MutableLiveData<Resource<ApiUserResponse>> = MutableLiveData()
+    private val statusMessageError = MutableLiveData<Event<String>>()
+    val messageError : LiveData<Event<String>>
+        get() = statusMessageError
+
+    init {
+        statusMessageError.value = Event("NetWork Error")
+    }
 
     fun getToken(userName: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
         token.postValue(Resource.Loading())
@@ -40,14 +53,14 @@ class UserViewModel(
         }
     }
 
-    fun getUser(userName: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun getUser(userName: String, token: String) = viewModelScope.launch(Dispatchers.IO) {
         user.postValue(Resource.Loading())
         try {
             if (isNetworkAvailable(app)) {
-                val apiResult = getUserUseCase.execute(userName)
+                val apiResult = getUserUseCase.execute(userName, token)
                 user.postValue(apiResult)
             } else {
-                token.postValue(Resource.Error("Internet is available"))
+                user.postValue(Resource.Error("Internet is available"))
             }
         }catch (e:Exception) {
             user.postValue(Resource.Error(e.message.toString()))

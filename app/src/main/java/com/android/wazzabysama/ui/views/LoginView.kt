@@ -1,5 +1,9 @@
 package com.android.wazzabysama.ui.views
 
+import android.content.Context
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -13,15 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -29,16 +32,121 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.R.string.password_forget
+import com.android.wazzabysama.data.util.Resource
+import com.android.wazzabysama.presentation.util.Event
+import com.android.wazzabysama.presentation.viewModel.UserViewModel
+import com.android.wazzabysama.presentation.viewModel.UserViewModelFactory
+import javax.inject.Inject
 
 
 @Composable
-fun Connexion(navController: NavHostController) {
+@ExperimentalMaterial3Api
+fun Login(navController: NavHostController, userViewModel: UserViewModel, context: Any) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
+    val isLoading = remember { mutableStateOf(false) }
+
+    fun showProgressBar(){
+        isLoading.value = true
+    }
+
+    fun hideProgressBar(){
+        isLoading.value = false
+    }
+
+    Column {
+        if (isLoading.value) {
+            AlertDialog(
+                onDismissRequest = {
+                    // Dismiss the dialog when the user clicks outside the dialog or on the back
+                    // button. If you want to disable that functionality, simply use an empty
+                    // onCloseRequest.
+                    isLoading.value = false
+                },
+                title = {
+
+                },
+                text = {
+                    Column( modifier = Modifier
+                        .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row() {
+                            CircularProgressIndicator()
+                            Row(Modifier.padding(10.dp)) {
+                                Text(text = "Connexion en cours...")
+                            }
+                        }
+
+                    }
+                },
+                confirmButton = {
+
+                },
+                dismissButton = {
+
+                }
+            )
+        }
+    }
+
+    fun getUser(userViewModel: UserViewModel, userName: String, token: String, context: Any) {
+        userViewModel.getUser(userName, token)
+        userViewModel.user.observe(context as LifecycleOwner) {user->
+            when (user) {
+                is Resource.Success -> {
+                    Log.d("Test1", "'user':'${user.data?.Users?.get(0)?.lastName}'");
+                    hideProgressBar()
+                    navController.navigate("home")
+                }
+
+                is Resource.Error -> {
+                    hideProgressBar()
+                    user.message?.let {
+                        Toast.makeText(context as Context, "An error occurred : $it", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+
+                is Resource.Loading -> {
+                    showProgressBar()
+                }
+            }
+        }
+    }
+
+    fun viewModelLogin(userViewModel: UserViewModel, userName: String, password: String, context: Any) {
+        userViewModel.getToken(userName, password)
+        userViewModel.token.observe(context as LifecycleOwner) {token->
+            when (token) {
+                is Resource.Success -> {
+                    Log.d("Test1", "'token':'${token.data?.token}'");
+                    token.data?.token?.let {
+                        getUser(userViewModel, userName,
+                            "Bearer $it",context as LifecycleOwner)
+                    }
+                }
+
+                is Resource.Error -> {
+                    hideProgressBar()
+                    token.message?.let {
+                        Toast.makeText(context as Context, "An error occurred : $it", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+
+                is Resource.Loading -> {
+                    showProgressBar()
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -119,7 +227,10 @@ fun Connexion(navController: NavHostController) {
                 .width(280.dp)
                 .padding(top = 30.dp),
             onClick = {
-                navController.navigate("home")
+                //navController.navigate("home")
+               // Toast.makeText(context,"MALEO MALEO MALEO",Toast.LENGTH_LONG).show()
+                viewModelLogin(userViewModel, "sidneymaleoregis@gmail.com","Nfkol3324012020@!", context)
+               // Log.d("Test1", "Here");
             }) {
             Text(stringResource(R.string.connexion), color = Color.White)
         }
@@ -178,4 +289,3 @@ fun Connexion(navController: NavHostController) {
     }
 
 }
-

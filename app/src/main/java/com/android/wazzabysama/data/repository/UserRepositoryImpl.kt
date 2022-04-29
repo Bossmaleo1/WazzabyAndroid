@@ -13,8 +13,8 @@ class UserRepositoryImpl(
     private val userRemoteDataSource: UserRemoteDataSource
 ) : UserRepository {
 
-    override suspend fun getUsers(userName: String): Resource<ApiUserResponse> {
-        return responseToResourceUser(userRemoteDataSource.getUser(userName))
+    override suspend fun getUsers(userName: String, token: String): Resource<ApiUserResponse> {
+        return responseToResourceUser(userRemoteDataSource.getUser(userName, token))
     }
 
     private fun responseToResourceUser(response: Response<ApiUserResponse>): Resource<ApiUserResponse> {

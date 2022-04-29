@@ -7,10 +7,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class UserUseCaseModule {
+    @Singleton
     @Provides
     fun provideTokenUseCase(
         userRepository: UserRepository
@@ -18,6 +20,7 @@ class UserUseCaseModule {
         return GetTokenUseCase(userRepository)
     }
 
+    @Singleton
     @Provides
     fun provideUserUseCase(
         userRepository: UserRepository

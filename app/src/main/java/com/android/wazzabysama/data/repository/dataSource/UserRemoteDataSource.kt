@@ -6,5 +6,5 @@ import retrofit2.Response
 
 interface UserRemoteDataSource {
     suspend fun getToken(userName: String, password: String): Response<ApiTokenResponse>
-    suspend fun getUser(userName: String): Response<ApiUserResponse>
+    suspend fun getUser(userName: String, token: String): Response<ApiUserResponse>
 }

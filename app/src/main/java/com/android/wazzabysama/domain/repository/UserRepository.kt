@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserRepository {
 
     //resource for retrofit requests
-    suspend fun getUsers(userName: String): Resource<ApiUserResponse>
+    suspend fun getUsers(userName: String, token: String): Resource<ApiUserResponse>
 
     suspend fun saveUser(user: User)
 
