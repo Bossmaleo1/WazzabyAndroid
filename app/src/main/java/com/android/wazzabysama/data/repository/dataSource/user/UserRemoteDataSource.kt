@@ -1,4 +1,4 @@
-package com.android.wazzabysama.data.repository.dataSource
+package com.android.wazzabysama.data.repository.dataSource.user
 
 import com.android.wazzabysama.data.model.api.ApiTokenResponse
 import com.android.wazzabysama.data.model.api.ApiUserResponse

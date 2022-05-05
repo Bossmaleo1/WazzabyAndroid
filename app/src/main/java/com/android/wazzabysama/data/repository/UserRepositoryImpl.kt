@@ -2,15 +2,18 @@ package com.android.wazzabysama.data.repository
 
 import com.android.wazzabysama.data.model.api.ApiTokenResponse
 import com.android.wazzabysama.data.model.api.ApiUserResponse
-import com.android.wazzabysama.data.model.data.User
-import com.android.wazzabysama.data.repository.dataSource.UserRemoteDataSource
+import com.android.wazzabysama.data.model.dataRoom.TokenRoom
+import com.android.wazzabysama.data.model.dataRoom.UserRoom
+import com.android.wazzabysama.data.repository.dataSource.user.UserLocalDataSource
+import com.android.wazzabysama.data.repository.dataSource.user.UserRemoteDataSource
 import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class UserRepositoryImpl(
-    private val userRemoteDataSource: UserRemoteDataSource
+    private val userRemoteDataSource: UserRemoteDataSource,
+    private val userLocalDataSource: UserLocalDataSource
 ) : UserRepository {
 
     override suspend fun getUsers(userName: String, token: String): Resource<ApiUserResponse> {
@@ -26,16 +29,24 @@ class UserRepositoryImpl(
         return Resource.Error(response.message())
     }
 
-    override suspend fun saveUser(user: User) {
-        TODO("Not yet implemented")
+    override suspend fun saveUser(user: UserRoom) {
+        userLocalDataSource.saveUserToDB(user)
     }
 
-    override suspend fun deleteUser(user: User) {
-        TODO("Not yet implemented")
+    override suspend fun saveToken(token: TokenRoom) {
+        userLocalDataSource.saveTokenToDB(token)
     }
 
-    override fun getSavedUser(): Flow<List<User>> {
-        TODO("Not yet implemented")
+    override suspend fun deleteUser(user: UserRoom) {
+        userLocalDataSource.deleteUserFromDB(user)
+    }
+
+    override fun getSavedUser(userToken: String): Flow<UserRoom> {
+        return userLocalDataSource.getSavedUser(userToken)
+    }
+
+    override fun getSavedToken(): Flow<TokenRoom> {
+        return userLocalDataSource.getSavedToken()
     }
 
     override suspend fun getToken(userName: String, password: String): Resource<ApiTokenResponse> {
@@ -51,15 +62,8 @@ class UserRepositoryImpl(
         return Resource.Error(response.message())
     }
 
-    override suspend fun saveToken(token: String) {
+    override suspend fun deleteToken(token: TokenRoom) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteToken(token: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getSavedToken(): Flow<String> {
-        TODO("Not yet implemented")
-    }
 }

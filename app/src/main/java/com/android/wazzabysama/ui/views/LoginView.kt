@@ -38,6 +38,11 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.R.string.password_forget
+import com.android.wazzabysama.data.model.data.Problematic
+import com.android.wazzabysama.data.model.data.User
+import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
+import com.android.wazzabysama.data.model.dataRoom.TokenRoom
+import com.android.wazzabysama.data.model.dataRoom.UserRoom
 import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.presentation.util.Event
 import com.android.wazzabysama.presentation.viewModel.UserViewModel
@@ -101,6 +106,32 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             when (user) {
                 is Resource.Success -> {
                     Log.d("Test1", "'user':'${user.data?.Users?.get(0)?.lastName}'");
+                    val user = user.data?.Users?.get(0) as User
+                    val problematic = user.problematic as Problematic
+                    //we save the user Token
+                    userViewModel.saveToken(TokenRoom(1,token))
+                    //We save the user Problematic
+                    userViewModel.saveProblematic(ProblematicRoom(
+                        problematic.id,
+                        problematic.wording,
+                        problematic.language,
+                        problematic.icon
+                    ))
+                    //We save the user
+                    userViewModel.saveUser(UserRoom(
+                        user.id,
+                        user.online,
+                        user.anonymous,
+                        problematic.id,
+                        user.email,
+                        user.firstName,
+                        user.lastName,
+                        user.images[0].imageName,
+                        user.pushNotifications?.get(0)?.keyPush,
+                        user.roles[0],
+                        user.username,
+                        token
+                    ))
                     hideProgressBar()
                     navController.navigate("home")
                 }

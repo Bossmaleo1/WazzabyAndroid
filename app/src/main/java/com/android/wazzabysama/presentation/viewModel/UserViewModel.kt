@@ -6,18 +6,21 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.android.wazzabysama.data.model.api.ApiTokenResponse
 import com.android.wazzabysama.data.model.api.ApiUserResponse
+import com.android.wazzabysama.data.model.data.User
+import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
+import com.android.wazzabysama.data.model.dataRoom.TokenRoom
+import com.android.wazzabysama.data.model.dataRoom.UserRoom
 import com.android.wazzabysama.data.util.Resource
-import com.android.wazzabysama.domain.usecase.user.GetTokenUseCase
-import com.android.wazzabysama.domain.usecase.user.GetUserUseCase
+import com.android.wazzabysama.domain.usecase.problematic.GetSavedProblematicUseCase
+import com.android.wazzabysama.domain.usecase.problematic.SaveProblematicUseCase
+import com.android.wazzabysama.domain.usecase.user.*
 import com.android.wazzabysama.presentation.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -26,7 +29,14 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val app: Application,
     private val getUserUseCase: GetUserUseCase,
-    private val getTokenUseCase: GetTokenUseCase
+    private val getTokenUseCase: GetTokenUseCase,
+    private val saveUserUseCase: SaveUserUseCase,
+    private val saveProblematicUseCase: SaveProblematicUseCase,
+    private val saveTokenUseCase: SaveTokenUseCase,
+    private val getSavedUserUseCase: GetSavedUserUseCase,
+    private val getSavedTokenUseCase: GetSavedTokenUseCase,
+    private val getSavedProblematic: GetSavedProblematicUseCase,
+    private val deleteSavedUserUseCase: DeleteSavedUserUseCase
 ): AndroidViewModel(app) {
 
     val token : MutableLiveData<Resource<ApiTokenResponse>> = MutableLiveData()
@@ -92,5 +102,40 @@ class UserViewModel @Inject constructor(
             }
         }
         return false
+    }
+
+    //local data
+    fun saveUser(user: UserRoom) = viewModelScope.launch {
+        saveUserUseCase.execute(user)
+    }
+
+    fun saveProblematic(problematic: ProblematicRoom) = viewModelScope.launch {
+        saveProblematicUseCase.execute(problematic)
+    }
+
+    fun saveToken(token: TokenRoom) = viewModelScope.launch {
+        saveTokenUseCase.execute(token)
+    }
+
+    fun getSavedUser(userToken: String) = liveData {
+        getSavedUserUseCase.execute(userToken).collect {
+            emit(it)
+        }
+    }
+
+    fun getSavedToken() = liveData {
+        getSavedTokenUseCase.execute().collect {
+            emit(it)
+        }
+    }
+
+    fun getSavedProblematic(userId: Int) = liveData {
+        getSavedProblematic.execute(userId).collect {
+            emit(it)
+        }
+    }
+
+    fun deleteUser(user: UserRoom) = viewModelScope.launch {
+        deleteSavedUserUseCase.execute(user)
     }
 }

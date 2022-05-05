@@ -1,25 +1,38 @@
 package com.android.wazzabysama.data.model.data
 
+import androidx.room.*
 import com.android.wazzabysama.data.model.data.Image
 import com.android.wazzabysama.data.model.data.User
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
+/*@Entity(
+    tableName = "public_message_data_table"
+)*/
 data class PublicMessage(
+    //@PrimaryKey(autoGenerate = false)
+    //@ColumnInfo(name="public_message_id")
     @SerializedName("id")
-    val id: Int,
+    var id: Int,
+    //@ColumnInfo(name="public_message_anonymous")
     @SerializedName("anonymous")
-    val anonymous: Int,
+    var anonymous: Int,
+    //@ColumnInfo(name="public_message_content")
     @SerializedName("content")
-    val content: String,
+    var content: String,
+    //@Embedded
     @SerializedName("images")
-    val images: List<Image>,
+    var images: List<Image>,
+    //@Embedded
     @SerializedName("published")
-    val published: Date,
+    var published: Date,
+    //@ColumnInfo(name="public_message_state")
     @SerializedName("state")
-    val state: Int,
+    var state: Int,
+    //@Ignore
     @SerializedName("user")
-    val user: User,
+    val user: User /*= User(0,1,"","",0, listOf(),"", listOf(), listOf(),"",Problematic(0,"","","")),*/,
+    //@ColumnInfo(name="public_message_wording")
     @SerializedName("wording")
-    val wording: String
+    var wording: String
 )

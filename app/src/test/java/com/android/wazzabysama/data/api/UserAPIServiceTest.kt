@@ -42,7 +42,7 @@ class UserAPIServiceTest {
     fun getUser_sentRequest_receivedExpected() {
         runBlocking {
             enqueueMockResponse("usersresponse.json")
-            val responseBody = service.getUser("sidneymaleoregis@gmail.com").body()
+            val responseBody = service.getUser("sidneymaleoregis@gmail.com","").body()
             val request = server.takeRequest()
             assertThat(responseBody).isNotNull()
             assertThat(request.path).isEqualTo("/api/users?username=sidneymaleoregis%40gmail.com")
@@ -64,7 +64,7 @@ class UserAPIServiceTest {
     fun getUser_receivedResponse_correctContent() {
         runBlocking {
             enqueueMockResponse("usersresponse.json")
-            val responseBody = service.getUser("sidneymaleoregis@gmail.com").body()
+            val responseBody = service.getUser("sidneymaleoregis@gmail.com","").body()
             val user = responseBody!!.Users[0]
             assertThat(user.firstName).isEqualTo("Sidney")
             assertThat(user.lastName).isEqualTo("MALEO")

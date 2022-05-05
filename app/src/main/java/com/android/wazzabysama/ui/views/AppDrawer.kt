@@ -32,7 +32,7 @@ fun AppDrawer(
     scope: CoroutineScope,
     drawerState: DrawerState
 ) {
-    val context = LocalContext.current
+    //val context = LocalContext.current
 
     Spacer(Modifier.size(15.dp))
 

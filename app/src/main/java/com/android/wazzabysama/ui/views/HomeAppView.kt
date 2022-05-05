@@ -27,7 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 @ExperimentalMaterial3Api
 fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String) {
-    val context = LocalContext.current
+    //val context = LocalContext.current
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
