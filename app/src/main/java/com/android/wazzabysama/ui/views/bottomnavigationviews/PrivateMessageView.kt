@@ -14,13 +14,13 @@ import androidx.compose.ui.unit.dp
 //private userProfiles = List<UserProfile>
 @Composable
 fun PrivateMessage() {
-    Surface(
+    /*Surface(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn {
 
         }
-    }
+    }*/
 
 
 }

@@ -2,9 +2,9 @@
 buildscript {
 
     ext {
-        compose_version = '1.2.0-alpha08'
-        navVersion = '2.5.0-beta01'
-        lifecycle_version  = "2.5.0-beta01"
+        compose_version = '1.2.0-beta01'
+        navVersion = '2.5.0-rc01'
+        lifecycle_version  = "2.5.0-rc01"
         coroutines_version = "1.5.2"
         preferences_version = '1.2.0'
         retrofitVersion = '2.4.1'
@@ -13,7 +13,7 @@ buildscript {
         dagger_hilt_version = '2.38.1'
         coil_version = '0.11.1'
         multidex_version = '2.0.1'
-        kotlin_version = '1.6.20'
+        kotlin_version = '1.6.21'
         accompanist_version = '0.22.0-rc'
         j_unit_version = '4.13.2'
         coil_compose = '1.4.0'

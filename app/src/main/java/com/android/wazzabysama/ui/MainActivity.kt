@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(route = WazzabyDrawerDestinations.HOME) {
-                HomeApp(navController,scope, drawerState)
+                HomeApp(navController,scope, drawerState, context,  userViewModel)
             }
 
             composable(route = WazzabyDrawerDestinations.INSCRIPTION_FIRST) {

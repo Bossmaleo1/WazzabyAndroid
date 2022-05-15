@@ -16,10 +16,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
+import com.android.wazzabysama.presentation.viewModel.UserViewModel
 import com.android.wazzabysama.ui.components.NavigationIcon
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.views.utils.ConstValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -30,7 +33,9 @@ fun AppDrawer(
     currentRoute: String,
     modifier: Modifier = Modifier,
     scope: CoroutineScope,
-    drawerState: DrawerState
+    drawerState: DrawerState,
+    viewItem: MutableLiveData<String>,
+    userViewModel: UserViewModel
 ) {
     //val context = LocalContext.current
 
@@ -83,11 +88,13 @@ fun AppDrawer(
             action = {
                 scope.launch {
                     drawerState.close()
+                    if (currentRoute == WazzabyDrawerDestinations.HOME_ROUTE) {
+                        viewItem.value =  ConstValue.publicMessage
+                    }
                 }
 
-                navController.navigate(WazzabyDrawerDestinations.HOME_ROUTE)
 
-               // Toast.makeText(context,"MALEO is the boss ${currentRoute}",Toast.LENGTH_LONG).show()
+                navController.navigate(WazzabyDrawerDestinations.HOME_ROUTE)
             }
         )
 
@@ -98,10 +105,12 @@ fun AppDrawer(
             action = {
                 scope.launch {
                     drawerState.close()
+                    if (currentRoute == WazzabyDrawerDestinations.PROBLEM_ROUTE) {
+                        viewItem.value = ConstValue.problem
+                    }
                 }
 
                 navController.navigate(WazzabyDrawerDestinations.PROBLEM_ROUTE)
-                //Toast.makeText(context,"MALEO is the boss ${currentRoute}",Toast.LENGTH_LONG).show()
             }
         )
     }

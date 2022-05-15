@@ -109,7 +109,12 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                     val user = user.data?.Users?.get(0) as User
                     val problematic = user.problematic as Problematic
                     //we save the user Token
-                    userViewModel.saveToken(TokenRoom(1,token))
+                    userViewModel.saveToken(
+                        TokenRoom(
+                            1,
+                            //we split the bear characters
+                            token.split(" ")[1])
+                    )
                     //We save the user Problematic
                     userViewModel.saveProblematic(ProblematicRoom(
                         problematic.id,
@@ -117,6 +122,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                         problematic.language,
                         problematic.icon
                     ))
+
                     //We save the user
                     userViewModel.saveUser(UserRoom(
                         user.id,
@@ -130,7 +136,8 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                         user.pushNotifications?.get(0)?.keyPush,
                         user.roles[0],
                         user.username,
-                        token
+                        //we split the bear characters
+                        token.split(" ")[1]
                     ))
                     hideProgressBar()
                     navController.navigate("home")
