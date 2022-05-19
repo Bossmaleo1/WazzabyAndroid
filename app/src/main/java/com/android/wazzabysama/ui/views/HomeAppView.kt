@@ -34,6 +34,7 @@ import com.android.wazzabysama.presentation.viewModel.UserViewModel
 import com.android.wazzabysama.ui.components.MenuHome
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
+import com.android.wazzabysama.ui.views.utils.ConstValue
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import kotlinx.coroutines.CoroutineScope
@@ -144,18 +145,10 @@ fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String,
 
 
         Log.d("MALEOSAMAMALEO9393", ""+saveValue)
-        if (saveValue === "PublicMessage")  {
+        if (saveValue === ConstValue.publicMessage)  {
             LazyColumn(contentPadding = innerPadding) {
                 items(count = 2000) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .padding(16.dp)
-                    ) {
-
-                        Text(text = "MALEO !!")
-                    }
+                    PublicMessageView()
                 }
             }
         }

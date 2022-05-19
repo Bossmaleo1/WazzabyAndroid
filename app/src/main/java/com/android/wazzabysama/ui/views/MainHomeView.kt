@@ -17,7 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 @ExperimentalMaterial3Api
 fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState, viewItem: MutableLiveData<String>, context: Any) {
     var switch by rememberSaveable { mutableStateOf(true) }
-    val context = LocalContext.current
     var selectedItem by remember { mutableStateOf(0) }
 
     viewItem.value = ConstValue.publicMessage
@@ -26,12 +25,12 @@ fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState, viewItem: Muta
         BottomNavigationItem(
             R.drawable.baseline_question_answer_24,
             stringResource(R.string.public_message),
-            "view_public_message"
+            ConstValue.publicMessageRoute
         ),
         BottomNavigationItem(
             R.drawable.baseline_chat_bubble_24,
             stringResource(R.string.private_message),
-            "view_public_message"
+            ConstValue.publicMessageRoute
         )
     )
 

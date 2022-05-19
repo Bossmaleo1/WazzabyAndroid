@@ -5,5 +5,6 @@ class ConstValue {
         const val publicMessage = "PublicMessage"
         const val privateMessage = "PrivateMessage"
         const val problem = "Problem"
+        const val publicMessageRoute = "view_public_message"
     }
 }
