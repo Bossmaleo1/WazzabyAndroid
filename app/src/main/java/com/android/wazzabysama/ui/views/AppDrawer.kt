@@ -4,9 +4,8 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,9 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
+import com.android.wazzabysama.data.model.dataRoom.UserRoom
 import com.android.wazzabysama.presentation.viewModel.UserViewModel
 import com.android.wazzabysama.ui.components.NavigationIcon
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
@@ -35,9 +36,17 @@ fun AppDrawer(
     scope: CoroutineScope,
     drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    context: Any
 ) {
-    //val context = LocalContext.current
+    var user: UserRoom
+    var userName by rememberSaveable { mutableStateOf("") }
+    userViewModel.getSavedToken().observe(context as LifecycleOwner) {token->
+        userViewModel.getSavedUser(token.token).observe(context as LifecycleOwner) {userRoom->
+            user = userRoom
+            userName = user.firstName + " " + user.lastName
+        }
+    }
 
     Spacer(Modifier.size(15.dp))
 
@@ -59,7 +68,7 @@ fun AppDrawer(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = "Sidney MALEO")
+        Text(text = userName)
     }
 
     Column(modifier = modifier.fillMaxSize()) {

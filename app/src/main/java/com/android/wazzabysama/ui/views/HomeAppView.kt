@@ -186,7 +186,8 @@ fun HomeApp(navController: NavHostController, scope: CoroutineScope, drawerState
                 scope,
                 drawerState,
                 viewItem,
-                userViewModel
+                userViewModel,
+                context
             )
         }
     ) {
