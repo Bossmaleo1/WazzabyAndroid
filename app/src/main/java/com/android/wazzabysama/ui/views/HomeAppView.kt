@@ -12,12 +12,14 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -79,6 +81,54 @@ fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String,
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
+                        DropdownMenuItem(
+                            text = { Text("Profil") },
+                            onClick = { /* Handle edit! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.AccountCircle,
+                                    contentDescription = null
+                                )
+                            })
+                        DropdownMenuItem(
+                            text = { Text("Historique") },
+                            onClick = { /* Handle settings! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.History,
+                                    contentDescription = null
+                                )
+                            })
+
+                        DropdownMenuItem(
+                            text = { Text("Paramètres") },
+                            onClick = { /* Handle send feedback! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Settings,
+                                    contentDescription = null
+                                )
+                            },
+                            trailingIcon = { Text("F11", textAlign = TextAlign.Center) })
+                        DropdownMenuItem(
+                            text = { Text("A propos") },
+                            onClick = { /* Handle settings! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Help,
+                                    contentDescription = null
+                                )
+                            })
+                        MenuDefaults.Divider()
+                        DropdownMenuItem(
+                            text = { Text("Déconnexion") },
+                            onClick = { /* Handle settings! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.PowerSettingsNew,
+                                    contentDescription = null
+                                )
+                            })
 
                     }
                 },
