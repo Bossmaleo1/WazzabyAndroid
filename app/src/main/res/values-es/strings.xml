@@ -10,4 +10,8 @@
     <!-- Untranslate zone-->
     <string name="private_message">Private Message</string>
     <string name="public_message">Public Message</string>
+    <string name="talks">negociaciones</string>
+    <string name="talk">intervención</string>
+    <string name="like">Me gusta</string>
+    <string name="dislike">Disgusto</string>
 </resources>

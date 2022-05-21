@@ -85,6 +85,11 @@ fun AppDrawer(
             Switch(
                 checked = checkedState.value,
                 onCheckedChange = { checkedState.value = it },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.Red,
+                    checkedTrackColor = Color.Green,
+                    uncheckedThumbColor = Color.Gray
+                )
             )
         }
 

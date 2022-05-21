@@ -14,20 +14,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PublicMessage() {
-
-    /*LazyColumn {
-        items(100) {
-            Text(
-                "User Name $it",
-                style = MaterialTheme.typography.h3,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .clickable { }
-            )
-            Divider(color = Color.Black, thickness = 5.dp)
-        }
-    }*/
-
     Column {
         for(i in 1..100) {
             Text(

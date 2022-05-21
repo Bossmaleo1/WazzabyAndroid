@@ -1,13 +1,16 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddComment
+import androidx.compose.material.icons.filled.ThumbDown
+import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.AddComment
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -16,15 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.android.wazzabysama.R
+import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 
 @ExperimentalMaterial3Api
 @Composable
@@ -69,7 +73,7 @@ fun PublicMessageView() {
             Column(modifier = Modifier.padding(4.dp)) {
                 Text(
                     text = userName,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = postTime,
@@ -81,7 +85,7 @@ fun PublicMessageView() {
 
         Row(
             modifier = Modifier
-                .padding(5.dp, 0.dp,0.dp,10.dp)
+                .padding(5.dp, 0.dp, 0.dp, 10.dp)
                 .fillMaxSize(),
             horizontalArrangement = Arrangement.Start
         ) {
@@ -90,6 +94,40 @@ fun PublicMessageView() {
                 modifier = Modifier.padding(10.dp, 0.dp,0.dp,0.dp),
                 style = MaterialTheme.typography.titleMedium
             )
+        }
+
+        Divider(color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.padding(10.dp))
+
+        Row(
+            modifier = Modifier
+                .padding(5.dp, 0.dp, 0.dp, 10.dp)
+                .fillMaxSize(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(5.dp)) {
+                Icon(
+                    Icons.Filled.AddComment,
+                    contentDescription = null
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("0 ")
+                Text(stringResource(id = R.string.talk),  style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Icon(
+                    Icons.Filled.ThumbUp,
+                    contentDescription = null,
+                )
+                Text(" 0",  style = MaterialTheme.typography.titleLarge)
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Icon(
+                    Icons.Filled.ThumbDown,
+                    contentDescription = null
+                )
+                Text(" 0",  style = MaterialTheme.typography.titleLarge)
+            }
+
         }
 
     }
