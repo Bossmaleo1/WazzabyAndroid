@@ -6,18 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddComment
-import androidx.compose.material.icons.filled.ThumbDown
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.AddComment
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,9 +20,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.android.wazzabysama.R
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 
 @ExperimentalMaterial3Api
 @Composable
@@ -107,25 +103,85 @@ fun PublicMessageView() {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(5.dp)) {
-                Icon(
-                    Icons.Filled.AddComment,
-                    contentDescription = null
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("0 ")
-                Text(stringResource(id = R.string.talk),  style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Icon(
-                    Icons.Filled.ThumbUp,
-                    contentDescription = null,
-                )
-                Text(" 0",  style = MaterialTheme.typography.titleLarge)
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Icon(
-                    Icons.Filled.ThumbDown,
-                    contentDescription = null
-                )
-                Text(" 0",  style = MaterialTheme.typography.titleLarge)
+                Row() {
+                    Icon(
+                        Icons.Filled.AddComment,
+                        contentDescription = null
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("0 ")
+                    Text(stringResource(id = R.string.talk),  style = MaterialTheme.typography.titleMedium)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                }
+
+                Row() {
+                    Icon(
+                        Icons.Filled.ThumbUp,
+                        contentDescription = null,
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("0",  style = MaterialTheme.typography.titleLarge)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                }
+
+                Row() {
+                    Icon(
+                        Icons.Filled.ThumbDown,
+                        contentDescription = null
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("0",  style = MaterialTheme.typography.titleLarge)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                }
+
+                Row() {
+                    var expanded by remember { mutableStateOf(false) }
+                    // RowScope here, so these icons will be placed horizontally
+                    IconButton(onClick = {
+                        expanded = true
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowDropDownCircle,
+                            contentDescription = "Localized description"
+                        )
+                    }
+
+                    //we create our Dropdown Menu Item
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Modifier ce post") },
+                            onClick = { /* Handle edit! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Edit,
+                                    contentDescription = null
+                                )
+                            })
+                        DropdownMenuItem(
+                            text = { Text("Supprimer ce post") },
+                            onClick = { /* Handle settings! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Delete,
+                                    contentDescription = null
+                                )
+                            })
+
+                        DropdownMenuItem(
+                            text = { Text("Signaler ce post") },
+                            onClick = { /* Handle send feedback! */ },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Flag,
+                                    contentDescription = null
+                                )
+                            })
+                    }
+                }
+
             }
 
         }
