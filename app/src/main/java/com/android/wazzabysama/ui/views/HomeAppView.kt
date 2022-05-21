@@ -1,28 +1,23 @@
 package com.android.wazzabysama.ui.views
 
 
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
@@ -32,7 +27,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.android.wazzabysama.presentation.viewModel.UserViewModel
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
+import com.android.wazzabysama.ui.views.shimmer.PublicMessageShimmer
+import com.android.wazzabysama.ui.views.shimmer.ShimmerGridItem
 import com.android.wazzabysama.ui.views.utils.ConstValue
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
@@ -41,8 +39,8 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 @ExperimentalMaterial3Api
 fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String, viewItem: MutableLiveData<String>, context: Any) {
-    //val context = LocalContext.current
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val listState = rememberLazyListState()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -142,14 +140,26 @@ fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String,
                 saveValue = it;
         }
 
+        when(saveValue) {
+            ConstValue.publicMessage ->
 
-        Log.d("MALEOSAMAMALEO9393", ""+saveValue)
-        if (saveValue === ConstValue.publicMessage)  {
-            LazyColumn(contentPadding = innerPadding) {
-                items(count = 2000) {
-                    PublicMessageView()
+                LazyColumn(contentPadding = innerPadding, state = listState) {
+                    items(count = 3) {
+                        PublicMessageView()
+                    }
+
+                    items(count = 3) {
+                        repeat(3) {
+                            PublicMessageShimmer()
+                        }
+                    }
                 }
-            }
+            ConstValue.privateMessage ->
+                LazyColumn(contentPadding = innerPadding, state = listState) {
+                    items(count = 2000) {
+                        PrivateMessageView()
+                    }
+                }
         }
 
     }

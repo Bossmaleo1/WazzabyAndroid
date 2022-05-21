@@ -1,7 +1,6 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 
 @ExperimentalMaterial3Api
 @Composable
@@ -40,13 +40,14 @@ fun PublicMessageView() {
             " with the release of Letraset sheets containing Lorem Ipsum passages, and more " +
             "recently with desktop publishing software like Aldus PageMaker including " +
             "versions of Lorem Ipsum") }
+    val countLike by rememberSaveable { mutableStateOf("0") }
+    val countDisLike by rememberSaveable { mutableStateOf("0") }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(10.dp),
-       /* visible = true,
-        highlight = PlaceholderHighlight.shimmer(),*/
         shape = RoundedCornerShape(corner = CornerSize(10.dp)),
     ) {
 
@@ -88,7 +89,8 @@ fun PublicMessageView() {
             Text(
                 text = content ,
                 modifier = Modifier.padding(10.dp, 0.dp,0.dp,0.dp),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
@@ -120,7 +122,7 @@ fun PublicMessageView() {
                         contentDescription = null,
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("0",  style = MaterialTheme.typography.titleLarge)
+                    Text(countLike,  style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 }
 
@@ -130,7 +132,7 @@ fun PublicMessageView() {
                         contentDescription = null
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("0",  style = MaterialTheme.typography.titleLarge)
+                    Text(countDisLike,  style = MaterialTheme.typography.titleLarge)
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 }
 

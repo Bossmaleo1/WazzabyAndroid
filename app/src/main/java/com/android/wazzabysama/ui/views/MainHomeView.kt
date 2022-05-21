@@ -15,12 +15,15 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 @ExperimentalMaterial3Api
-fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState, viewItem: MutableLiveData<String>, context: Any) {
+fun MainHomeView(
+    scope: CoroutineScope,
+    drawerState: DrawerState,
+    viewItem: MutableLiveData<String>,
+    context: Any
+) {
     var switch by rememberSaveable { mutableStateOf(true) }
     var selectedItem by remember { mutableStateOf(0) }
-
     viewItem.value = ConstValue.publicMessage
-
     val items = listOf(
         BottomNavigationItem(
             R.drawable.baseline_question_answer_24,
@@ -34,30 +37,32 @@ fun MainHomeView(scope: CoroutineScope, drawerState: DrawerState, viewItem: Muta
         )
     )
 
-    Scaffold(topBar = { DrawerAppBar(scope, drawerState, "Wazzaby", viewItem, context) }, bottomBar = {
-        NavigationBar {
-            items.forEachIndexed { index, item ->
-                NavigationBarItem(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = item.id),
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(item.title) },
-                    selected = selectedItem == index,
-                    onClick = {
-                        selectedItem = index
-                        switch = index != 1
-                        if (switch) {
-                            viewItem.value = ConstValue.publicMessage
-                        } else {
-                            viewItem.value = ConstValue.privateMessage
+    Scaffold(topBar = {
+        DrawerAppBar(scope, drawerState, "Wazzaby", viewItem, context)
+    },
+        bottomBar = {
+            NavigationBar {
+                items.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = item.id),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text(item.title) },
+                        selected = selectedItem == index,
+                        onClick = {
+                            selectedItem = index
+                            switch = index != 1
+                            if (switch) {
+                                viewItem.value = ConstValue.publicMessage
+                            } else {
+                                viewItem.value = ConstValue.privateMessage
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
-        }
-    }
-    ){}
+        }) {}
 }
