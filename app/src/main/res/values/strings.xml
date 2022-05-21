@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">WazzabySama</string>
     <string name="your_email">Email</string>
+    <string name="home_app">Home</string>
+    <string name="problematic_app">Problem</string>
     <string name="your_password">Enter password</string>
     <string name="password_forget">Password Forget ?</string>
     <string name="inscription">Register</string>
     <string name="connexion">Connexion</string>
+    <!-- Untranslate zone-->
+    <string name="private_message">Private Message</string>
+    <string name="public_message">Public Message</string>
+    <string name="talks">Talks</string>
+    <string name="talk">Talk</string>
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
 </resources>

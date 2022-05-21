@@ -1,0 +1,5 @@
+package com.android.wazzabysama.domain.usecase.categoryproblematic
+
+import com.android.wazzabysama.domain.repository.CategoryProblematicRepository
+
+class SaveCategoryProblematicUseCase(private val categoryProblematicRepository: CategoryProblematicRepository)

@@ -1,0 +1,34 @@
+{"hydra:member": [
+    {
+      "@id": "/api/users/81",
+      "@type": "User",
+      "id": 81,
+      "email": "sidneymaleoregis@gmail.com",
+      "online": 1,
+      "anonymous": 1,
+      "firstName": "Sidney",
+      "lastName": "MALEO",
+      "problematic": {
+        "@id": "/api/problematics/81",
+        "@type": "Problematic",
+        "id": 81,
+        "wording": "Christianisme",
+        "icon": "",
+        "language": "fr"
+      },
+      "towns": [],
+      "languages": [],
+      "images": [
+        {
+          "@id": "/api/images/18",
+          "@type": "Image",
+          "id": 18,
+          "imageName": "photo-2-62129c4b0a5a0818619410.jpg"
+        }
+      ],
+      "roles": [
+        "ROLE_SUPER_ADMIN"
+      ]
+    }
+  ]
+  }

@@ -1,0 +1,5 @@
+package com.android.wazzabysama.domain.usecase.privatemessage
+
+import com.android.wazzabysama.domain.repository.PrivateMessageRepository
+
+class GetPrivateMessageUseCase(private val privateMessageRepository: PrivateMessageRepository)
