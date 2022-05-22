@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
@@ -29,6 +31,7 @@ import com.android.wazzabysama.presentation.viewModel.UserViewModel
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
+import com.android.wazzabysama.ui.views.button.FloatingButton
 import com.android.wazzabysama.ui.views.shimmer.PublicMessageShimmer
 import com.android.wazzabysama.ui.views.shimmer.ShimmerGridItem
 import com.android.wazzabysama.ui.views.utils.ConstValue
@@ -53,6 +56,7 @@ fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String,
                     }
                 },
                 actions = {
+
                     var expanded by remember { mutableStateOf(false) }
                     // RowScope here, so these icons will be placed horizontally
                     IconButton(onClick = { /* doSomething() */ }) {
@@ -142,17 +146,16 @@ fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String,
 
         when(saveValue) {
             ConstValue.publicMessage ->
-
                 LazyColumn(contentPadding = innerPadding, state = listState) {
                     items(count = 3) {
                         PublicMessageView()
                     }
 
-                    items(count = 3) {
+                    /*items(count = 3) {
                         repeat(3) {
                             PublicMessageShimmer()
                         }
-                    }
+                    }*/
                 }
             ConstValue.privateMessage ->
                 LazyColumn(contentPadding = innerPadding, state = listState) {
