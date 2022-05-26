@@ -22,6 +22,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -94,6 +95,23 @@ fun PublicMessageView() {
             )
         }
 
+        Row(
+            modifier = Modifier
+                .padding(5.dp, 0.dp, 0.dp, 10.dp)
+                .fillMaxSize(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.photo),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+
+        }
+
         Divider(color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier.padding(10.dp))
 
@@ -105,7 +123,8 @@ fun PublicMessageView() {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(5.dp)) {
-                Row() {
+                Row(modifier = Modifier
+                    .wrapContentWidth()) {
                     Icon(
                         Icons.Filled.AddComment,
                         contentDescription = null
@@ -116,7 +135,8 @@ fun PublicMessageView() {
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 }
 
-                Row() {
+                Row(modifier = Modifier
+                    .wrapContentWidth()) {
                     Icon(
                         Icons.Filled.ThumbUp,
                         contentDescription = null,
@@ -126,7 +146,8 @@ fun PublicMessageView() {
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 }
 
-                Row() {
+                Row(modifier = Modifier
+                    .wrapContentWidth()) {
                     Icon(
                         Icons.Filled.ThumbDown,
                         contentDescription = null
@@ -136,7 +157,8 @@ fun PublicMessageView() {
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 }
 
-                Row() {
+                Row(modifier = Modifier
+                    .wrapContentWidth()) {
                     var expanded by remember { mutableStateOf(false) }
                     // RowScope here, so these icons will be placed horizontally
                     IconButton(onClick = {
