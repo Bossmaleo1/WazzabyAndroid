@@ -147,7 +147,7 @@ fun DrawerAppBar(scope: CoroutineScope, drawerState: DrawerState, title: String,
         when(saveValue) {
             ConstValue.publicMessage ->
                 LazyColumn(contentPadding = innerPadding, state = listState) {
-                    items(count = 3) {
+                    items(count = 2000) {
                         PublicMessageView()
                     }
 

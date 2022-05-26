@@ -75,13 +75,10 @@ fun MainHomeView(
                 ExtendedFloatingActionButton(
                     icon = { Icon(Icons.Filled.ModeEdit, "") },
                     text = {
-                        Text(
-                        text="Nouveau message public",
-                        style = MaterialTheme.typography.titleSmall,
-
-                        )
-                           },
-                    onClick = { /*do something*/ },
+                        Text(text = "Nouveau message",
+                            style = MaterialTheme.typography.titleSmall)
+                    },
+                    onClick = {/*do something*/ },
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 )
             }

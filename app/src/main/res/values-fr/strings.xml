@@ -8,8 +8,8 @@
     <string name="inscription">S\'inscrire</string>
     <string name="connexion">Connexion</string>
     <!-- Untranslate zone-->
-    <string name="private_message">Private Message</string>
-    <string name="public_message">Public Message</string>
+    <string name="private_message">Message Privé</string>
+    <string name="public_message">Message Public</string>
     <string name="talks">Interventions</string>
     <string name="talk">Intervention</string>
     <string name="like">Aimer</string>
