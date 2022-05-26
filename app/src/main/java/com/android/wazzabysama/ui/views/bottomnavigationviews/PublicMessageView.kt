@@ -59,7 +59,7 @@ fun PublicMessageView() {
             horizontalArrangement = Arrangement.Start
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_profile_colorier),
+                painter = painterResource(id = R.drawable.ic_profile),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -138,23 +138,11 @@ fun PublicMessageView() {
                 Row(modifier = Modifier
                     .wrapContentWidth()) {
                     Icon(
-                        Icons.Filled.ThumbUp,
+                        Icons.Filled.FavoriteBorder,
                         contentDescription = null,
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(countLike,  style = MaterialTheme.typography.titleLarge)
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                }
-
-                Row(modifier = Modifier
-                    .wrapContentWidth()) {
-                    Icon(
-                        Icons.Filled.ThumbDown,
-                        contentDescription = null
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(countDisLike,  style = MaterialTheme.typography.titleLarge)
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text("0 ")
                 }
 
                 Row(modifier = Modifier
