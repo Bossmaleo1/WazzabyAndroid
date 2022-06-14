@@ -1,6 +1,8 @@
 package com.android.wazzabysama.data.repository
 
 import com.android.wazzabysama.data.model.api.ApiPublicMessageResponse
+import com.android.wazzabysama.data.model.api.ApiUserResponse
+import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.data.model.data.PublicMessage
 import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.data.repository.dataSource.publicMessage.PublicMessageLocalDataSource
@@ -8,13 +10,24 @@ import com.android.wazzabysama.data.repository.dataSource.publicMessage.PublicMe
 import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.domain.repository.PublicMessageRepository
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 class PublicMessageRepositoryImpl(
     private val publicMessageRemoteDataSource: PublicMessageRemoteDataSource,
     private val publicMessageLocalDataSource : PublicMessageLocalDataSource
 ) : PublicMessageRepository {
-    override suspend fun getPublicMessages(): Resource<ApiPublicMessageResponse> {
-        TODO("Not yet implemented")
+
+    override suspend fun getPublicMessages(problematic: Problematic, page: Int): Resource<ApiPublicMessageResponse> {
+        return responseToResourcePublicMessage(publicMessageRemoteDataSource.getPublicMessage(problematic,page))
+    }
+
+    private fun responseToResourcePublicMessage(response: Response<ApiPublicMessageResponse>): Resource<ApiPublicMessageResponse> {
+        if (response.isSuccessful) {
+            response.body()?.let { result ->
+                return Resource.Success(result)
+            }
+        }
+        return Resource.Error(response.message())
     }
 
     override suspend fun savePublicMessage(publicMessage: PublicMessage) {
@@ -25,7 +38,7 @@ class PublicMessageRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getSavedPublicMessage(): Flow<List<PublicMessageRoom>> {
-        TODO("Not yet implemented")
+    override fun getSavedPublicMessage(publicMessageProblematic: String): Flow<List<PublicMessageRoom>> {
+        return publicMessageLocalDataSource.getSavedPublicMessage(publicMessageProblematic)
     }
 }

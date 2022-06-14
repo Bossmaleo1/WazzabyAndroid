@@ -1,11 +1,15 @@
 package com.android.wazzabysama.presentation.di
 
 import com.android.wazzabysama.data.repository.ProblematicRepositoryImpl
+import com.android.wazzabysama.data.repository.PublicMessageRepositoryImpl
 import com.android.wazzabysama.data.repository.UserRepositoryImpl
 import com.android.wazzabysama.data.repository.dataSource.problematic.ProblematicLocalDataSource
+import com.android.wazzabysama.data.repository.dataSource.publicMessage.PublicMessageLocalDataSource
+import com.android.wazzabysama.data.repository.dataSource.publicMessage.PublicMessageRemoteDataSource
 import com.android.wazzabysama.data.repository.dataSource.user.UserLocalDataSource
 import com.android.wazzabysama.data.repository.dataSource.user.UserRemoteDataSource
 import com.android.wazzabysama.domain.repository.ProblematicRepository
+import com.android.wazzabysama.domain.repository.PublicMessageRepository
 import com.android.wazzabysama.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -33,4 +37,14 @@ class RepositoryModule {
     ): ProblematicRepository {
         return ProblematicRepositoryImpl(problematicLocalDataSource)
     }
+
+    @Singleton
+    @Provides
+    fun providePublicMessageRepository(
+        publicMessageRemoteDataSource: PublicMessageRemoteDataSource,
+        publicMessageLocalDataSource: PublicMessageLocalDataSource
+    ): PublicMessageRepository {
+        return PublicMessageRepositoryImpl(publicMessageRemoteDataSource,publicMessageLocalDataSource)
+    }
+
 }
