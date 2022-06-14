@@ -2,6 +2,7 @@ package com.android.wazzabysama.domain.repository
 
 import com.android.wazzabysama.data.model.api.ApiPublicMessageResponse
 import com.android.wazzabysama.data.model.data.PublicMessage
+import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.data.util.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,6 @@ interface PublicMessageRepository {
     suspend fun deletePublicMessage(publicMessage: PublicMessage)
 
     //Flow for Room Data backup
-    fun getSavedPublicMessage(): Flow<List<PublicMessage>>
+    fun getSavedPublicMessage(): Flow<List<PublicMessageRoom>>
 
 }

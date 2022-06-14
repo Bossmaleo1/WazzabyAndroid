@@ -1,4 +1,4 @@
-package com.android.wazzabysama.ui.views.utils
+package com.android.wazzabysama.ui.views.model
 
 class ConstValue {
     companion object {

@@ -2,19 +2,17 @@ package com.android.wazzabysama.ui.views
 
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.android.wazzabysama.R
 import com.android.wazzabysama.ui.model.BottomNavigationItem
-import com.android.wazzabysama.ui.views.utils.ConstValue
+import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -75,7 +73,7 @@ fun MainHomeView(
                 ExtendedFloatingActionButton(
                     icon = { Icon(Icons.Filled.ModeEdit, "") },
                     text = {
-                        Text(text = "Nouveau message",
+                        Text(text = stringResource(R.string.new_message),
                             style = MaterialTheme.typography.titleSmall)
                     },
                     onClick = {/*do something*/ },

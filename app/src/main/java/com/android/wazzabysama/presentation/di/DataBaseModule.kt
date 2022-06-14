@@ -3,6 +3,7 @@ package com.android.wazzabysama.presentation.di
 import android.app.Application
 import androidx.room.Room
 import com.android.wazzabysama.data.db.dao.ProblematicDAO
+import com.android.wazzabysama.data.db.dao.PublicMessageDAO
 import com.android.wazzabysama.data.db.dao.UserDAO
 import com.android.wazzabysama.data.db.dao.WazzabyDatabase
 import dagger.Module
@@ -26,6 +27,12 @@ class DataBaseModule {
     @Provides
     fun provideUserDao(wazzabyDatabase: WazzabyDatabase): UserDAO {
         return wazzabyDatabase.getUserDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun providePublicMessageDao(wazzabyDatabase: WazzabyDatabase): PublicMessageDAO {
+        return wazzabyDatabase.getPublicMessageDAO()
     }
 
     @Singleton

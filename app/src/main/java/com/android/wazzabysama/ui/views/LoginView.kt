@@ -81,7 +81,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                 text = {
                     Column( modifier = Modifier
                         .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Row() {
+                        Row {
                             CircularProgressIndicator()
                             Row(Modifier.padding(10.dp)) {
                                 Text(text = "Connexion en cours...")
@@ -105,9 +105,8 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         userViewModel.user.observe(context as LifecycleOwner) {user->
             when (user) {
                 is Resource.Success -> {
-                    Log.d("Test1", "'user':'${user.data?.Users?.get(0)?.lastName}'");
                     val user = user.data?.Users?.get(0) as User
-                    val problematic = user.problematic as Problematic
+                    val problematic = user.problematic
                     //we save the user Token
                     userViewModel.saveToken(
                         TokenRoom(
@@ -163,10 +162,11 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         userViewModel.token.observe(context as LifecycleOwner) {token->
             when (token) {
                 is Resource.Success -> {
-                    Log.d("Test1", "'token':'${token.data?.token}'");
+                    Log.d("Test1", "'token':'${token.data?.token}'")
                     token.data?.token?.let {
                         getUser(userViewModel, userName,
-                            "Bearer $it",context as LifecycleOwner)
+                            "Bearer $it", context
+                        )
                     }
                 }
 
