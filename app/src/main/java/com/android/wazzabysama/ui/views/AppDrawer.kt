@@ -21,7 +21,7 @@ import com.android.wazzabysama.data.model.dataRoom.UserRoom
 import com.android.wazzabysama.presentation.viewModel.UserViewModel
 import com.android.wazzabysama.ui.components.NavigationIcon
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
-import com.android.wazzabysama.ui.views.utils.ConstValue
+import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -40,7 +40,7 @@ fun AppDrawer(
     var user: UserRoom
     var userName by rememberSaveable { mutableStateOf("") }
     userViewModel.getSavedToken().observe(context as LifecycleOwner) {token->
-        userViewModel.getSavedUser(token.token).observe(context as LifecycleOwner) {userRoom->
+        userViewModel.getSavedUserByToken(token.token).observe(context) { userRoom->
             user = userRoom
             userName = user.firstName + " " + user.lastName
         }

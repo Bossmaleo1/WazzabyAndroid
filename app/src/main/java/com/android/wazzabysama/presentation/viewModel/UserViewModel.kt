@@ -5,11 +5,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import androidx.lifecycle.*
 import com.android.wazzabysama.data.model.api.ApiTokenResponse
 import com.android.wazzabysama.data.model.api.ApiUserResponse
-import com.android.wazzabysama.data.model.data.User
 import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
 import com.android.wazzabysama.data.model.dataRoom.TokenRoom
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
@@ -20,7 +18,6 @@ import com.android.wazzabysama.domain.usecase.user.*
 import com.android.wazzabysama.presentation.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -117,7 +114,7 @@ class UserViewModel @Inject constructor(
         saveTokenUseCase.execute(token)
     }
 
-    fun getSavedUser(userToken: String) = liveData {
+    fun getSavedUserByToken(userToken: String) = liveData {
         getSavedUserUseCase.execute(userToken).collect {
             emit(it)
         }

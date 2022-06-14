@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.android.wazzabysama.data.model.data.*
 import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
+import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.data.model.dataRoom.TokenRoom
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
 
@@ -12,7 +13,8 @@ import com.android.wazzabysama.data.model.dataRoom.UserRoom
     entities = [
         UserRoom::class,
         ProblematicRoom::class,
-        TokenRoom::class
+        TokenRoom::class,
+        PublicMessageRoom::class
     ],
     version = 1,
     exportSchema = false
@@ -20,4 +22,5 @@ import com.android.wazzabysama.data.model.dataRoom.UserRoom
 abstract class WazzabyDatabase : RoomDatabase() {
     abstract fun getUserDAO():UserDAO
     abstract fun getProblematicDAO():ProblematicDAO
+    abstract fun getPublicMessageDAO():PublicMessageDAO
 }

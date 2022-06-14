@@ -112,6 +112,7 @@ fun PublicMessageView() {
 
         }
 
+
         Divider(color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier.padding(10.dp))
 

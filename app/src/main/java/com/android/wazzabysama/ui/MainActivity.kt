@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -34,7 +36,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userFactory: UserViewModelFactory
-    lateinit var userViewModel: UserViewModel //we call our login viewModel
+    //@Inject
+    private lateinit var userViewModel: UserViewModel //we call our login viewModel
+    var token: String? = null
 
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,11 +49,17 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     MainView(navController, this)
-                    //userViewModel.getToken("userName", "password")
+                    userViewModel.getSavedToken().observe(this as LifecycleOwner) {token->
+                        this.token = token?.token
+                    }
 
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(100)
-                        navController.navigate("connexion_view")
+                        if(token === null) {
+                            navController.navigate("connexion_view")
+                        }else {
+                            navController.navigate(WazzabyDrawerDestinations.HOME)
+                        }
                     }
                 }
             }
@@ -67,17 +77,23 @@ class MainActivity : ComponentActivity() {
         val scope = rememberCoroutineScope()
         //We call our init view model method
         this.initViewModel()
-        NavHost(navController = navController, startDestination = "launch_view" ) {
-            composable(route = "launch_view") {
+        NavHost(navController = navController, startDestination = "LAUNCH_VIEW" ) {
+            composable(route = "LAUNCH_VIEW") {
                 LaunchView()
             }
 
             composable(route = WazzabyDrawerDestinations.CONNEXION_VIEW) {
                 Login(navController,userViewModel, context)
+                BackHandler {
+                    Log.d("Test1", "Here Our Test !! Test!!");
+                }
             }
 
             composable(route = WazzabyDrawerDestinations.HOME) {
                 HomeApp(navController,scope, drawerState, context,  userViewModel)
+                BackHandler {
+                    Log.d("Test1", "Here Our Test !! Test!!");
+                }
             }
 
             composable(route = WazzabyDrawerDestinations.INSCRIPTION_FIRST) {
