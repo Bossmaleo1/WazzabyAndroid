@@ -1,6 +1,7 @@
 package com.android.wazzabysama.presentation.di
 
 import com.android.wazzabysama.BuildConfig
+import com.android.wazzabysama.data.api.service.PublicMessageAPIService
 import com.android.wazzabysama.data.api.service.UserAPIService
 import dagger.Module
 import dagger.Provides
@@ -41,5 +42,11 @@ class NetModule {
     @Provides
     fun provideUserAPIService(retrofit: Retrofit): UserAPIService {
         return retrofit.create(UserAPIService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providePublicMessageAPIService(retrofit: Retrofit): PublicMessageAPIService {
+        return retrofit.create(PublicMessageAPIService::class.java)
     }
 }
