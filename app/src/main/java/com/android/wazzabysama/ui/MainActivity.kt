@@ -1,6 +1,7 @@
 package com.android.wazzabysama.ui
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
@@ -75,6 +77,7 @@ class MainActivity : ComponentActivity() {
     fun MainView(navController: NavHostController, context: Any) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val scope = rememberCoroutineScope()
+        val activity = (LocalContext.current as? Activity)
         //We call our init view model method
         this.initViewModel()
         NavHost(navController = navController, startDestination = "LAUNCH_VIEW" ) {
@@ -85,14 +88,14 @@ class MainActivity : ComponentActivity() {
             composable(route = WazzabyDrawerDestinations.CONNEXION_VIEW) {
                 Login(navController,userViewModel, context)
                 BackHandler {
-                    Log.d("Test1", "Here Our Test !! Test!!");
+                    activity?.finish()
                 }
             }
 
             composable(route = WazzabyDrawerDestinations.HOME) {
                 HomeApp(navController,scope, drawerState, context,  userViewModel)
                 BackHandler {
-                    Log.d("Test1", "Here Our Test !! Test!!");
+                    activity?.finish()
                 }
             }
 
