@@ -80,5 +80,5 @@ fun MainHomeView(
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 )
             }
-        }) {}
+        }) {paddingValues ->  }
 }
