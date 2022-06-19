@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.Flow
 interface PublicMessageRepository {
 
     //resource for retrofit requests
-    suspend fun getPublicMessages(problematic: Problematic, page: Int): Resource<ApiPublicMessageResponse>
+    suspend fun getPublicMessages(problematic: Problematic, page: Int,token: String): Resource<ApiPublicMessageResponse>
 
-    suspend fun savePublicMessage(publicMessage: PublicMessage)
+    suspend fun savePublicMessage(publicMessage: PublicMessageRoom)
 
     suspend fun deletePublicMessage(publicMessage: PublicMessage)
 

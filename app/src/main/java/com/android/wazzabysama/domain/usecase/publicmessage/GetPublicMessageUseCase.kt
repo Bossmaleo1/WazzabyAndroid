@@ -6,7 +6,7 @@ import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.domain.repository.PublicMessageRepository
 
 class GetPublicMessageUseCase(private val publicMessageRepository: PublicMessageRepository) {
-    suspend fun execute(problematic: Problematic, page: Int): Resource<ApiPublicMessageResponse> {
-        return publicMessageRepository.getPublicMessages(problematic,page)
+    suspend fun execute(problematic: Problematic, page: Int, token: String): Resource<ApiPublicMessageResponse> {
+        return publicMessageRepository.getPublicMessages(problematic,page,token)
     }
 }

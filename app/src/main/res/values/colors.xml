@@ -32,6 +32,8 @@
     <color name="yellow_logo">@color/yellow700</color>
     <color name="blue_logo">@color/blue500</color>
 
+    <color name="blue_light">#BBDEFB</color>
+
     <!-- Status bar -->
     <color name="black30">#4D000000</color>
 

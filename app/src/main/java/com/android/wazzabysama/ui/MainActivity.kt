@@ -2,10 +2,7 @@ package com.android.wazzabysama.ui
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -19,13 +16,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.android.wazzabysama.presentation.viewModel.UserViewModel
-import com.android.wazzabysama.presentation.viewModel.UserViewModelFactory
+import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
+import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
+import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
+import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.theme.WazzabySamaTheme
 import com.android.wazzabysama.ui.views.*
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -38,8 +36,10 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userFactory: UserViewModelFactory
-    //@Inject
+    @Inject
+    lateinit var publicMessageFactory: PublicMessageViewModelFactory
     private lateinit var userViewModel: UserViewModel //we call our login viewModel
+    private lateinit var publicMessageViewModel: PublicMessageViewModel
     var token: String? = null
 
     @SuppressLint("CoroutineCreationDuringComposition")
@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
 
     private fun initViewModel() {
         userViewModel = ViewModelProvider(this, userFactory)[UserViewModel::class.java]
+        publicMessageViewModel = ViewModelProvider(this, publicMessageFactory)[PublicMessageViewModel::class.java]
     }
 
     @Composable
@@ -93,7 +94,7 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(route = WazzabyDrawerDestinations.HOME) {
-                HomeApp(navController,scope, drawerState, context,  userViewModel)
+                HomeApp(/*navController,*/scope, drawerState, context,  userViewModel, publicMessageViewModel)
                 BackHandler {
                     activity?.finish()
                 }

@@ -17,8 +17,12 @@ class PublicMessageRepositoryImpl(
     private val publicMessageLocalDataSource : PublicMessageLocalDataSource
 ) : PublicMessageRepository {
 
-    override suspend fun getPublicMessages(problematic: Problematic, page: Int): Resource<ApiPublicMessageResponse> {
-        return responseToResourcePublicMessage(publicMessageRemoteDataSource.getPublicMessage(problematic,page))
+    override suspend fun getPublicMessages(problematic: Problematic, page: Int,token: String): Resource<ApiPublicMessageResponse> {
+        return responseToResourcePublicMessage(publicMessageRemoteDataSource.getPublicMessage(problematic,  page, token))
+    }
+
+    override suspend fun savePublicMessage(publicMessage: PublicMessageRoom) {
+        publicMessageLocalDataSource.savePublicMessageToDB(publicMessage)
     }
 
     private fun responseToResourcePublicMessage(response: Response<ApiPublicMessageResponse>): Resource<ApiPublicMessageResponse> {
@@ -30,9 +34,6 @@ class PublicMessageRepositoryImpl(
         return Resource.Error(response.message())
     }
 
-    override suspend fun savePublicMessage(publicMessage: PublicMessage) {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun deletePublicMessage(publicMessage: PublicMessage) {
         TODO("Not yet implemented")

@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.android.wazzabysama.R
+import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.ui.model.BottomNavigationItem
 import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +22,8 @@ fun MainHomeView(
     scope: CoroutineScope,
     drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
-    context: Any
+    context: Any,
+    publicMessageViewModel: PublicMessageViewModel
 ) {
     var switch by rememberSaveable { mutableStateOf(true) }
     var selectedItem by remember { mutableStateOf(0) }
@@ -42,7 +44,7 @@ fun MainHomeView(
 
 
     Scaffold(topBar = {
-        DrawerAppBar(scope, drawerState, "Wazzaby", viewItem, context)
+        DrawerAppBar(scope, drawerState, "Wazzaby", viewItem, context,publicMessageViewModel)
     },
         bottomBar = {
             NavigationBar {

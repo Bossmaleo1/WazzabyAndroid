@@ -18,7 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
-import com.android.wazzabysama.presentation.viewModel.UserViewModel
+import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.components.NavigationIcon
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.model.ConstValue

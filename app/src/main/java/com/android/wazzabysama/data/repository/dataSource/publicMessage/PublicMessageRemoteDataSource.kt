@@ -5,5 +5,5 @@ import com.android.wazzabysama.data.model.data.Problematic
 import retrofit2.Response
 
 interface PublicMessageRemoteDataSource {
-    suspend fun getPublicMessage(problematic: Problematic, page: Int): Response<ApiPublicMessageResponse>
+    suspend fun getPublicMessage(problematic: Problematic, page: Int, token: String): Response<ApiPublicMessageResponse>
 }

@@ -15,4 +15,10 @@
     <string name="like">Like</string>
     <string name="dislike">Dislike</string>
     <string name="new_message">New message</string>
+    <string name="profile">Profile</string>
+    <string name="history">History</string>
+    <string name="Settings">Settings</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="wait">Please Wait ...</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.android.wazzabysama.presentation.viewModel
+package com.android.wazzabysama.presentation.viewModel.user
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -20,7 +20,6 @@ class UserViewModelFactory(
     private val deleteSavedUserUseCase: DeleteSavedUserUseCase
 ):ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        //return super.create(modelClass)
         return UserViewModel(
             app,
             getUserUseCase,
