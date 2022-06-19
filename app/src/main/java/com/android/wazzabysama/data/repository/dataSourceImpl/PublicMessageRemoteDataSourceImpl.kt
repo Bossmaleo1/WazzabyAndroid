@@ -12,8 +12,9 @@ class PublicMessageRemoteDataSourceImpl(
 ): PublicMessageRemoteDataSource {
     override suspend fun getPublicMessage(
         problematic: Problematic,
-        page: Int
+        page: Int,
+        token: String
     ): Response<ApiPublicMessageResponse> {
-        return publicMessageAPIService.getPublicMessage(problematic.wording,page,true)
+        return publicMessageAPIService.getPublicMessage("/api/problematics/${problematic.id}",page,true, token)
     }
 }

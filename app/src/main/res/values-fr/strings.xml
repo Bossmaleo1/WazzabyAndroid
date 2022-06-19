@@ -15,4 +15,10 @@
     <string name="like">Aimer</string>
     <string name="dislike">Ne pas aimer</string>
     <string name="new_message">Nouveau message</string>
+    <string name="profile">Profil</string>
+    <string name="history">Historique</string>
+    <string name="Settings">Paramètres</string>
+    <string name="about">A propos</string>
+    <string name="logout">Déconnexion</string>
+    <string name="wait">Connexion en cours ...</string>
 </resources>

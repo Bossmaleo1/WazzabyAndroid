@@ -17,4 +17,11 @@
     <string name="dislike">Não gostar</string>
     <string name="new_message">Nova mensagem</string>
 
+    <string name="profile">Perfil</string>
+    <string name="history">História</string>
+    <string name="Settings">Definições</string>
+    <string name="about">Sobre</string>
+    <string name="logout">Sair</string>
+    <string name="wait">Por favor, espere ...</string>
+
 </resources>

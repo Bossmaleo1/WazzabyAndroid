@@ -2,7 +2,6 @@ package com.android.wazzabysama.ui.views
 
 import android.content.Context
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,28 +31,21 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
-import com.android.wazzabysama.R.string.password_forget
-import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.data.model.data.User
 import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
 import com.android.wazzabysama.data.model.dataRoom.TokenRoom
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
 import com.android.wazzabysama.data.util.Resource
-import com.android.wazzabysama.presentation.util.Event
-import com.android.wazzabysama.presentation.viewModel.UserViewModel
-import com.android.wazzabysama.presentation.viewModel.UserViewModelFactory
-import javax.inject.Inject
+import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 
 
 @Composable
 @ExperimentalMaterial3Api
 fun Login(navController: NavHostController, userViewModel: UserViewModel, context: Any) {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("sidneymaleoregis@gmail.com") }
+    var password by rememberSaveable { mutableStateOf("Nfkol3324012020@!") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     val isLoading = remember { mutableStateOf(false) }
 
@@ -84,7 +75,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                         Row {
                             CircularProgressIndicator()
                             Row(Modifier.padding(10.dp)) {
-                                Text(text = "Connexion en cours...")
+                                Text(text = stringResource(id = R.string.wait))
                             }
                         }
 
@@ -105,8 +96,9 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         userViewModel.user.observe(context as LifecycleOwner) {user->
             when (user) {
                 is Resource.Success -> {
-                    val user = user.data?.Users?.get(0) as User
-                    val problematic = user.problematic
+                    //We extract our user object value
+                    val userObjectValue = user.data?.Users?.get(0) as User
+                    val problematic = userObjectValue.problematic
                     //we save the user Token
                     userViewModel.saveToken(
                         TokenRoom(
@@ -121,20 +113,19 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                         problematic.language,
                         problematic.icon
                     ))
-
                     //We save the user
                     userViewModel.saveUser(UserRoom(
-                        user.id,
-                        user.online,
-                        user.anonymous,
+                        userObjectValue.id,
+                        userObjectValue.online,
+                        userObjectValue.anonymous,
                         problematic.id,
-                        user.email,
-                        user.firstName,
-                        user.lastName,
-                        user.images[0].imageName,
-                        user.pushNotifications?.get(0)?.keyPush,
-                        user.roles[0],
-                        user.username,
+                        userObjectValue.email,
+                        userObjectValue.firstName,
+                        userObjectValue.lastName,
+                        userObjectValue.images[0].imageName,
+                        "",
+                        userObjectValue.roles[0],
+                        userObjectValue.username,
                         //we split the bear characters
                         token.split(" ")[1]
                     ))
@@ -162,7 +153,6 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         userViewModel.token.observe(context as LifecycleOwner) {token->
             when (token) {
                 is Resource.Success -> {
-                    Log.d("Test1", "'token':'${token.data?.token}'")
                     token.data?.token?.let {
                         getUser(userViewModel, userName,
                             "Bearer $it", context
@@ -216,6 +206,12 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
 
         TextField(
             value = email,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = colorResource(R.color.blue_light)
+                /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
+                 focusedIndicatorColor = Color.Transparent,
+                  unfocusedIndicatorColor = Color.Transparent*/
+            ),
             onValueChange = { email = it },
             label = { Text(stringResource(id = R.string.your_email)) },
             placeholder = { Text("") },
@@ -227,11 +223,17 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                         tint = colorResource(R.color.Purple700)
                     )
                 }
-            },
+            }
         )
 
         TextField(
             value = password,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = colorResource(R.color.blue_light)
+                /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
+                 focusedIndicatorColor = Color.Transparent,
+                  unfocusedIndicatorColor = Color.Transparent*/
+            ),
             onValueChange = { password = it },
             label = { Text(stringResource(id = R.string.your_password)) },
             visualTransformation =
@@ -252,7 +254,11 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                         if (passwordHidden) painterResource(id = R.drawable.baseline_visibility_24)
                         else painterResource(id = R.drawable.baseline_visibility_off_24)
                     val description = if (passwordHidden) "Show password" else "Hide password"
-                    Icon(painter = visibilityIcon, contentDescription = description)
+                    Icon(
+                        painter = visibilityIcon,
+                        contentDescription = description,
+                        tint = colorResource(R.color.Purple700)
+                    )
                 }
             },
 
@@ -267,7 +273,8 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             onClick = {
                 //navController.navigate("home")
                // Toast.makeText(context,"MALEO MALEO MALEO",Toast.LENGTH_LONG).show()
-                viewModelLogin(userViewModel, "sidneymaleoregis@gmail.com","Nfkol3324012020@!", context)
+                viewModelLogin(userViewModel, email,
+                    password, context)
                // Log.d("Test1", "Here");
             }) {
             Text(stringResource(R.string.connexion), color = Color.White)

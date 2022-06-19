@@ -15,6 +15,8 @@ interface PublicMessageAPIService {
         @Query("_page")
         page: Int,
         @Query("pagination")
-        pagination: Boolean
+        pagination: Boolean,
+        @Header("Authorization")
+        token: String
     ): Response<ApiPublicMessageResponse>
 }

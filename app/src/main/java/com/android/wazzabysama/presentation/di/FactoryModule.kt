@@ -3,8 +3,10 @@ package com.android.wazzabysama.presentation.di
 import android.app.Application
 import com.android.wazzabysama.domain.usecase.problematic.GetSavedProblematicUseCase
 import com.android.wazzabysama.domain.usecase.problematic.SaveProblematicUseCase
+import com.android.wazzabysama.domain.usecase.publicmessage.*
 import com.android.wazzabysama.domain.usecase.user.*
-import com.android.wazzabysama.presentation.viewModel.UserViewModelFactory
+import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
+import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +30,7 @@ class FactoryModule {
         getSavedTokenUseCase: GetSavedTokenUseCase,
         getSavedProblematic: GetSavedProblematicUseCase,
         deleteSavedUserUseCase: DeleteSavedUserUseCase
-    ): UserViewModelFactory{
+    ): UserViewModelFactory {
         return UserViewModelFactory(
             application,
             getUserUseCase,
@@ -40,6 +42,26 @@ class FactoryModule {
             getSavedTokenUseCase,
             getSavedProblematic,
             deleteSavedUserUseCase
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providePublicMessageViewModelFactory(
+        application: Application,
+        deleteSavedPublicMessageUseCase: DeleteSavedPublicMessageUseCase,
+        getPublicMessageUseCase: GetPublicMessageUseCase,
+        getSavedPublicMessageUseCase: GetSavedPublicMessageUseCase,
+        //updateSavedPublicMessageUseCase: UpdateSavedPublicMessageUseCase,
+        savePublicMessageUseCase: SavePublicMessageUseCase
+    ): PublicMessageViewModelFactory {
+        return PublicMessageViewModelFactory(
+            application,
+            deleteSavedPublicMessageUseCase,
+            getPublicMessageUseCase,
+            getSavedPublicMessageUseCase,
+            //updateSavedPublicMessageUseCase,
+            savePublicMessageUseCase
         )
     }
 }

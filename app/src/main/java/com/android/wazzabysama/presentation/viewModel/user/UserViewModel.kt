@@ -1,4 +1,4 @@
-package com.android.wazzabysama.presentation.viewModel
+package com.android.wazzabysama.presentation.viewModel.user
 
 import android.app.Application
 import android.content.Context
@@ -15,7 +15,6 @@ import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.domain.usecase.problematic.GetSavedProblematicUseCase
 import com.android.wazzabysama.domain.usecase.problematic.SaveProblematicUseCase
 import com.android.wazzabysama.domain.usecase.user.*
-import com.android.wazzabysama.presentation.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,13 +37,6 @@ class UserViewModel @Inject constructor(
 
     val token : MutableLiveData<Resource<ApiTokenResponse>> = MutableLiveData()
     val user : MutableLiveData<Resource<ApiUserResponse>> = MutableLiveData()
-    private val statusMessageError = MutableLiveData<Event<String>>()
-    val messageError : LiveData<Event<String>>
-        get() = statusMessageError
-
-    init {
-        statusMessageError.value = Event("NetWork Error")
-    }
 
     fun getToken(userName: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
         token.postValue(Resource.Loading())
@@ -69,39 +61,11 @@ class UserViewModel @Inject constructor(
             } else {
                 user.postValue(Resource.Error("Internet is available"))
             }
-        }catch (e:Exception) {
+        } catch (e: Exception) {
             user.postValue(Resource.Error(e.message.toString()))
         }
-    }
+     }
 
-    private fun isNetworkAvailable(context: Context?): Boolean {
-        if (context == null) return false
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-            if (capabilities != null) {
-                when {
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                        return true
-                    }
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                        return true
-                    }
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-                        return true
-                    }
-                }
-            }
-        } else {
-            val activeNetworkInfo = connectivityManager.activeNetworkInfo
-            if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
-                return true
-            }
-        }
-        return false
-    }
-
-    //local data
     fun saveUser(user: UserRoom) = viewModelScope.launch {
         saveUserUseCase.execute(user)
     }
@@ -134,5 +98,32 @@ class UserViewModel @Inject constructor(
 
     fun deleteUser(user: UserRoom) = viewModelScope.launch {
         deleteSavedUserUseCase.execute(user)
+    }
+
+    private fun isNetworkAvailable(context: Context?): Boolean {
+        if (context == null) return false
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                when {
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                        return true
+                    }
+                }
+            }
+        } else {
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+                return true
+            }
+        }
+        return false
     }
 }
