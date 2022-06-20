@@ -8,6 +8,8 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LifecycleOwner
@@ -16,6 +18,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.android.wazzabysama.data.model.data.Problematic
+import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -41,6 +45,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var userViewModel: UserViewModel //we call our login viewModel
     private lateinit var publicMessageViewModel: PublicMessageViewModel
     var token: String? = null
+
 
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +86,31 @@ class MainActivity : ComponentActivity() {
         val activity = (LocalContext.current as? Activity)
         //We call our init view model method
         this.initViewModel()
+        /*val publicMessageList = remember { mutableStateListOf<PublicMessageRoom>() }
+
+        userViewModel.getSavedToken().observe(context as LifecycleOwner) {tokenRoom ->
+            userViewModel.getSavedUserByToken(tokenRoom.token).observe(context as LifecycleOwner) {userRoom->
+                userRoom.id?.let {
+                    userViewModel.getSavedProblematic(it.toInt())
+                        .observe(context) {problematicRoom->
+                            val problematic = Problematic(
+                                problematicRoom.id,
+                                problematicRoom.wording,
+                                problematicRoom.language,
+                                problematicRoom.icon
+                            )
+                            //On commence par mettre à jour notre liste de message public
+                            publicMessageViewModel.getAllPublicMessage(problematic).observe(context) { publicMessageRoom ->
+                                publicMessageList.addAll(publicMessageRoom)
+                            }
+
+                            viewModelPublicMessage(publicMessageViewModel, problematic,
+                                1,context,tokenRoom.token,userRoom,userViewModel)
+                        }
+                }
+            }
+        }*/
+
         NavHost(navController = navController, startDestination = "LAUNCH_VIEW" ) {
             composable(route = "LAUNCH_VIEW") {
                 LaunchView()

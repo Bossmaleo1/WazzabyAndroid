@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
+import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.data.model.data.User
 import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
 import com.android.wazzabysama.data.model.dataRoom.TokenRoom
@@ -48,6 +49,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
     var password by rememberSaveable { mutableStateOf("Nfkol3324012020@!") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     val isLoading = remember { mutableStateOf(false) }
+    val isNetworkAvailableState = remember { mutableStateOf(false) }
 
     fun showProgressBar(){
         isLoading.value = true
@@ -64,7 +66,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                     // Dismiss the dialog when the user clicks outside the dialog or on the back
                     // button. If you want to disable that functionality, simply use an empty
                     // onCloseRequest.
-                    isLoading.value = false
+                    isLoading.value = true
                 },
                 title = {
 
@@ -93,12 +95,12 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
 
     fun getUser(userViewModel: UserViewModel, userName: String, token: String, context: Any) {
         userViewModel.getUser(userName, token)
-        userViewModel.user.observe(context as LifecycleOwner) {user->
+        userViewModel.user.observe(context as LifecycleOwner) { user->
             when (user) {
                 is Resource.Success -> {
-                    //We extract our user object value
-                    val userObjectValue = user.data?.Users?.get(0) as User
-                    val problematic = userObjectValue.problematic
+                    Log.d("Test1", "'user':'${user.data?.Users?.get(0)?.lastName}'");
+                    val user = user.data?.Users?.get(0) as User
+                    val problematic = user.problematic as Problematic
                     //we save the user Token
                     userViewModel.saveToken(
                         TokenRoom(
@@ -107,28 +109,33 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                             token.split(" ")[1])
                     )
                     //We save the user Problematic
-                    userViewModel.saveProblematic(ProblematicRoom(
+                    userViewModel.saveProblematic(
+                        ProblematicRoom(
                         problematic.id,
                         problematic.wording,
                         problematic.language,
                         problematic.icon
-                    ))
+                    )
+                    )
+
                     //We save the user
-                    userViewModel.saveUser(UserRoom(
-                        userObjectValue.id,
-                        userObjectValue.online,
-                        userObjectValue.anonymous,
+                    userViewModel.saveUser(
+                        UserRoom(
+                        user.id,
+                        user.online,
+                        user.anonymous,
                         problematic.id,
-                        userObjectValue.email,
-                        userObjectValue.firstName,
-                        userObjectValue.lastName,
-                        userObjectValue.images[0].imageName,
+                        user.email,
+                        user.firstName,
+                        user.lastName,
+                        user.images[0].imageName,
                         "",
-                        userObjectValue.roles[0],
-                        userObjectValue.username,
+                        user.roles[0],
+                        user.username,
                         //we split the bear characters
                         token.split(" ")[1]
-                    ))
+                    )
+                    )
                     hideProgressBar()
                     navController.navigate("home")
                 }
@@ -153,10 +160,10 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         userViewModel.token.observe(context as LifecycleOwner) {token->
             when (token) {
                 is Resource.Success -> {
+                    Log.d("Test1", "'token':'${token.data?.token}'");
                     token.data?.token?.let {
                         getUser(userViewModel, userName,
-                            "Bearer $it", context
-                        )
+                            "Bearer $it",context as LifecycleOwner)
                     }
                 }
 
@@ -174,6 +181,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             }
         }
     }
+
 
     Column(
         modifier = Modifier
@@ -271,11 +279,10 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                 .width(280.dp)
                 .padding(top = 30.dp),
             onClick = {
-                //navController.navigate("home")
-               // Toast.makeText(context,"MALEO MALEO MALEO",Toast.LENGTH_LONG).show()
-                viewModelLogin(userViewModel, email,
-                    password, context)
-               // Log.d("Test1", "Here");
+                viewModelLogin(userViewModel, "sidneymaleoregis@gmail.com","Nfkol3324012020@!", context)
+
+                /*viewModelLogin(userViewModel, email,
+                    password, context)*/
             }) {
             Text(stringResource(R.string.connexion), color = Color.White)
         }
@@ -332,5 +339,6 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         }
 
     }
+
 
 }
