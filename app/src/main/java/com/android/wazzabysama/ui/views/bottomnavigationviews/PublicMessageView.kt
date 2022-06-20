@@ -26,10 +26,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 
 @ExperimentalMaterial3Api
 @Composable
 fun PublicMessageView() {
+
     val userName by rememberSaveable { mutableStateOf("Sidney MALEO") }
     val postTime by rememberSaveable { mutableStateOf("Il y a 2 jours") }
     val content by rememberSaveable { mutableStateOf("Lorem Ipsum is simply dummy text of " +

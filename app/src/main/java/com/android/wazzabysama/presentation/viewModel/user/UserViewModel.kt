@@ -5,9 +5,17 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import com.android.wazzabysama.data.model.api.ApiTokenResponse
 import com.android.wazzabysama.data.model.api.ApiUserResponse
+import com.android.wazzabysama.data.model.data.Token
+import com.android.wazzabysama.data.model.data.User
 import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
 import com.android.wazzabysama.data.model.dataRoom.TokenRoom
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
@@ -35,8 +43,15 @@ class UserViewModel @Inject constructor(
     private val deleteSavedUserUseCase: DeleteSavedUserUseCase
 ): AndroidViewModel(app) {
 
+    val tokenState: MutableState<List<TokenRoom>> = mutableStateOf(emptyList<TokenRoom>())
+    val userState: MutableState<List<UserRoom>> = mutableStateOf(emptyList<UserRoom>())
+    val problematicState: MutableState<List<ProblematicRoom>> = mutableStateOf(emptyList<ProblematicRoom>())
     val token : MutableLiveData<Resource<ApiTokenResponse>> = MutableLiveData()
     val user : MutableLiveData<Resource<ApiUserResponse>> = MutableLiveData()
+
+    init {
+        //tokenState.value = listOf(this.getSavedToken().value) as List<TokenRoom>
+    }
 
     fun getToken(userName: String, password: String) = viewModelScope.launch(Dispatchers.IO) {
         token.postValue(Resource.Loading())
@@ -61,10 +76,10 @@ class UserViewModel @Inject constructor(
             } else {
                 user.postValue(Resource.Error("Internet is available"))
             }
-        } catch (e: Exception) {
+        }catch (e:Exception) {
             user.postValue(Resource.Error(e.message.toString()))
         }
-     }
+    }
 
     fun saveUser(user: UserRoom) = viewModelScope.launch {
         saveUserUseCase.execute(user)
@@ -81,18 +96,21 @@ class UserViewModel @Inject constructor(
     fun getSavedUserByToken(userToken: String) = liveData {
         getSavedUserUseCase.execute(userToken).collect {
             emit(it)
+            userState.value = listOf(it)
         }
     }
 
     fun getSavedToken() = liveData {
         getSavedTokenUseCase.execute().collect {
             emit(it)
+            tokenState.value = listOf(it)
         }
     }
 
     fun getSavedProblematic(userId: Int) = liveData {
         getSavedProblematic.execute(userId).collect {
             emit(it)
+            problematicState.value = listOf(it)
         }
     }
 

@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/baseline_favorite_border_24.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/baseline_menu_18.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/sample_my_view.xml" value="0.13728470111448834" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.20885416666666667" />
       </map>
     </option>
