@@ -104,7 +104,7 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "com.google.accompanist:accompanist-coil:$coil_version"
+    //implementation "com.google.accompanist:accompanist-coil:$coil_version"
     implementation "androidx.navigation:navigation-compose:$navVersion"
     implementation "com.google.dagger:hilt-android:$dagger_hilt_version"
     implementation "androidx.test.espresso:espresso-core:3.4.0@aar"

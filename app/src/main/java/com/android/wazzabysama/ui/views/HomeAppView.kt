@@ -2,9 +2,14 @@ package com.android.wazzabysama.ui.views
 
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -14,11 +19,15 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.launch
@@ -39,12 +48,20 @@ import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
 import com.android.wazzabysama.ui.views.model.ConstValue
+import com.android.wazzabysama.ui.views.shimmer.PublicMessageShimmer
+import com.android.wazzabysama.ui.views.utils.InfiniteListHandler
+import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
 fun DrawerAppBar(
@@ -52,66 +69,19 @@ fun DrawerAppBar(
     title: String, viewItem: MutableLiveData<String>, context: Any,
     publicViewModel: PublicMessageViewModel, userViewModel: UserViewModel
 ) {
-    val listState = rememberLazyListState()
+    val listStatePublicMessage = rememberLazyListState()
+    val listStatePrivateMessage = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
 
-    val token = userViewModel.getSavedToken()
     var saveValue by remember { mutableStateOf("") }
-    val publicMessageList = remember { mutableStateListOf<PublicMessageRoom>() }
-
-
-    userViewModel.getSavedToken().observe(context as LifecycleOwner) { tokenRoom ->
-        userViewModel.getSavedUserByToken(tokenRoom.token)
-            .observe(context as LifecycleOwner) { userRoom ->
-                userRoom.id?.let {
-                    userViewModel.getSavedProblematic(it.toInt())
-                        .observe(context) { problematicRoom ->
-                            /* val problematic = Problematic(
-                                 problematicRoom.id,
-                                 problematicRoom.wording,
-                                 problematicRoom.language,
-                                 problematicRoom.icon
-                             )
-                             //On commence par mettre à jour notre liste de message public
-                             publicViewModel.getAllPublicMessage(problematic)
-                                 .observe(context) { publicMessageRoom ->
-                                     publicMessageList.addAll(publicMessageRoom)
-                                 }
-
-                             viewModelPublicMessage(
-                                 publicViewModel, problematic,
-                                 1, context, tokenRoom.token, userRoom, userViewModel
-                             )*/
-                        }
-                }
-            }
-    }
-
-
-    // we loading our publicMessage
-    /*userViewModel.getSavedToken().observe(context as LifecycleOwner) {tokenRoom ->
-        userViewModel.getSavedUserByToken(tokenRoom.token).observe(context as LifecycleOwner) {userRoom->
-            userRoom.id?.let {
-                userViewModel.getSavedProblematic(it.toInt())
-                    .observe(context) {problematicRoom->
-                        val problematic = Problematic(
-                            problematicRoom.id,
-                            problematicRoom.wording,
-                            problematicRoom.language,
-                            problematicRoom.icon
-                        )
-                        //On commence par mettre à jour notre liste de message public
-                        publicViewModel.getAllPublicMessage(problematic).observe(context) { publicMessageRoom ->
-                            publicMessageList.addAll(publicMessageRoom)
-                        }
-
-                        viewModelPublicMessage(publicViewModel, problematic,
-                            1,context,tokenRoom.token,userRoom,userViewModel)
-                    }
-            }
-        }
-    }*/
-
+    val problematic by userViewModel.problematicValue.observeAsState()
+    val user by userViewModel.userValue.observeAsState()
+    val token by userViewModel.tokenValue.observeAsState()
+    val publicMessageResponse by publicViewModel.publicMessageListValue.observeAsState()
+    val publicMessageStateList = remember { mutableStateListOf<PublicMessage>() }
+    var page = 0
+    var isRefreshing by remember { mutableStateOf(false) }
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -217,13 +187,121 @@ fun DrawerAppBar(
 
         when (saveValue) {
             ConstValue.publicMessage ->
-                LazyColumn(contentPadding = innerPadding, state = listState) {
-                    items(count = 2000) {
-                        PublicMessageView()
+                if (problematic !== null && token !== null && user !== null) {
+                    val problematicTemp = Problematic(
+                        problematic!!.id,
+                        problematic!!.wording,
+                        problematic!!.language,
+                        problematic!!.icon
+                    )
+                    publicViewModel.getPublicMessage(
+                        problematicTemp, 1, token?.token!!
+                    )
+
+                    SwipeRefresh(
+                        state = swipeRefreshState,
+                        onRefresh = {
+                           isRefreshing = true
+                            page = 1
+                            publicViewModel.initPublicMessage()
+                            publicViewModel.getPublicMessage(
+                                problematicTemp, page, token?.token!!
+                            )
+                        },
+                        indicator = { state, trigger ->
+                            SwipeRefreshIndicator(
+                                // Pass the SwipeRefreshState + trigger through
+                                state = state,
+                                refreshTriggerDistance = trigger,
+                                // Enable the scale animation
+                                scale = true,
+                                // Change the color and shape
+                                backgroundColor = colorResource(R.color.Purple700),
+                                shape = MaterialTheme.shapes.small,
+                            )
+                        }
+                    ) {
+
+                        InfiniteListMessagePublicRemote(
+                            listState = listStatePublicMessage,
+                            listItems = remember { publicViewModel.publicMessageStateRemoteList },
+                            paddingValues = PaddingValues(
+                                top = innerPadding.calculateTopPadding(),
+                                bottom = innerPadding.calculateBottomPadding() + 100.dp
+                            )
+
+                        ) {
+                            if (publicViewModel.publicMessageStateRemoteList.isNotEmpty()) {
+                                if (!isRefreshing) {
+                                    page++
+                                    publicViewModel.getPublicMessage(
+                                        problematicTemp, page, token?.token!!
+                                    )
+                                    if (page == 1) {
+                                        for (i in 0..9) {
+                                            if (!publicViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
+                                                userViewModel.saveUser(
+                                                    UserRoom(
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.id,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.online,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.anonymous,
+                                                        user!!.problematic_id,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.email,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.firstName,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.lastName,
+                                                        "", "", "", "", ""
+                                                    )
+                                                )
+
+                                                publicViewModel.savePublicMessageRoom(
+                                                    publicViewModel.publicMessageStateRemoteList[i],
+                                                    user!!
+                                                )
+                                            }
+                                        }
+                                    } else {
+                                        val begin = (page -1)*10
+                                        val end = ((page*10) - 1)
+
+                                        for (i in begin..end) {
+                                            if (!publicViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
+                                                userViewModel.saveUser(
+                                                    UserRoom(
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.id,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.online,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.anonymous,
+                                                        user!!.problematic_id,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.email,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.firstName,
+                                                        publicViewModel.publicMessageStateRemoteList[i].user.lastName,
+                                                        "", "", "", "", ""
+                                                    )
+                                                )
+
+                                                publicViewModel.savePublicMessageRoom(
+                                                    publicViewModel.publicMessageStateRemoteList[i],
+                                                    user!!
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                            }
+                        }
                     }
+
+                    LaunchedEffect(isRefreshing) {
+                        if (isRefreshing) {
+                            delay(1000L)
+                            isRefreshing = false
+                        }
+                    }
+
                 }
             ConstValue.privateMessage ->
-                LazyColumn(contentPadding = innerPadding, state = listState) {
+                LazyColumn(contentPadding = innerPadding, state = listStatePrivateMessage) {
                     items(count = 2000) {
                         PrivateMessageView()
                     }
@@ -247,58 +325,6 @@ fun HomeApp(
     val currentRoute =
         navBackStackEntry?.destination?.route ?: WazzabyDrawerDestinations.HOME_ROUTE
     val viewItem: MutableLiveData<String> = MutableLiveData()
-
-    //publicMessageViewModel.getPublicMessage()
-
-
-    userViewModel.getSavedToken()
-    if (userViewModel.tokenState.value.isNotEmpty()) {
-        if (userViewModel.tokenState.value[0] !== null) {
-            userViewModel.getSavedUserByToken(userViewModel.tokenState.value[0].token)
-        }
-
-        if (userViewModel.userState.value.isNotEmpty()) {
-            userViewModel.userState.value[0].id?.let { userViewModel.getSavedProblematic(it.toInt()) }
-            if (userViewModel.problematicState.value.isNotEmpty()) {
-                val problematic = Problematic(
-                    userViewModel.problematicState.value[0].id,
-                    userViewModel.problematicState.value[0].wording,
-                    userViewModel.problematicState.value[0].language,
-                    userViewModel.problematicState.value[0].icon
-                )
-                publicMessageViewModel.getPublicMessage(
-                    problematic,
-                    1,
-                    userViewModel.tokenState.value[0].token
-                )
-                if (publicMessageViewModel.publicMessageList.value.isNotEmpty()) {
-                    publicMessageViewModel.publicMessageList.value.forEach { publicMessage ->
-                        userViewModel.userState.value[0].id?.let {
-                            userViewModel.saveUser(
-                                UserRoom(
-                                    publicMessage.user.id,
-                                    publicMessage.user.online,
-                                    publicMessage.user.anonymous,
-                                    it.toInt(),
-                                    publicMessage.user.email,
-                                    publicMessage.user.firstName,
-                                    publicMessage.user.lastName,
-                                    "",
-                                    "",
-                                    "",
-                                    publicMessage.user.username,
-                                    "")
-                            )
-                        }
-                        publicMessageViewModel.savePublicMessageRoom(
-                            publicMessage
-                            ,userViewModel.userState.value[0]
-                        )
-                    }
-                }
-            }
-        }
-    }
 
 
     ModalNavigationDrawer(
@@ -349,55 +375,3 @@ fun HomeApp(
     }
 
 }
-
-/*fun viewModelPublicMessage(
-    publicMessageViewModel: PublicMessageViewModel,
-    problematic: Problematic,
-    page: Int, context: Any,
-    token: String,
-    user: UserRoom,
-    userViewModel: UserViewModel
-) {
-    publicMessageViewModel.getPublicMessage(problematic, page, token)
-    publicMessageViewModel.publicMessageList.observe(context as LifecycleOwner) { publicMessageList ->
-        when (publicMessageList) {
-            is Resource.Success -> {
-                publicMessageList.data.let { result ->
-
-                    for (publicMessage: PublicMessage in result?.publicMessageList?.toList()!!) {
-                        Log.d("Test", " ${publicMessage.content}")
-                        userViewModel.saveUser(
-                            UserRoom(
-                                publicMessage.user.id,
-                                publicMessage.user.online,
-                                publicMessage.user.anonymous,
-                                user.problematic_id,
-                                publicMessage.user.email,
-                                publicMessage.user.firstName,
-                                publicMessage.user.lastName,
-                                "", "", "", "", ""
-                            )
-                        )
-
-                        publicMessageViewModel.savePublicMessageRoom(publicMessage, user)
-
-                    }
-                }
-            }
-
-            is Resource.Error -> {
-                hideProgressBar()
-                Log.d("Test1", "Erreur réseaux")
-                publicMessageList.message?.let {
-                    Toast.makeText(context as Context, "An error occurred : $it", Toast.LENGTH_LONG)
-                        .show()
-                }
-            }
-
-            is Resource.Loading -> {
-                showProgressBar()
-            }
-        }
-    }
-
-}*/

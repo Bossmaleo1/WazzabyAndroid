@@ -43,11 +43,19 @@ class UserViewModel @Inject constructor(
     private val deleteSavedUserUseCase: DeleteSavedUserUseCase
 ): AndroidViewModel(app) {
 
-    val tokenState: MutableState<List<TokenRoom>> = mutableStateOf(emptyList<TokenRoom>())
-    val userState: MutableState<List<UserRoom>> = mutableStateOf(emptyList<UserRoom>())
-    val problematicState: MutableState<List<ProblematicRoom>> = mutableStateOf(emptyList<ProblematicRoom>())
+    //val tokenState: MutableState<List<TokenRoom>> = mutableStateOf(emptyList<TokenRoom>())
     val token : MutableLiveData<Resource<ApiTokenResponse>> = MutableLiveData()
     val user : MutableLiveData<Resource<ApiUserResponse>> = MutableLiveData()
+
+    private val tokenMutable: MutableLiveData<TokenRoom> = MutableLiveData()
+    val tokenValue: LiveData<TokenRoom> = tokenMutable
+
+    private val userMutable: MutableLiveData<UserRoom> = MutableLiveData()
+    val userValue: LiveData<UserRoom> = userMutable
+
+    private val problematic: MutableLiveData<ProblematicRoom> =  MutableLiveData()
+    val problematicValue: LiveData<ProblematicRoom> = problematic
+
 
     init {
         //tokenState.value = listOf(this.getSavedToken().value) as List<TokenRoom>
@@ -96,21 +104,21 @@ class UserViewModel @Inject constructor(
     fun getSavedUserByToken(userToken: String) = liveData {
         getSavedUserUseCase.execute(userToken).collect {
             emit(it)
-            userState.value = listOf(it)
+            userMutable.value = it
         }
     }
 
     fun getSavedToken() = liveData {
         getSavedTokenUseCase.execute().collect {
             emit(it)
-            tokenState.value = listOf(it)
+            tokenMutable.value = it
         }
     }
 
     fun getSavedProblematic(userId: Int) = liveData {
         getSavedProblematic.execute(userId).collect {
             emit(it)
-            problematicState.value = listOf(it)
+            problematic.value = it
         }
     }
 

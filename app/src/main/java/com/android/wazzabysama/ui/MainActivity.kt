@@ -86,30 +86,6 @@ class MainActivity : ComponentActivity() {
         val activity = (LocalContext.current as? Activity)
         //We call our init view model method
         this.initViewModel()
-        /*val publicMessageList = remember { mutableStateListOf<PublicMessageRoom>() }
-
-        userViewModel.getSavedToken().observe(context as LifecycleOwner) {tokenRoom ->
-            userViewModel.getSavedUserByToken(tokenRoom.token).observe(context as LifecycleOwner) {userRoom->
-                userRoom.id?.let {
-                    userViewModel.getSavedProblematic(it.toInt())
-                        .observe(context) {problematicRoom->
-                            val problematic = Problematic(
-                                problematicRoom.id,
-                                problematicRoom.wording,
-                                problematicRoom.language,
-                                problematicRoom.icon
-                            )
-                            //On commence par mettre à jour notre liste de message public
-                            publicMessageViewModel.getAllPublicMessage(problematic).observe(context) { publicMessageRoom ->
-                                publicMessageList.addAll(publicMessageRoom)
-                            }
-
-                            viewModelPublicMessage(publicMessageViewModel, problematic,
-                                1,context,tokenRoom.token,userRoom,userViewModel)
-                        }
-                }
-            }
-        }*/
 
         NavHost(navController = navController, startDestination = "LAUNCH_VIEW" ) {
             composable(route = "LAUNCH_VIEW") {
