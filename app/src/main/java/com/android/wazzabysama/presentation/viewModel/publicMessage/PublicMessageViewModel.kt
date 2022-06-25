@@ -5,19 +5,16 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.android.wazzabysama.data.model.api.ApiPublicMessageResponse
+import androidx.lifecycle.*
 import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.data.model.data.PublicMessage
-import com.android.wazzabysama.data.model.data.Token
 import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
-import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.domain.usecase.publicmessage.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,18 +28,10 @@ class PublicMessageViewModel @Inject constructor(
     private val savePublicMessageUseCase: SavePublicMessageUseCase
 ) : AndroidViewModel(app) {
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
+    private val publicMessageList: MutableLiveData<List<PublicMessage>> = MutableLiveData()
+    val publicMessageListValue: LiveData<List<PublicMessage>> = publicMessageList
 
-        }
-    }
-
-    //val mealsState: MutableState<List<MealResponse>> = mutableStateOf(emptyList<MealResponse>())*/
-    val publicMessageList:  MutableState<List<PublicMessage>> = mutableStateOf(emptyList<PublicMessage>())
-
-    //val tokenState: MutableState<List<PublicMessage>> = mutableStateOf(emptyList<PublicMessage>())
-
-    val publicMessagesLocal: MutableState<List<PublicMessageRoom>> = mutableStateOf(emptyList<PublicMessageRoom>())
+    val publicMessageStateRemoteList = mutableStateListOf<PublicMessage>()
 
     fun getPublicMessage(problematic: Problematic, page: Int, token: String) =
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,15 +40,15 @@ class PublicMessageViewModel @Inject constructor(
                 if (isNetworkAvailable(app)) {
                     val apiResult = getPublicMessageUseCase.execute(problematic, page, "Bearer $token")
                     apiResult.data?.let {
-                        publicMessageList.value = it.publicMessageList
+                        publicMessageList.postValue(it.publicMessageList)
+                        publicMessageStateRemoteList.addAll(it.publicMessageList)
                     }
-                    //publicMessageList.value = apiResult.data.publicMessageList
-                    //publicMessageList.postValue(apiResult)
+                    //isRefreshing = true
                 } else {
-                    //publicMessageList.postValue(Resource.Error("Internet is available"))
+                    Toast.makeText(app.applicationContext,"Internet is not available",Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                //publicMessageList.postValue(Resource.Error(e.message.toString()))
+                Toast.makeText(app.applicationContext,e.message.toString(),Toast.LENGTH_LONG).show()
             }
         }
 
@@ -71,7 +60,6 @@ class PublicMessageViewModel @Inject constructor(
                         publicMessage.id,
                         publicMessage.anonymous,
                         publicMessage.content,
-                        //publicMessage.images[0].imageName,
                         "",
                         publicMessage.published.toString(),
                         publicMessage.state,
@@ -118,5 +106,9 @@ class PublicMessageViewModel @Inject constructor(
             }
         }
         return false
+    }
+
+    fun initPublicMessage() {
+        publicMessageStateRemoteList.removeAll(publicMessageStateRemoteList)
     }
 }

@@ -1,21 +1,31 @@
 package com.android.wazzabysama.ui.views
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.android.wazzabysama.BuildConfig
 import com.android.wazzabysama.R
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -37,12 +47,15 @@ fun AppDrawer(
     userViewModel: UserViewModel,
     context: Any
 ) {
-    var user: UserRoom
     var userName by rememberSaveable { mutableStateOf("") }
-    userViewModel.getSavedToken().observe(context as LifecycleOwner) {token->
-        userViewModel.getSavedUserByToken(token.token).observe(context) { userRoom->
-            user = userRoom
-            userName = user.firstName + " " + user.lastName
+    userViewModel.getSavedToken()
+    val token by userViewModel.tokenValue.observeAsState()
+    val user by userViewModel.userValue.observeAsState()
+    if (token?.token !== null) {
+        userViewModel.getSavedUserByToken(token?.token!!).observe(context as LifecycleOwner) {}
+        if (user?.id != null) {
+            userViewModel.getSavedProblematic(user?.id!!).observe(context) {}
+            userName = user?.firstName + " " + user?.lastName
         }
     }
 
@@ -52,12 +65,21 @@ fun AppDrawer(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_profile_colorier),
-            modifier = Modifier.size(72.dp),
-            contentScale = ContentScale.Crop,
-            contentDescription = "Profile picture description"
-        )
+        if (user?.imageUrl !== null) {
+            Image(
+                painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${user?.imageUrl}"),
+                modifier = Modifier.clip(CircleShape),
+                contentScale = ContentScale.Crop,
+                contentDescription = "Profile picture description"
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.ic_profile_colorier),
+                modifier = Modifier.size(72.dp),
+                contentScale = ContentScale.Crop,
+                contentDescription = "Profile picture description"
+            )
+        }
     }
 
     Spacer(Modifier.size(10.dp))
@@ -78,7 +100,7 @@ fun AppDrawer(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
-        ){
+        ) {
             val checkedState = remember { mutableStateOf(true) }
             Switch(
                 checked = checkedState.value,
@@ -101,7 +123,7 @@ fun AppDrawer(
                 scope.launch {
                     drawerState.close()
                     if (currentRoute == WazzabyDrawerDestinations.HOME_ROUTE) {
-                        viewItem.value =  ConstValue.publicMessage
+                        viewItem.value = ConstValue.publicMessage
                     }
                 }
 
