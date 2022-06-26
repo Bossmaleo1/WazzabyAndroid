@@ -39,7 +39,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val userName by rememberSaveable { mutableStateOf("${publicMessage.user.firstName} ${publicMessage.user.lastName}") }
     val postTime by rememberSaveable { mutableStateOf(published) }
     val content by rememberSaveable { mutableStateOf(publicMessage.content) }
-    val countLike by rememberSaveable { mutableStateOf("0") }
+    val countCommentaries by rememberSaveable { mutableStateOf("${publicMessage.comments.size}") }
     val countDisLike by rememberSaveable { mutableStateOf("0") }
 
     Card(
@@ -161,9 +161,9 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         contentDescription = null
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("0 ")
+                    Text(countCommentaries)
                     Text(
-                        stringResource(id = R.string.talk),
+                        " ${stringResource(id = R.string.talk)}",
                         style = MaterialTheme.typography.titleMedium
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
