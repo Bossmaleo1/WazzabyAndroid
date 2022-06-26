@@ -179,7 +179,6 @@ fun DrawerAppBar(
                 title = { Text(title) }
             )
         }) { innerPadding ->
-
         var saveValue by remember { mutableStateOf("") }
         viewItem.observe(context as LifecycleOwner) {
             saveValue = it
@@ -197,6 +196,7 @@ fun DrawerAppBar(
                     publicViewModel.getPublicMessage(
                         problematicTemp, 1, token?.token!!
                     )
+
 
                     SwipeRefresh(
                         state = swipeRefreshState,
@@ -291,7 +291,7 @@ fun DrawerAppBar(
                             }
                         }
                     }
-
+                    // cette instruction permet de réactivé le reflesh
                     LaunchedEffect(isRefreshing) {
                         if (isRefreshing) {
                             delay(1000L)
