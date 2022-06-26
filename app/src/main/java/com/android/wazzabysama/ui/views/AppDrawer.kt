@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -68,8 +71,11 @@ fun AppDrawer(
         if (user?.imageUrl !== null) {
             Image(
                 painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${user?.imageUrl}"),
-                modifier = Modifier.clip(CircleShape),
-                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .height(100.dp)
+                    .width(100.dp)
+                    .clip(RoundedCornerShape(corner = CornerSize(50.dp))),
                 contentDescription = "Profile picture description"
             )
         } else {
@@ -107,7 +113,7 @@ fun AppDrawer(
                 onCheckedChange = { checkedState.value = it },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.Red,
-                    checkedTrackColor = Color.Green,
+                    checkedTrackColor = colorResource(R.color.blue_light),
                     uncheckedThumbColor = Color.Gray
                 )
             )

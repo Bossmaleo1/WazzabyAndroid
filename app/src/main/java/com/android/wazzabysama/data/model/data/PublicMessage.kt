@@ -20,5 +20,7 @@ data class PublicMessage(
     @SerializedName("user")
     val user: User,
     @SerializedName("wording")
-    var wording: String
+    var wording: String,
+    @SerializedName("comments")
+    val comments: List<String>,
 )
