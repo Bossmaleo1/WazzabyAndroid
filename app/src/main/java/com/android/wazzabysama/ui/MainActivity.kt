@@ -6,20 +6,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.android.wazzabysama.data.model.data.Problematic
-import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -27,6 +28,8 @@ import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.theme.WazzabySamaTheme
 import com.android.wazzabysama.ui.views.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,18 +37,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val REQUEST_PERMISSION_LOCATION_LAST_LOCATION = 1
+
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userFactory: UserViewModelFactory
+
     @Inject
     lateinit var publicMessageFactory: PublicMessageViewModelFactory
     private lateinit var userViewModel: UserViewModel //we call our login viewModel
     private lateinit var publicMessageViewModel: PublicMessageViewModel
     var token: String? = null
-
 
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,15 +61,15 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     MainView(navController, this)
-                    userViewModel.getSavedToken().observe(this as LifecycleOwner) {token->
+                    userViewModel.getSavedToken().observe(this as LifecycleOwner) { token ->
                         this.token = token?.token
                     }
 
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(100)
-                        if(token === null) {
+                        if (token === null) {
                             navController.navigate("connexion_view")
-                        }else {
+                        } else {
                             navController.navigate(WazzabyDrawerDestinations.HOME)
                         }
                     }
@@ -75,7 +80,8 @@ class MainActivity : ComponentActivity() {
 
     private fun initViewModel() {
         userViewModel = ViewModelProvider(this, userFactory)[UserViewModel::class.java]
-        publicMessageViewModel = ViewModelProvider(this, publicMessageFactory)[PublicMessageViewModel::class.java]
+        publicMessageViewModel =
+            ViewModelProvider(this, publicMessageFactory)[PublicMessageViewModel::class.java]
     }
 
     @Composable
@@ -87,20 +93,27 @@ class MainActivity : ComponentActivity() {
         //We call our init view model method
         this.initViewModel()
 
-        NavHost(navController = navController, startDestination = "LAUNCH_VIEW" ) {
+        NavHost(navController = navController, startDestination = "LAUNCH_VIEW") {
             composable(route = "LAUNCH_VIEW") {
                 LaunchView()
             }
 
             composable(route = WazzabyDrawerDestinations.CONNEXION_VIEW) {
-                Login(navController,userViewModel, context)
+                Login(navController, userViewModel, context)
                 BackHandler {
                     activity?.finish()
                 }
             }
 
             composable(route = WazzabyDrawerDestinations.HOME) {
-                HomeApp(/*navController,*/scope, drawerState, context,  userViewModel, publicMessageViewModel)
+                RequestLocationPermission()
+                HomeApp(
+                    scope,
+                    drawerState,
+                    context,
+                    userViewModel,
+                    publicMessageViewModel
+                )
                 BackHandler {
                     activity?.finish()
                 }
@@ -118,7 +131,29 @@ class MainActivity : ComponentActivity() {
                 FormStepDoneView(navController)
             }
         }
-
     }
+
+    @OptIn(ExperimentalPermissionsApi::class)
+    @Composable
+    fun RequestLocationPermission() {
+        val locationPermissionsState = rememberMultiplePermissionsState(
+            listOf(
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+            )
+        )
+
+        if (locationPermissionsState.allPermissionsGranted) {
+            //Text("Thanks! I can access your exact location :D")
+        } else {
+            CoroutineScope(Dispatchers.Main).launch {
+                locationPermissionsState.launchMultiplePermissionRequest()
+            }
+        }
+    }
+
 }
+
+
+
 
