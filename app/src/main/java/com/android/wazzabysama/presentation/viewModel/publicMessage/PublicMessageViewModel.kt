@@ -48,7 +48,7 @@ class PublicMessageViewModel @Inject constructor(
                     Toast.makeText(app.applicationContext,"Internet is not available",Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(app.applicationContext,e.message.toString(),Toast.LENGTH_LONG).show()
+                //Toast.makeText(app,e.message.toString(),Toast.LENGTH_LONG).show()
             }
         }
 
