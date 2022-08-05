@@ -18,7 +18,7 @@ class UserLocalDataSourceImpl(
     }
 
     override fun getSavedToken(): Flow<TokenRoom> {
-       return userDAO.getToken()
+        return userDAO.getToken()
     }
 
     override fun getSavedUsers(): Flow<List<UserRoom>> {

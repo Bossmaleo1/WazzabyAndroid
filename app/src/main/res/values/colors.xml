@@ -1,10 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--resources>
-    <color name="Purple700">#188dc8</color>
-    <color name="Purple900">#188dc8</color>
-    <color name="status_bar">#ffffff</color>
-    <color name="primary_gray">#E0E0E0</color>
-    <color name="primary_gray_dark">#9E9E9E</color>
-</resources-->
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <color name="overlay_light_primary">#9C4146</color>
@@ -35,6 +29,7 @@
 
     <!-- Status bar -->
     <color name="black30">#4D000000</color>
+    <color name="black40">#616161</color>
     <color name="light_blue_400">#FF29B6F6</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="gray_400">#FFBDBDBD</color>

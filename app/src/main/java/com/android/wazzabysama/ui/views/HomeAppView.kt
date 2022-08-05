@@ -1,28 +1,20 @@
 package com.android.wazzabysama.ui.views
 
 
-import android.content.Context
 import android.os.Build
-import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -38,18 +30,12 @@ import androidx.navigation.compose.rememberNavController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.data.model.data.PublicMessage
-import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
-import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
-import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
-import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
 import com.android.wazzabysama.ui.views.model.ConstValue
-import com.android.wazzabysama.ui.views.shimmer.PublicMessageShimmer
-import com.android.wazzabysama.ui.views.utils.InfiniteListHandler
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
@@ -57,9 +43,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -67,7 +51,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 fun DrawerAppBar(
     scope: CoroutineScope, drawerState: DrawerState,
     title: String, viewItem: MutableLiveData<String>, context: Any,
-    publicViewModel: PublicMessageViewModel, userViewModel: UserViewModel
+    publicMessageViewModel: PublicMessageViewModel, userViewModel: UserViewModel
 ) {
     val listStatePublicMessage = rememberLazyListState()
     val listStatePrivateMessage = rememberLazyListState()
@@ -77,7 +61,7 @@ fun DrawerAppBar(
     val problematic by userViewModel.problematicValue.observeAsState()
     val user by userViewModel.userValue.observeAsState()
     val token by userViewModel.tokenValue.observeAsState()
-    val publicMessageResponse by publicViewModel.publicMessageListValue.observeAsState()
+    val publicMessageResponse by publicMessageViewModel.publicMessageListValue.observeAsState()
     val publicMessageStateList = remember { mutableStateListOf<PublicMessage>() }
     var page = 0
     var isRefreshing by remember { mutableStateOf(false) }
@@ -90,7 +74,11 @@ fun DrawerAppBar(
                     IconButton(onClick = {
                         scope.launch { drawerState.open() }
                     }) {
-                        Icon(Icons.Filled.Menu, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Outlined.Menu,
+                            tint = colorResource(R.color.black40),
+                            contentDescription = null
+                        )
                     }
                 },
                 actions = {
@@ -101,7 +89,8 @@ fun DrawerAppBar(
                         //We add our badges
                         BadgedBox(badge = { Badge { Text("8") } }) {
                             Icon(
-                                imageVector = Icons.Filled.Notifications,
+                                imageVector = Icons.Outlined.Notifications,
+                                tint = colorResource(R.color.black40),
                                 contentDescription = "Localized description"
                             )
                         }
@@ -111,7 +100,8 @@ fun DrawerAppBar(
                         expanded = true
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.MoreVert,
+                            imageVector = Icons.Outlined.MoreVert,
+                            tint = colorResource(R.color.black40),
                             contentDescription = "Localized description"
                         )
                     }
@@ -122,46 +112,50 @@ fun DrawerAppBar(
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.profile)) },
+                            text = { Text(stringResource(id = R.string.profile), color = colorResource(R.color.black40)) },
                             onClick = { /* Handle edit! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.AccountCircle,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             })
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.history)) },
+                            text = { Text(stringResource(id = R.string.history), color = colorResource(R.color.black40)) },
                             onClick = { /* Handle settings! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.History,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             })
 
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.Settings)) },
+                            text = { Text(stringResource(id = R.string.Settings), color = colorResource(R.color.black40)) },
                             onClick = { /* Handle send feedback! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Settings,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             },
                             trailingIcon = { Text("F11", textAlign = TextAlign.Center) })
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.about)) },
+                            text = { Text(stringResource(id = R.string.about), color = colorResource(R.color.black40)) },
                             onClick = { /* Handle settings! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Help,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             })
                         MenuDefaults.Divider()
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.logout)) },
+                            text = { Text(stringResource(id = R.string.logout),color = colorResource(R.color.black40)) },
                             onClick = {
                                 /* Handle settings! */
 
@@ -169,6 +163,7 @@ fun DrawerAppBar(
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.PowerSettingsNew,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             })
@@ -176,7 +171,7 @@ fun DrawerAppBar(
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                title = { Text(title) }
+                title = { Text(title, color = colorResource(R.color.black40)) }
             )
         }) { innerPadding ->
         var saveValue by remember { mutableStateOf("") }
@@ -193,7 +188,7 @@ fun DrawerAppBar(
                         problematic!!.language,
                         problematic!!.icon
                     )
-                    publicViewModel.getPublicMessage(
+                    publicMessageViewModel.getPublicMessage(
                         problematicTemp, 1, token?.token!!
                     )
 
@@ -203,8 +198,8 @@ fun DrawerAppBar(
                         onRefresh = {
                            isRefreshing = true
                             page = 1
-                            publicViewModel.initPublicMessage()
-                            publicViewModel.getPublicMessage(
+                            publicMessageViewModel.initPublicMessage()
+                            publicMessageViewModel.getPublicMessage(
                                 problematicTemp, page, token?.token!!
                             )
                         },
@@ -224,37 +219,37 @@ fun DrawerAppBar(
 
                         InfiniteListMessagePublicRemote(
                             listState = listStatePublicMessage,
-                            listItems = remember { publicViewModel.publicMessageStateRemoteList },
+                            listItems = remember { publicMessageViewModel.publicMessageStateRemoteList },
                             paddingValues = PaddingValues(
                                 top = innerPadding.calculateTopPadding(),
                                 bottom = innerPadding.calculateBottomPadding() + 100.dp
                             )
 
                         ) {
-                            if (publicViewModel.publicMessageStateRemoteList.isNotEmpty()) {
+                            if (publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
                                 if (!isRefreshing) {
                                     page++
-                                    publicViewModel.getPublicMessage(
+                                    publicMessageViewModel.getPublicMessage(
                                         problematicTemp, page, token?.token!!
                                     )
                                     if (page == 1) {
                                         for (i in 0..9) {
-                                            if (!publicViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
+                                            if (!publicMessageViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
                                                 userViewModel.saveUser(
                                                     UserRoom(
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.id,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.online,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.anonymous,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.id,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.online,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.anonymous,
                                                         user!!.problematic_id,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.email,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.firstName,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.lastName,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.email,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.firstName,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.lastName,
                                                         "", "", "", "", ""
                                                     )
                                                 )
 
-                                                publicViewModel.savePublicMessageRoom(
-                                                    publicViewModel.publicMessageStateRemoteList[i],
+                                                publicMessageViewModel.savePublicMessageRoom(
+                                                    publicMessageViewModel.publicMessageStateRemoteList[i],
                                                     user!!
                                                 )
                                             }
@@ -264,22 +259,22 @@ fun DrawerAppBar(
                                         val end = ((page*10) - 1)
 
                                         for (i in begin..end) {
-                                            if (!publicViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
+                                            if (!publicMessageViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
                                                 userViewModel.saveUser(
                                                     UserRoom(
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.id,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.online,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.anonymous,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.id,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.online,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.anonymous,
                                                         user!!.problematic_id,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.email,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.firstName,
-                                                        publicViewModel.publicMessageStateRemoteList[i].user.lastName,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.email,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.firstName,
+                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.lastName,
                                                         "", "", "", "", ""
                                                     )
                                                 )
 
-                                                publicViewModel.savePublicMessageRoom(
-                                                    publicViewModel.publicMessageStateRemoteList[i],
+                                                publicMessageViewModel.savePublicMessageRoom(
+                                                    publicMessageViewModel.publicMessageStateRemoteList[i],
                                                     user!!
                                                 )
                                             }
@@ -313,6 +308,7 @@ fun DrawerAppBar(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
 fun HomeApp(

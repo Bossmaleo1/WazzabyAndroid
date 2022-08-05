@@ -1,8 +1,13 @@
 package com.android.wazzabysama.ui.views
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ModeEdit
+import androidx.compose.material.icons.outlined.ChatBubbleOutline
+import androidx.compose.material.icons.outlined.ModeEdit
+import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -17,6 +22,7 @@ import com.android.wazzabysama.ui.model.BottomNavigationItem
 import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
 fun MainHomeView(
@@ -32,12 +38,12 @@ fun MainHomeView(
     viewItem.value = ConstValue.publicMessage
     val items = listOf(
         BottomNavigationItem(
-            R.drawable.baseline_question_answer_24,
+            Icons.Outlined.QuestionAnswer,
             stringResource(R.string.public_message),
             ConstValue.publicMessageRoute
         ),
         BottomNavigationItem(
-            R.drawable.baseline_chat_bubble_24,
+            Icons.Outlined.ChatBubbleOutline,
             stringResource(R.string.private_message),
             ConstValue.publicMessageRoute
         )
@@ -46,7 +52,7 @@ fun MainHomeView(
 
 
     Scaffold(topBar = {
-        DrawerAppBar(scope, drawerState, "Wazzaby", viewItem, context,publicMessageViewModel,userViewModel)
+        DrawerAppBar(scope, drawerState, title = stringResource(id = R.string.app_name), viewItem, context,publicMessageViewModel,userViewModel)
     },
         bottomBar = {
             NavigationBar {
@@ -54,7 +60,7 @@ fun MainHomeView(
                     NavigationBarItem(
                         icon = {
                             Icon(
-                                painter = painterResource(id = item.id),
+                                item.id,
                                 contentDescription = null
                             )
                         },
@@ -75,7 +81,7 @@ fun MainHomeView(
         }, floatingActionButton = {
             if (switch) {
                 ExtendedFloatingActionButton(
-                    icon = { Icon(Icons.Filled.ModeEdit, "") },
+                    icon = { Icon(Icons.Outlined.ModeEdit, "") },
                     text = {
                         Text(text = stringResource(R.string.new_message),
                             style = MaterialTheme.typography.titleSmall)

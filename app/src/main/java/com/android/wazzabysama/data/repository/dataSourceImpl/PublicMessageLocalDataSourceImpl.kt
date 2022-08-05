@@ -5,19 +5,18 @@ import com.android.wazzabysama.data.model.dataRoom.PublicMessageRoom
 import com.android.wazzabysama.data.repository.dataSource.publicMessage.PublicMessageLocalDataSource
 import kotlinx.coroutines.flow.Flow
 
-class PublicMessageLocalDataSourceImpl (
+class PublicMessageLocalDataSourceImpl(
     private val publicMessageDAO: PublicMessageDAO
-    ) : PublicMessageLocalDataSource
-{
+) : PublicMessageLocalDataSource {
     override suspend fun savePublicMessageToDB(publicMessage: PublicMessageRoom) {
         publicMessageDAO.insert(publicMessage)
     }
 
     override fun getSavedPublicMessage(publicMessageProblematic: String): Flow<List<PublicMessageRoom>> {
-       return publicMessageDAO.getAllPublicMessages(publicMessageProblematic)
+        return publicMessageDAO.getAllPublicMessages(publicMessageProblematic)
     }
 
     override suspend fun deletePublicMessageFromDB(publicMessage: PublicMessageRoom) {
-       return publicMessageDAO.deletePublicMessage(publicMessage)
+        return publicMessageDAO.deletePublicMessage(publicMessage)
     }
 }
