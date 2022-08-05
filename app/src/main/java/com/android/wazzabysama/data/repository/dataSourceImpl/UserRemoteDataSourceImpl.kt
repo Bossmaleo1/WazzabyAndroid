@@ -9,14 +9,14 @@ import retrofit2.Response
 
 class UserRemoteDataSourceImpl(
     private val userAPIService: UserAPIService
-): UserRemoteDataSource {
+) : UserRemoteDataSource {
 
     override suspend fun getToken(userName: String, password: String): Response<ApiTokenResponse> {
         return userAPIService.getToken(ApiLogin(userName, password))
     }
 
     override suspend fun getUser(userName: String, token: String): Response<ApiUserResponse> {
-        return userAPIService.getUser(userName,token)
+        return userAPIService.getUser(userName, token)
     }
 
 }

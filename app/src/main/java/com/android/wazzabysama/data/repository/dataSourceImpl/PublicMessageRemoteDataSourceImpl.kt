@@ -9,12 +9,17 @@ import retrofit2.Response
 
 class PublicMessageRemoteDataSourceImpl(
     private val publicMessageAPIService: PublicMessageAPIService
-): PublicMessageRemoteDataSource {
+) : PublicMessageRemoteDataSource {
     override suspend fun getPublicMessage(
         problematic: Problematic,
         page: Int,
         token: String
     ): Response<ApiPublicMessageResponse> {
-        return publicMessageAPIService.getPublicMessage("/api/problematics/${problematic.id}",page,true, token)
+        return publicMessageAPIService.getPublicMessage(
+            "/api/problematics/${problematic.id}",
+            page,
+            true,
+            token
+        )
     }
 }

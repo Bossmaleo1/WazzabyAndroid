@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class ProblematicLocalDataSourceImpl(
     private val problematicDAO: ProblematicDAO
-): ProblematicLocalDataSource {
+) : ProblematicLocalDataSource {
     override suspend fun saveProblematicToBD(problematic: ProblematicRoom) {
         problematicDAO.insert(problematic)
     }

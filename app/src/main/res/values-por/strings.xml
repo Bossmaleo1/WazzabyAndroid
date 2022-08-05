@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WazzabySama</string>
+    <string name="app_name">Wazzaby-Sama</string>
     <string name="your_email">Seu email</string>
     <string name="home_app">Casa</string>
     <string name="problematic_app">Problema</string>
@@ -23,5 +23,9 @@
     <string name="about">Sobre</string>
     <string name="logout">Sair</string>
     <string name="wait">Por favor, espere ...</string>
+
+    <string name="report_post">Denunciar esta postagem</string>
+    <string name="delete_post">Excluir esta postagem</string>
+    <string name="edit_post">Editar esta postagem</string>
 
 </resources>

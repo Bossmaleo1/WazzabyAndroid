@@ -16,7 +16,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,7 +49,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(10.dp),
+            .padding(2.5.dp),
         shape = RoundedCornerShape(corner = CornerSize(10.dp)),
     ) {
 
@@ -68,8 +71,6 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         .clip(RoundedCornerShape(corner = CornerSize(25.dp)))
                 )
             } else {
-
-                //Log.d("MALEOSAMASAMASAMA1", "${BuildConfig.BASE_URL_DEV}/images/${publicMessage.images[publicMessage.user.images.size - 1].imageName}")
                 Image(
                     painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${publicMessage.user.images[publicMessage.user.images.size - 1].imageName}"),
                     modifier = Modifier
@@ -84,13 +85,29 @@ fun PublicMessageView(publicMessage: PublicMessage) {
             Column(modifier = Modifier.padding(4.dp)) {
                 Text(
                     text = userName,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
+                    color = colorResource(R.color.black40)
                 )
-                Text(
-                    text = postTime,
-                    modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
-                    style = MaterialTheme.typography.titleSmall
-                )
+                Row {
+                    Image(
+                        painter = painterResource(id = R.drawable.baseline_access_time_black_24),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .height(18.dp)
+                            .width(18.dp),
+                        colorFilter = ColorFilter.tint(color = colorResource(R.color.black40))
+
+                    )
+
+                    Text(
+                        text = postTime,
+                        modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = colorResource(R.color.black40)
+                    )
+                }
+
             }
         }
 
@@ -104,7 +121,8 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 text = content,
                 modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
                 style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = colorResource(R.color.black40)
             )
         }
 
@@ -157,14 +175,15 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         .wrapContentWidth()
                 ) {
                     Icon(
-                        Icons.Filled.AddComment,
+                        Icons.Outlined.QuestionAnswer,
+                        tint = colorResource(R.color.black40),
                         contentDescription = null
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(countCommentaries)
+                    Text(countCommentaries, color = colorResource(R.color.black40))
                     Text(
                         " ${stringResource(id = R.string.talk)}",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium, color = colorResource(R.color.black40)
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 }
@@ -174,11 +193,12 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         .wrapContentWidth()
                 ) {
                     Icon(
-                        Icons.Filled.FavoriteBorder,
+                        Icons.Outlined.FavoriteBorder,
+                        tint = colorResource(R.color.black40),
                         contentDescription = null,
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("0 ")
+                    Text("0 ", color = colorResource(R.color.black40))
                 }
 
                 Row(
@@ -191,7 +211,8 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         expanded = true
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowDropDownCircle,
+                            imageVector = Icons.Outlined.ArrowDropDownCircle,
+                            tint = colorResource(R.color.black40),
                             contentDescription = "Localized description"
                         )
                     }
@@ -202,30 +223,33 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Modifier ce post") },
+                            text = { Text(stringResource(id = R.string.edit_post), color = colorResource(R.color.black40)) },
                             onClick = { /* Handle edit! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Edit,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             })
                         DropdownMenuItem(
-                            text = { Text("Supprimer ce post") },
+                            text = { Text(stringResource(id = R.string.delete_post), color = colorResource(R.color.black40)) },
                             onClick = { /* Handle settings! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Delete,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             })
 
                         DropdownMenuItem(
-                            text = { Text("Signaler ce post") },
+                            text = { Text(stringResource(id = R.string.report_post), color = colorResource(R.color.black40)) },
                             onClick = { /* Handle send feedback! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Flag,
+                                    tint = colorResource(R.color.black40),
                                     contentDescription = null
                                 )
                             })
