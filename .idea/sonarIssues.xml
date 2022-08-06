@@ -38,7 +38,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/LoginView.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/MainHomeView.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/Problems.kt">
           <value>
             <set />
           </value>
