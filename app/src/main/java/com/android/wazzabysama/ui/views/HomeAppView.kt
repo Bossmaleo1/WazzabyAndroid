@@ -5,11 +5,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -49,11 +47,16 @@ import kotlinx.coroutines.delay
 @Composable
 @ExperimentalMaterial3Api
 fun DrawerAppBar(
-    scope: CoroutineScope, drawerState: DrawerState,
-    title: String, viewItem: MutableLiveData<String>, context: Any,
-    publicMessageViewModel: PublicMessageViewModel, userViewModel: UserViewModel
+    scope: CoroutineScope,
+    drawerState: DrawerState,
+    title: String,
+    viewItem: MutableLiveData<String>,
+    context: Any,
+    publicMessageViewModel: PublicMessageViewModel,
+    userViewModel: UserViewModel,
+    listStatePublicMessage: LazyListState
 ) {
-    val listStatePublicMessage = rememberLazyListState()
+
     val listStatePrivateMessage = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
 
@@ -321,6 +324,7 @@ fun HomeApp(
     val currentRoute =
         navBackStackEntry?.destination?.route ?: WazzabyDrawerDestinations.HOME_ROUTE
     val viewItem: MutableLiveData<String> = MutableLiveData()
+    val listStatePublicMessage = rememberLazyListState()
 
 
     ModalNavigationDrawer(
@@ -352,7 +356,8 @@ fun HomeApp(
                     viewItem,
                     context,
                     publicMessageViewModel,
-                    userViewModel
+                    userViewModel,
+                    listStatePublicMessage
                 )
             }
 
@@ -363,7 +368,8 @@ fun HomeApp(
                     viewItem,
                     context,
                     userViewModel,
-                    publicMessageViewModel
+                    publicMessageViewModel,
+                    listStatePublicMessage
                 )
             }
 

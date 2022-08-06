@@ -3,15 +3,14 @@ package com.android.wazzabysama.ui.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.ModeEdit
 import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
@@ -31,10 +30,14 @@ fun MainHomeView(
     viewItem: MutableLiveData<String>,
     context: Any,
     publicMessageViewModel: PublicMessageViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    listStatePublicMessage: LazyListState
 ) {
     var switch by rememberSaveable { mutableStateOf(true) }
     var selectedItem by remember { mutableStateOf(0) }
+    //This variable help use to dynamic our extended button
+    var fabExtended by remember { mutableStateOf(true) }
+
     viewItem.value = ConstValue.publicMessage
     val items = listOf(
         BottomNavigationItem(
@@ -52,7 +55,16 @@ fun MainHomeView(
 
 
     Scaffold(topBar = {
-        DrawerAppBar(scope, drawerState, title = stringResource(id = R.string.app_name), viewItem, context,publicMessageViewModel,userViewModel)
+        DrawerAppBar(
+            scope,
+            drawerState,
+            title = stringResource(id = R.string.app_name),
+            viewItem,
+            context,
+            publicMessageViewModel,
+            userViewModel,
+            listStatePublicMessage
+        )
     },
         bottomBar = {
             NavigationBar {
@@ -80,8 +92,19 @@ fun MainHomeView(
             }
         }, floatingActionButton = {
             if (switch) {
+                //This function help us to make our button extensible
+                LaunchedEffect(listStatePublicMessage) {
+                    var prev = 0
+                    snapshotFlow { listStatePublicMessage.firstVisibleItemIndex }
+                        .collect {
+                            fabExtended = it <= prev
+                            prev = it
+                        }
+                }
+
                 ExtendedFloatingActionButton(
                     icon = { Icon(Icons.Outlined.ModeEdit, "") },
+                    expanded = fabExtended,
                     text = {
                         Text(text = stringResource(R.string.new_message),
                             style = MaterialTheme.typography.titleSmall)
