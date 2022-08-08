@@ -64,7 +64,14 @@ fun AppDrawer(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        if (user?.imageUrl !== null) {
+        if (user?.imageUrl?.length == 0) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_profile_colorier),
+                modifier = Modifier.size(72.dp),
+                contentScale = ContentScale.Crop,
+                contentDescription = "Profile picture description"
+            )
+        } else {
             Image(
                 painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${user?.imageUrl}"),
                 modifier = Modifier
@@ -72,13 +79,6 @@ fun AppDrawer(
                     .height(100.dp)
                     .width(100.dp)
                     .clip(RoundedCornerShape(corner = CornerSize(50.dp))),
-                contentDescription = "Profile picture description"
-            )
-        } else {
-            Image(
-                painter = painterResource(id = R.drawable.ic_profile_colorier),
-                modifier = Modifier.size(72.dp),
-                contentScale = ContentScale.Crop,
                 contentDescription = "Profile picture description"
             )
         }

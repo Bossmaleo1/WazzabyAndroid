@@ -111,8 +111,7 @@ class MainActivity : ComponentActivity() {
                     drawerState,
                     context,
                     userViewModel,
-                    publicMessageViewModel,
-                    listStatePublicMessage
+                    publicMessageViewModel
                 )
                 BackHandler {
                     activity?.finish()

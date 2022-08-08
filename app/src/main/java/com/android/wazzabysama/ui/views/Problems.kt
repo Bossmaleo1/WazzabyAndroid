@@ -35,7 +35,6 @@ fun Problems(
         viewItem,
         context,
         publicMessageViewModel,
-        userViewModel,
-        rememberLazyListState()
+        userViewModel
     )
 }

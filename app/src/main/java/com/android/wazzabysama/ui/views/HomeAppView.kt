@@ -53,11 +53,10 @@ fun DrawerAppBar(
     viewItem: MutableLiveData<String>,
     context: Any,
     publicMessageViewModel: PublicMessageViewModel,
-    userViewModel: UserViewModel,
-    listStatePublicMessage: LazyListState
+    userViewModel: UserViewModel
 ) {
     val listStatePrivateMessage = rememberLazyListState()
-    //val listStatePublicMessage = rememberLazyListState()
+    val listStatePublicMessage = rememberLazyListState()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
 
@@ -318,8 +317,7 @@ fun DrawerAppBar(
 fun HomeApp(
     scope: CoroutineScope, drawerState: DrawerState, context: Any,
     userViewModel: UserViewModel,
-    publicMessageViewModel: PublicMessageViewModel,
-    listStatePublicMessage: LazyListState
+    publicMessageViewModel: PublicMessageViewModel
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -357,8 +355,7 @@ fun HomeApp(
                     viewItem,
                     context,
                     publicMessageViewModel,
-                    userViewModel,
-                    listStatePublicMessage
+                    userViewModel
                 )
             }
 
