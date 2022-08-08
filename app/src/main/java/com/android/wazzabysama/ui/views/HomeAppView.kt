@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -51,10 +52,12 @@ fun DrawerAppBar(
     drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
     publicMessageViewModel: PublicMessageViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    listStatePublicMessage: LazyListState
 ) {
     val listStatePrivateMessage = rememberLazyListState()
-    val listStatePublicMessage = rememberLazyListState()
+    //val listStatePublicMessage = rememberLazyListState()
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
     var saveValue by remember { mutableStateOf("") }
     val problematic by userViewModel.problematicValue.observeAsState()

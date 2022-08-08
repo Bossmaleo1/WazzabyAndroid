@@ -3,6 +3,7 @@ package com.android.wazzabysama.ui.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.ModeEdit
@@ -34,6 +35,7 @@ fun MainHomeView(
     var selectedItem by remember { mutableStateOf(0) }
     //This variable help use to dynamic our extended button
     var fabExtended by remember { mutableStateOf(true) }
+    val listStatePublicMessage = rememberLazyListState()
 
     viewItem.value = ConstValue.publicMessage
     val items = listOf(
@@ -57,7 +59,8 @@ fun MainHomeView(
             drawerState,
             viewItem,
             publicMessageViewModel,
-            userViewModel
+            userViewModel,
+            listStatePublicMessage
         )
     },
         bottomBar = {
@@ -87,14 +90,14 @@ fun MainHomeView(
         }, floatingActionButton = {
             if (switch) {
                 //This function help us to make our button extensible
-                /*LaunchedEffect(listStatePublicMessage) {
+                LaunchedEffect(listStatePublicMessage) {
                     var prev = 0
                     snapshotFlow { listStatePublicMessage.firstVisibleItemIndex }
                         .collect {
                             fabExtended = it <= prev
                             prev = it
                         }
-                }*/
+                }
 
                 ExtendedFloatingActionButton(
                     icon = { Icon(Icons.Outlined.ModeEdit, "") },
