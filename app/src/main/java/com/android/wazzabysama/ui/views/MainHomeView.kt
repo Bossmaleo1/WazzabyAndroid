@@ -30,8 +30,7 @@ fun MainHomeView(
     viewItem: MutableLiveData<String>,
     context: Any,
     publicMessageViewModel: PublicMessageViewModel,
-    userViewModel: UserViewModel,
-    listStatePublicMessage: LazyListState
+    userViewModel: UserViewModel
 ) {
     var switch by rememberSaveable { mutableStateOf(true) }
     var selectedItem by remember { mutableStateOf(0) }
@@ -62,8 +61,7 @@ fun MainHomeView(
             viewItem,
             context,
             publicMessageViewModel,
-            userViewModel,
-            listStatePublicMessage
+            userViewModel
         )
     },
         bottomBar = {
@@ -93,14 +91,14 @@ fun MainHomeView(
         }, floatingActionButton = {
             if (switch) {
                 //This function help us to make our button extensible
-                LaunchedEffect(listStatePublicMessage) {
+                /*LaunchedEffect(listStatePublicMessage) {
                     var prev = 0
                     snapshotFlow { listStatePublicMessage.firstVisibleItemIndex }
                         .collect {
                             fabExtended = it <= prev
                             prev = it
                         }
-                }
+                }*/
 
                 ExtendedFloatingActionButton(
                     icon = { Icon(Icons.Outlined.ModeEdit, "") },

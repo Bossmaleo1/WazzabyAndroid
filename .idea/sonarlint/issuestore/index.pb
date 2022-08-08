@@ -13,5 +13,3 @@ z
 Japp/src/main/java/com/android/wazzabysama/ui/model/BottomNavigationItem.kt,8/c/8cca8ba3cfaf651d85cd1b859f59944f419dcd07
 Ž
 ^app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PrivateMessageView.kt,a/5/a566bfee6daf4acd5b4d79c7836dbd15e0184420
-l
-<app/src/main/java/com/android/wazzabysama/ui/MainActivity.kt,4/a/4abf39e2545621f81c468e93a0c95450ba8ac78d

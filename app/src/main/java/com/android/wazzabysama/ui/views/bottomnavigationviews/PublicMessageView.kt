@@ -61,6 +61,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val countDisLike by rememberSaveable { mutableStateOf("0") }
     var expandContentText by remember { mutableStateOf(false)}
 
+    Log.d("MyID", "my userId : ${publicMessage.id}")
     Card(
         modifier = Modifier
             .fillMaxWidth()
