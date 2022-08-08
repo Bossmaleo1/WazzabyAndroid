@@ -3,6 +3,7 @@ package com.android.wazzabysama.ui.views.bottomnavigationviews
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -58,6 +59,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val content by rememberSaveable { mutableStateOf(publicMessage.content) }
     val countCommentaries by rememberSaveable { mutableStateOf("${publicMessage.comments.size}") }
     val countDisLike by rememberSaveable { mutableStateOf("0") }
+    var expandContentText by remember { mutableStateOf(false)}
 
     Card(
         modifier = Modifier
@@ -127,17 +129,10 @@ fun PublicMessageView(publicMessage: PublicMessage) {
 
         Row(
             modifier = Modifier
-                .padding(5.dp, 0.dp, 5.dp, 10.dp),
+                .padding(5.dp, 0.dp, 5.dp, 0.dp)
+                .animateContentSize(),
             horizontalArrangement = Arrangement.Center
         ) {
-            /*Text(
-                text = content,
-                modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
-                style = MaterialTheme.typography.titleMedium,
-                overflow = TextOverflow.Ellipsis,
-                color = colorResource(R.color.black40),
-                maxLines = 2
-            )*/
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     text = content,
@@ -146,86 +141,27 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                     textAlign = TextAlign.Justify,
                     color = colorResource(R.color.black40),
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 3
+                    maxLines =  if (expandContentText) Int.MAX_VALUE else 3
                 )
             }
         }
 
         Row(
             modifier = Modifier
-                .padding(5.dp, 0.dp, 5.dp, 10.dp),
+                .padding(0.dp, 0.dp, 0.dp, 0.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            /*Text(
-                text="Read More",
-                color = colorResource(R.color.blue300),
-            )*/
-
-            TextButton(onClick = {   }) {
+            TextButton(onClick = {  expandContentText = !expandContentText }) {
                 Icon(
-                    //imageVector = Icons.Outlined.KeyboardDoubleArrowUp,
-                    imageVector = Icons.Outlined.KeyboardDoubleArrowDown,
+                    imageVector = if(expandContentText) Icons.Outlined.KeyboardDoubleArrowUp else Icons.Outlined.KeyboardDoubleArrowDown,
                     contentDescription = null,
                     tint = colorResource(R.color.black40)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                ClickableText(
-                    buildAnnotatedString {
-                        pushStringAnnotation(
-                            tag = "",
-                            annotation = ""
-                        )
-                        withStyle(
-                            style = SpanStyle(
-                                color = colorResource(R.color.black40),
-                                fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline,
-                                fontSize = 15.sp
-                            )
-                        ) {
-                            append("Read More")
-                            // append(stringResource(id = password_forget))
-                        }
-
-                        pop()
-                    },
-                    onClick = {
-
-                    })
-
+                Text(text = if(expandContentText) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more), color = colorResource(R.color.black40))
             }
 
-            OutlinedButton(onClick = {   }) {
-                Icon(
-                    //imageVector = Icons.Outlined.KeyboardDoubleArrowUp,
-                    imageVector = Icons.Outlined.KeyboardDoubleArrowDown,
-                    contentDescription = null,
-                    tint = colorResource(R.color.black40)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Read More", color = colorResource(R.color.black40))
-            }
-            ClickableText(
-                buildAnnotatedString {
-                    pushStringAnnotation(
-                        tag = "",
-                        annotation = ""
-                    )
-                    withStyle(
-                        style = SpanStyle(
-                            color = colorResource(R.color.Purple700),
-                            fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline,
-                            fontSize = 15.sp
-                        )
-                    ) {
-                        append("Read More")
-                        // append(stringResource(id = password_forget))
-                    }
 
-                    pop()
-                },
-                onClick = {
-
-                })
         }
 
         if (publicMessage.images.isNotEmpty()) {
