@@ -3,7 +3,6 @@ package com.android.wazzabysama.ui.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.ModeEdit
@@ -28,7 +27,6 @@ fun MainHomeView(
     scope: CoroutineScope,
     drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
-    context: Any,
     publicMessageViewModel: PublicMessageViewModel,
     userViewModel: UserViewModel
 ) {
@@ -57,9 +55,7 @@ fun MainHomeView(
         DrawerAppBar(
             scope,
             drawerState,
-            title = stringResource(id = R.string.app_name),
             viewItem,
-            context,
             publicMessageViewModel,
             userViewModel
         )
@@ -111,5 +107,5 @@ fun MainHomeView(
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 )
             }
-        }) {paddingValues ->  }
+        }) {}
 }

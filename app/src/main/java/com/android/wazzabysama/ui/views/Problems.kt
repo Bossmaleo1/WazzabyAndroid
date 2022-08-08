@@ -4,12 +4,9 @@ package com.android.wazzabysama.ui.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.MutableLiveData
 import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
@@ -23,7 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 fun Problems(
     scope: CoroutineScope, drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
-    context: Any,
     userViewModel: UserViewModel,
     publicMessageViewModel: PublicMessageViewModel
 ) {
@@ -31,9 +27,7 @@ fun Problems(
     DrawerAppBar(
         scope,
         drawerState,
-        stringResource(R.string.problematic_app),
         viewItem,
-        context,
         publicMessageViewModel,
         userViewModel
     )

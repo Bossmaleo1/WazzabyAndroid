@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -14,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -49,17 +49,13 @@ import kotlinx.coroutines.delay
 fun DrawerAppBar(
     scope: CoroutineScope,
     drawerState: DrawerState,
-    title: String,
     viewItem: MutableLiveData<String>,
-    context: Any,
     publicMessageViewModel: PublicMessageViewModel,
     userViewModel: UserViewModel
 ) {
     val listStatePrivateMessage = rememberLazyListState()
     val listStatePublicMessage = rememberLazyListState()
-
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
-
     var saveValue by remember { mutableStateOf("") }
     val problematic by userViewModel.problematicValue.observeAsState()
     val user by userViewModel.userValue.observeAsState()
@@ -174,11 +170,10 @@ fun DrawerAppBar(
                     }
                 },
                 scrollBehavior = scrollBehavior,
-                title = { Text(title, color = colorResource(R.color.black40)) }
+                title = { Text(if (saveValue == ConstValue.problem) stringResource(R.string.problematic_app) else  stringResource(id = R.string.app_name), color = colorResource(R.color.black40)) }
             )
         }) { innerPadding ->
-        var saveValue by remember { mutableStateOf("") }
-        viewItem.observe(context as LifecycleOwner) {
+        viewItem.observe(LocalContext.current as LifecycleOwner) {
             saveValue = it
         }
 
@@ -230,7 +225,7 @@ fun DrawerAppBar(
 
                         ) {
                             if (publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
-                                if (!isRefreshing) {
+                                if (!isRefreshing && publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
                                     page++
                                     publicMessageViewModel.getPublicMessage(
                                         problematicTemp, page, token?.token!!
@@ -315,7 +310,7 @@ fun DrawerAppBar(
 @Composable
 @ExperimentalMaterial3Api
 fun HomeApp(
-    scope: CoroutineScope, drawerState: DrawerState, context: Any,
+    scope: CoroutineScope, drawerState: DrawerState,
     userViewModel: UserViewModel,
     publicMessageViewModel: PublicMessageViewModel
 ) {
@@ -338,8 +333,7 @@ fun HomeApp(
                 scope,
                 drawerState,
                 viewItem,
-                userViewModel,
-                context
+                userViewModel
             )
         }
     ) {
@@ -353,7 +347,6 @@ fun HomeApp(
                     scope,
                     drawerState,
                     viewItem,
-                    context,
                     publicMessageViewModel,
                     userViewModel
                 )
@@ -364,7 +357,6 @@ fun HomeApp(
                     scope,
                     drawerState,
                     viewItem,
-                    context,
                     userViewModel,
                     publicMessageViewModel
                 )
