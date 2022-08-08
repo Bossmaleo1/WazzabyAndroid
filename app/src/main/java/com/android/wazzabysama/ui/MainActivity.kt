@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -55,7 +57,8 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
-                    MainView(navController, this)
+                    val listStatePublicMessage = rememberLazyListState()
+                    MainView(navController, this,listStatePublicMessage)
                     userViewModel.getSavedToken().observe(this as LifecycleOwner) { token ->
                         this.token = token?.token
                     }
@@ -81,12 +84,13 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     @ExperimentalMaterial3Api
-    fun MainView(navController: NavHostController, context: Any) {
+    fun MainView(navController: NavHostController, context: Any,listStatePublicMessage: LazyListState) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         val activity = (LocalContext.current as? Activity)
         //We call our init view model method
         this.initViewModel()
+        //val listStatePublicMessage = rememberLazyListState()
 
         NavHost(navController = navController, startDestination = "LAUNCH_VIEW") {
             composable(route = "LAUNCH_VIEW") {
@@ -107,7 +111,8 @@ class MainActivity : ComponentActivity() {
                     drawerState,
                     context,
                     userViewModel,
-                    publicMessageViewModel
+                    publicMessageViewModel,
+                    listStatePublicMessage
                 )
                 BackHandler {
                     activity?.finish()
