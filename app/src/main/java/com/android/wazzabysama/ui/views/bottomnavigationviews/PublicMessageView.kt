@@ -172,6 +172,14 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 horizontalArrangement = Arrangement.Start
             ) {
                 Image(
+                    painter = painterResource(id = R.drawable.photo),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+
+                Image(
                     painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${publicMessage.images[publicMessage.images.size - 1].imageName}"),
                     modifier = Modifier
                         .padding(4.dp)
