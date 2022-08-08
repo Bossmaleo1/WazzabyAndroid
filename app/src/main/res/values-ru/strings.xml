@@ -24,5 +24,7 @@
     <string name="report_post">Сообщить об этом сообщении</string>
     <string name="delete_post">Удалить этот пост</string>
     <string name="edit_post">Изменить этот пост</string>
+    <string name="read_more">Читать далее</string>
+    <string name="read_less">Читать меньше</string>
 
 </resources>

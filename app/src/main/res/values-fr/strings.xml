@@ -24,4 +24,6 @@
     <string name="report_post">Signaler ce post</string>
     <string name="delete_post">Supprimer ce post</string>
     <string name="edit_post">Modifier ce post</string>
+    <string name="read_more">Lire Plus</string>
+    <string name="read_less">Lire Moins</string>
 </resources>

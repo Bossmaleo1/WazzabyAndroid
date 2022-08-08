@@ -15,7 +15,6 @@
     <string name="like">Me gusta</string>
     <string name="dislike">Disgusto</string>
     <string name="new_message">Nuevo mensaje</string>
-
     <string name="profile">Perfil</string>
     <string name="history">Historia</string>
     <string name="Settings">Ajustes</string>
@@ -25,4 +24,6 @@
     <string name="report_post">Reportar esta publicación</string>
     <string name="delete_post">Borra esta publicación</string>
     <string name="edit_post">Editar esta publicación</string>
+    <string name="read_more">Lee Mas</string>
+    <string name="read_less">Leer Menos</string>
 </resources>

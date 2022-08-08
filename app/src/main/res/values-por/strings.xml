@@ -10,22 +10,21 @@
     <!-- Untranslate zone-->
     <string name="private_message">Private Message</string>
     <string name="public_message">Public Message</string>
-
     <string name="talks">conversas</string>
     <string name="talk">intervenção</string>
     <string name="like">Como</string>
     <string name="dislike">Não gostar</string>
     <string name="new_message">Nova mensagem</string>
-
     <string name="profile">Perfil</string>
     <string name="history">História</string>
     <string name="Settings">Definições</string>
     <string name="about">Sobre</string>
     <string name="logout">Sair</string>
     <string name="wait">Por favor, espere ...</string>
-
     <string name="report_post">Denunciar esta postagem</string>
     <string name="delete_post">Excluir esta postagem</string>
     <string name="edit_post">Editar esta postagem</string>
+    <string name="read_more">Consulte Mais informação</string>
+    <string name="read_less">Leia menos</string>
 
 </resources>

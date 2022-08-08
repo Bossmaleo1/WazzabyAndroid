@@ -25,4 +25,6 @@
     <string name="report_post">Report this post</string>
     <string name="delete_post">Delete this post</string>
     <string name="edit_post">Edit this post</string>
+    <string name="read_more">Read More</string>
+    <string name="read_less">Read Less</string>
 </resources>
