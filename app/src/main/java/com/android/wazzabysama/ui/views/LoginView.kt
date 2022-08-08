@@ -3,6 +3,7 @@ package com.android.wazzabysama.ui.views
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
@@ -127,7 +128,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                         user.email,
                         user.firstName,
                         user.lastName,
-                        user.images[0].imageName,
+                        (if (user.images.isNotEmpty())  user.images[0].imageName else  ""),
                         "",
                         user.roles[0],
                         user.username,
@@ -190,29 +191,47 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         verticalArrangement = Arrangement.Top
     ) {
 
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.End
+        ) {
+
+            OutlinedButton(
+                border = BorderStroke(1.dp, color = colorResource(R.color.Purple700)),
+                onClick = {  navController.navigate("inscription_step_first") }) {
+                Icon(
+                    imageVector = Icons.Outlined.ManageAccounts,
+                    contentDescription = null,
+                    tint = colorResource(R.color.Purple700)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(stringResource(id = R.string.inscription), color = colorResource(R.color.Purple700))
+            }
+
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
+
             Image(
                 painter = painterResource(id = R.drawable.wazzabysama),
                 contentDescription = "The Application Launcher",
                 modifier = Modifier
-                    .padding(0.dp, 30.dp, 0.dp, 0.dp)
-                    .height(100.dp)
-                    .width(100.dp)
+                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
+                    .height(75.dp)
+                    .width(75.dp)
             )
         }
 
-        Divider(
-            color = colorResource(R.color.Purple700),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(30.dp)
-        )
 
-        TextField(
+        OutlinedTextField(
             value = email,
+            modifier = Modifier.padding(top = 10.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = colorResource(R.color.blue_light)
                 /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
@@ -233,10 +252,10 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             }
         )
 
-        TextField(
+        OutlinedTextField(
             value = password,
             colors = TextFieldDefaults.textFieldColors(
-                containerColor = colorResource(R.color.blue_light)
+                containerColor = colorResource(R.color.blue_light),
                 /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
                  focusedIndicatorColor = Color.Transparent,
                   unfocusedIndicatorColor = Color.Transparent*/
@@ -273,68 +292,21 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                 .padding(top = 30.dp)
         )
 
-        Button(
+        OutlinedButton(
             modifier = Modifier
                 .width(280.dp)
                 .padding(top = 30.dp),
+            border = BorderStroke(1.dp, color = colorResource(R.color.Purple700)),
             onClick = {
-                viewModelLogin(userViewModel, "sidneymaleoregis@gmail.com","Nfkol3324012020@!", context)
-
-                /*viewModelLogin(userViewModel, email,
-                    password, context)*/
+                viewModelLogin(userViewModel, email,password, context)
             }) {
-            Text(stringResource(R.string.connexion), color = Color.White)
-        }
-
-        Spacer(Modifier.size(20.dp))
-
-        ClickableText(
-            buildAnnotatedString {
-                pushStringAnnotation(
-                    tag = "",
-                    annotation = ""
+                Icon(
+                    imageVector = Icons.Outlined.Login,
+                    contentDescription = null,
+                    tint = colorResource(R.color.Purple700)
                 )
-                withStyle(
-                    style = SpanStyle(
-                        color = colorResource(R.color.Purple700),
-                        fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline,
-                        fontSize = 15.sp
-                    )
-                ) {
-                   // append(stringResource(id = password_forget))
-                }
-
-                pop()
-            },
-            onClick = {
-
-            })
-
-        Divider(
-            color = colorResource(R.color.Purple700),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-        )
-
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.End
-    ) {
-
-        Button(onClick = {  navController.navigate("inscription_step_first") }) {
-            Icon(
-                painterResource(id = R.drawable.baseline_question_answer_24),
-                contentDescription = null,
-                tint = Color.White
-            )
-            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            Text(stringResource(id = R.string.inscription), color = Color.White)
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(stringResource(R.string.connexion))
         }
 
     }

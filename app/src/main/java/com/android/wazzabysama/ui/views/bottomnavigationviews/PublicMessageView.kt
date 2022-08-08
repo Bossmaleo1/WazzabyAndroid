@@ -1,11 +1,15 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -14,13 +18,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.vector.VectorProperty
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.android.wazzabysama.BuildConfig
 import com.android.wazzabysama.R
@@ -47,7 +64,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(2.5.dp),
-        shape = RoundedCornerShape(corner = CornerSize(10.dp)),
+        shape = RoundedCornerShape(corner = CornerSize(10.dp))
     ) {
 
         Row(
@@ -110,35 +127,114 @@ fun PublicMessageView(publicMessage: PublicMessage) {
 
         Row(
             modifier = Modifier
-                .padding(5.dp, 0.dp, 0.dp, 10.dp)
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.Start
+                .padding(5.dp, 0.dp, 5.dp, 10.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(
+            /*Text(
                 text = content,
                 modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp),
                 style = MaterialTheme.typography.titleMedium,
                 overflow = TextOverflow.Ellipsis,
-                color = colorResource(R.color.black40)
-            )
+                color = colorResource(R.color.black40),
+                maxLines = 2
+            )*/
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                Text(
+                    text = content,
+                    modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Justify,
+                    color = colorResource(R.color.black40),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 3
+                )
+            }
         }
 
         Row(
             modifier = Modifier
-                .padding(5.dp, 0.dp, 0.dp, 10.dp)
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.Start
+                .padding(5.dp, 0.dp, 5.dp, 10.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
+            /*Text(
+                text="Read More",
+                color = colorResource(R.color.blue300),
+            )*/
 
-            if (publicMessage.images.isNotEmpty()) {
-                Image(
-                    painter = painterResource(id = R.drawable.photo),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
+            TextButton(onClick = {   }) {
+                Icon(
+                    //imageVector = Icons.Outlined.KeyboardDoubleArrowUp,
+                    imageVector = Icons.Outlined.KeyboardDoubleArrowDown,
+                    contentDescription = null,
+                    tint = colorResource(R.color.black40)
                 )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                ClickableText(
+                    buildAnnotatedString {
+                        pushStringAnnotation(
+                            tag = "",
+                            annotation = ""
+                        )
+                        withStyle(
+                            style = SpanStyle(
+                                color = colorResource(R.color.black40),
+                                fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline,
+                                fontSize = 15.sp
+                            )
+                        ) {
+                            append("Read More")
+                            // append(stringResource(id = password_forget))
+                        }
 
+                        pop()
+                    },
+                    onClick = {
+
+                    })
+
+            }
+
+            OutlinedButton(onClick = {   }) {
+                Icon(
+                    //imageVector = Icons.Outlined.KeyboardDoubleArrowUp,
+                    imageVector = Icons.Outlined.KeyboardDoubleArrowDown,
+                    contentDescription = null,
+                    tint = colorResource(R.color.black40)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text("Read More", color = colorResource(R.color.black40))
+            }
+            ClickableText(
+                buildAnnotatedString {
+                    pushStringAnnotation(
+                        tag = "",
+                        annotation = ""
+                    )
+                    withStyle(
+                        style = SpanStyle(
+                            color = colorResource(R.color.Purple700),
+                            fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline,
+                            fontSize = 15.sp
+                        )
+                    ) {
+                        append("Read More")
+                        // append(stringResource(id = password_forget))
+                    }
+
+                    pop()
+                },
+                onClick = {
+
+                })
+        }
+
+        if (publicMessage.images.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .padding(5.dp, 0.dp, 0.dp, 10.dp)
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.Start
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${publicMessage.images[publicMessage.images.size - 1].imageName}"),
                     modifier = Modifier

@@ -56,8 +56,9 @@ fun DrawerAppBar(
     userViewModel: UserViewModel,
     listStatePublicMessage: LazyListState
 ) {
-
     val listStatePrivateMessage = rememberLazyListState()
+    //val listStatePublicMessage = rememberLazyListState()
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
 
     var saveValue by remember { mutableStateOf("") }
@@ -317,14 +318,14 @@ fun DrawerAppBar(
 fun HomeApp(
     scope: CoroutineScope, drawerState: DrawerState, context: Any,
     userViewModel: UserViewModel,
-    publicMessageViewModel: PublicMessageViewModel
+    publicMessageViewModel: PublicMessageViewModel,
+    listStatePublicMessage: LazyListState
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute =
         navBackStackEntry?.destination?.route ?: WazzabyDrawerDestinations.HOME_ROUTE
     val viewItem: MutableLiveData<String> = MutableLiveData()
-    val listStatePublicMessage = rememberLazyListState()
 
 
     ModalNavigationDrawer(
@@ -368,8 +369,7 @@ fun HomeApp(
                     viewItem,
                     context,
                     userViewModel,
-                    publicMessageViewModel,
-                    listStatePublicMessage
+                    publicMessageViewModel
                 )
             }
 
