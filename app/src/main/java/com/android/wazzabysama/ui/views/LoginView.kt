@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -22,14 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
@@ -49,7 +41,6 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
     var password by rememberSaveable { mutableStateOf("Nfkol3324012020@!") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     val isLoading = remember { mutableStateOf(false) }
-    val isNetworkAvailableState = remember { mutableStateOf(false) }
 
     fun showProgressBar(){
         isLoading.value = true

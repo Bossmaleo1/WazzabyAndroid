@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.PermissionChecker
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
@@ -109,7 +108,6 @@ class MainActivity : ComponentActivity() {
                 HomeApp(
                     scope,
                     drawerState,
-                    context,
                     userViewModel,
                     publicMessageViewModel
                 )

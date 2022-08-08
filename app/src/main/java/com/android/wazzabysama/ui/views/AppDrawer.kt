@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,17 +44,16 @@ fun AppDrawer(
     scope: CoroutineScope,
     drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
-    userViewModel: UserViewModel,
-    context: Any
+    userViewModel: UserViewModel
 ) {
     var userName by rememberSaveable { mutableStateOf("") }
     userViewModel.getSavedToken()
     val token by userViewModel.tokenValue.observeAsState()
     val user by userViewModel.userValue.observeAsState()
     if (token?.token !== null) {
-        userViewModel.getSavedUserByToken(token?.token!!).observe(context as LifecycleOwner) {}
+        userViewModel.getSavedUserByToken(token?.token!!).observe(LocalContext.current as LifecycleOwner) {}
         if (user?.id != null) {
-            userViewModel.getSavedProblematic(user?.id!!).observe(context) {}
+            userViewModel.getSavedProblematic(user?.id!!).observe(LocalContext.current as LifecycleOwner) {}
             userName = user?.firstName + " " + user?.lastName
         }
     }

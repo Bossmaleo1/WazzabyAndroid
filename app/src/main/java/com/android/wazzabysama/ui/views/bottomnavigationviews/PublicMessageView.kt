@@ -1,14 +1,12 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
@@ -19,26 +17,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.vector.VectorProperty
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.android.wazzabysama.BuildConfig
 import com.android.wazzabysama.R
@@ -46,6 +33,13 @@ import com.android.wazzabysama.data.model.data.PublicMessage
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Composable
+fun getOurPublicMessageImage(publicMessage: PublicMessage): Painter {
+    if (publicMessage.user.images.isEmpty()) {
+       return  painterResource(id = R.drawable.ic_profile)
+    }
+    return  rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${publicMessage.user.images[publicMessage.user.images.size - 1].imageName}")
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterial3Api
@@ -58,10 +52,9 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val postTime by rememberSaveable { mutableStateOf(published) }
     val content by rememberSaveable { mutableStateOf(publicMessage.content) }
     val countCommentaries by rememberSaveable { mutableStateOf("${publicMessage.comments.size}") }
-    val countDisLike by rememberSaveable { mutableStateOf("0") }
+    //val countDisLike by rememberSaveable { mutableStateOf("0") }
     var expandContentText by remember { mutableStateOf(false)}
 
-    Log.d("MyID", "my userId : ${publicMessage.id}")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,28 +69,17 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 .fillMaxSize(),
             horizontalArrangement = Arrangement.Start
         ) {
-            if (publicMessage.user.images.isEmpty()) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_profile),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .height(50.dp)
-                        .width(50.dp)
-                        .clip(RoundedCornerShape(corner = CornerSize(25.dp)))
-                )
-            } else {
-                Image(
-                    painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${publicMessage.user.images[publicMessage.user.images.size - 1].imageName}"),
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .height(50.dp)
-                        .width(50.dp)
-                        .clip(RoundedCornerShape(corner = CornerSize(25.dp))),
-                    contentDescription = "Profile picture description"
-                )
-            }
+
+            Image(
+                painter = getOurPublicMessageImage(publicMessage),
+                contentDescription = "Profile picture description",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .height(50.dp)
+                    .width(50.dp)
+                    .clip(RoundedCornerShape(corner = CornerSize(25.dp)))
+            )
 
             Column(modifier = Modifier.padding(4.dp)) {
                 Text(
