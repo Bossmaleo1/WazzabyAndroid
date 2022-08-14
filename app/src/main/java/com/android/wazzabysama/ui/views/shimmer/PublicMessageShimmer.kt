@@ -49,6 +49,13 @@ fun PublicMessageShimmer() {
         )
     )
     ShimmerGridItem(brush = brush)
+    ShimmerGridItem(brush = brush)
+    ShimmerGridItem(brush = brush)
+    ShimmerGridItem(brush = brush)
+    ShimmerGridItem(brush = brush)
+    ShimmerGridItem(brush = brush)
+    ShimmerGridItem(brush = brush)
+    ShimmerGridItem(brush = brush)
 }
 
 @ExperimentalMaterial3Api

@@ -1,6 +1,7 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -54,6 +55,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val countCommentaries by rememberSaveable { mutableStateOf("${publicMessage.comments.size}") }
     //val countDisLike by rememberSaveable { mutableStateOf("0") }
     var expandContentText by remember { mutableStateOf(false)}
+    Log.d("MyId", "${publicMessage.id}")
 
     Card(
         modifier = Modifier

@@ -8,6 +8,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/data/repository/dataSourceImpl/PublicMessageRemoteDataSourceImpl.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/presentation/viewModel/publicMessage/PublicMessageViewModel.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/MainActivity.kt">
           <value>
             <set />
@@ -54,6 +64,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PublicMessageView.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/shimmer/PublicMessageShimmer.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/utils/InfiniteList.kt">
           <value>
             <set />
           </value>

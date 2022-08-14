@@ -2,6 +2,7 @@ package com.android.wazzabysama.ui.views
 
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -56,16 +57,13 @@ fun DrawerAppBar(
     listStatePublicMessage: LazyListState
 ) {
     val listStatePrivateMessage = rememberLazyListState()
-    //val listStatePublicMessage = rememberLazyListState()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
     var saveValue by remember { mutableStateOf("") }
     val problematic by userViewModel.problematicValue.observeAsState()
     val user by userViewModel.userValue.observeAsState()
     val token by userViewModel.tokenValue.observeAsState()
-    val publicMessageResponse by publicMessageViewModel.publicMessageListValue.observeAsState()
-    val publicMessageStateList = remember { mutableStateListOf<PublicMessage>() }
-    var page = 0
+    //var page = 0
     var isRefreshing by remember { mutableStateOf(false) }
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
     Scaffold(
@@ -189,19 +187,22 @@ fun DrawerAppBar(
                         problematic!!.language,
                         problematic!!.icon
                     )
-                    publicMessageViewModel.getPublicMessage(
-                        problematicTemp, 1, token?.token!!
-                    )
+                    if (publicMessageViewModel.currentPage.value == 1) {
+                        publicMessageViewModel.getPublicMessage(
+                            problematicTemp, publicMessageViewModel.currentPage.value, token?.token!!
+                        )
+                    }
 
 
                     SwipeRefresh(
                         state = swipeRefreshState,
                         onRefresh = {
                            isRefreshing = true
-                            page = 1
+                            //page = 1
+                            publicMessageViewModel.currentPage.value = 1
                             publicMessageViewModel.initPublicMessage()
                             publicMessageViewModel.getPublicMessage(
-                                problematicTemp, page, token?.token!!
+                                problematicTemp, publicMessageViewModel.currentPage.value, token?.token!!
                             )
                         },
                         indicator = { state, trigger ->
@@ -224,16 +225,19 @@ fun DrawerAppBar(
                             paddingValues = PaddingValues(
                                 top = innerPadding.calculateTopPadding(),
                                 bottom = innerPadding.calculateBottomPadding() + 100.dp
-                            )
-
-                        ) {
-                            if (publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
+                            ),
+                            publicMessageViewModel = publicMessageViewModel,
+                            problematic = problematicTemp,
+                            token?.token!!
+                        ) //{
+                            /*if (publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
                                 if (!isRefreshing && publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
-                                    page++
+                                    //page++
                                     publicMessageViewModel.getPublicMessage(
-                                        problematicTemp, page, token?.token!!
-                                    )
-                                    if (page == 1) {
+                                        problematicTemp, publicMessageViewModel.currentPage.value + 1, token?.token!!
+                                    )*/
+
+                                    /*if (publicMessageViewModel.currentPage.value == 1) {
                                         for (i in 0..9) {
                                             if (!publicMessageViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
                                                 userViewModel.saveUser(
@@ -255,11 +259,12 @@ fun DrawerAppBar(
                                                 )
                                             }
                                         }
-                                    } else {
-                                        val begin = (page -1)*10
-                                        val end = ((page*10) - 1)
-
-                                        for (i in begin..end) {
+                                    } else {*/
+                                        //val begin = (publicMessageViewModel.currentPage.value -1)*10
+                                        //val end = ((publicMessageViewModel.currentPage.value*10) - 1)
+                                        //Log.d("MyId","${publicMessageViewModel.currentPage.value}")
+                                    //Log.d("MyId","begin - end : ${begin} - ${end}")
+                                        /*for (i in begin..end) {
                                             if (!publicMessageViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
                                                 userViewModel.saveUser(
                                                     UserRoom(
@@ -279,13 +284,13 @@ fun DrawerAppBar(
                                                     user!!
                                                 )
                                             }
-                                        }
-                                    }
+                                        }*/
+                                    //}
 
-                                }
+                               // }
 
-                            }
-                        }
+                           // }
+                        //}
                     }
                     // cette instruction permet de réactivé le reflesh
                     LaunchedEffect(isRefreshing) {

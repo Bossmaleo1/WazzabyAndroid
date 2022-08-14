@@ -1,62 +1,24 @@
 package com.android.wazzabysama.ui.views.utils
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import com.android.wazzabysama.R
+import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.data.model.data.PublicMessage
+import com.android.wazzabysama.data.model.data.Token
+import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
 import com.android.wazzabysama.ui.views.shimmer.PublicMessageShimmer
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.flow.distinctUntilChanged
-
-/**
- * Handler to make any lazy column (or lazy row) infinite. Will notify the [onLoadMore]
- * callback once needed
- * @param listState state of the list that needs to also be passed to the LazyColumn composable.
- * Get it by calling rememberLazyListState()
- * @param buffer the number of items before the end of the list to call the onLoadMore callback
- * @param onLoadMore will notify when we need to load more
- */
-@Composable
-fun InfiniteListHandler(
-    listState: LazyListState,
-    buffer: Int = 6,
-    onLoadMore: () -> Unit
-) {
-    val loadMore = remember {
-        derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val totalItemsNumber = layoutInfo.totalItemsCount
-            val lastVisibleItemIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1
-
-            lastVisibleItemIndex > (totalItemsNumber - buffer)
-        }
-    }
-
-    LaunchedEffect(loadMore) {
-        snapshotFlow { loadMore.value }
-            .distinctUntilChanged()
-            .collect {
-                onLoadMore()
-            }
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,24 +27,64 @@ fun InfiniteListMessagePublicRemote(
     listState: LazyListState,
     listItems: List<PublicMessage>,
     paddingValues: PaddingValues,
-    onLoadMore: () -> Unit
+    publicMessageViewModel: PublicMessageViewModel,
+    problematic: Problematic,
+    token: String,
+
+    //onLoadMore: () -> Unit
 ) {
 
     LazyColumn(
         contentPadding = paddingValues, //PaddingValues(),
         state = listState
     ) {
+
         items(listItems) { publicMessage ->
             PublicMessageView(publicMessage)
         }
 
-        items(count = 8) {
+        items(count = 1) {
             PublicMessageShimmer()
         }
     }
 
-
-    InfiniteListHandler(listState = listState) {
+    /*InfiniteListHandler(listState = listState) {
         onLoadMore()
+    }*/
+    listState.OnBottomReached(buffer = 2) {
+        publicMessageViewModel.getPublicMessage(problematic,publicMessageViewModel.currentPage.value + 1,token)
+    }
+
+}
+
+@Composable
+fun LazyListState.OnBottomReached(
+    buffer: Int = 0,
+    loadMore : () -> Unit
+){
+    // Buffer must be positive.
+    // Or our list will never reach the bottom.
+    require(buffer >= 0) { "buffer cannot be negative, but was $buffer" }
+
+    // state object which tells us if we should load more
+    val shouldLoadMore = remember {
+        derivedStateOf {
+            // get last visible item
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
+                ?:
+                // list is empty
+                // return false here if loadMore should not be invoked if the list is empty
+                return@derivedStateOf true
+            // Check if last visible item is the last item in the list
+            lastVisibleItem.index == layoutInfo.totalItemsCount - 1 - buffer
+        }
+    }
+    
+    LaunchedEffect(shouldLoadMore) {
+        snapshotFlow { shouldLoadMore.value }
+            .collect {
+                // if should load more, then invoke loadMore
+                if (it) loadMore()
+            }
     }
 }
