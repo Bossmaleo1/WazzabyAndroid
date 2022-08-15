@@ -201,9 +201,9 @@ fun DrawerAppBar(
                             //page = 1
                             publicMessageViewModel.currentPage.value = 1
                             publicMessageViewModel.initPublicMessage()
-                            publicMessageViewModel.getPublicMessage(
+                            /*publicMessageViewModel.getPublicMessage(
                                 problematicTemp, publicMessageViewModel.currentPage.value, token?.token!!
-                            )
+                            )*/
                         },
                         indicator = { state, trigger ->
                             SwipeRefreshIndicator(
@@ -229,68 +229,7 @@ fun DrawerAppBar(
                             publicMessageViewModel = publicMessageViewModel,
                             problematic = problematicTemp,
                             token?.token!!
-                        ) //{
-                            /*if (publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
-                                if (!isRefreshing && publicMessageViewModel.publicMessageStateRemoteList.isNotEmpty()) {
-                                    //page++
-                                    publicMessageViewModel.getPublicMessage(
-                                        problematicTemp, publicMessageViewModel.currentPage.value + 1, token?.token!!
-                                    )*/
-
-                                    /*if (publicMessageViewModel.currentPage.value == 1) {
-                                        for (i in 0..9) {
-                                            if (!publicMessageViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
-                                                userViewModel.saveUser(
-                                                    UserRoom(
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.id,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.online,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.anonymous,
-                                                        user!!.problematic_id,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.email,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.firstName,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.lastName,
-                                                        "", "", "", "", ""
-                                                    )
-                                                )
-
-                                                publicMessageViewModel.savePublicMessageRoom(
-                                                    publicMessageViewModel.publicMessageStateRemoteList[i],
-                                                    user!!
-                                                )
-                                            }
-                                        }
-                                    } else {*/
-                                        //val begin = (publicMessageViewModel.currentPage.value -1)*10
-                                        //val end = ((publicMessageViewModel.currentPage.value*10) - 1)
-                                        //Log.d("MyId","${publicMessageViewModel.currentPage.value}")
-                                    //Log.d("MyId","begin - end : ${begin} - ${end}")
-                                        /*for (i in begin..end) {
-                                            if (!publicMessageViewModel.publicMessageStateRemoteList[i].user.email.equals(user!!.email)) {
-                                                userViewModel.saveUser(
-                                                    UserRoom(
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.id,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.online,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.anonymous,
-                                                        user!!.problematic_id,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.email,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.firstName,
-                                                        publicMessageViewModel.publicMessageStateRemoteList[i].user.lastName,
-                                                        "", "", "", "", ""
-                                                    )
-                                                )
-
-                                                publicMessageViewModel.savePublicMessageRoom(
-                                                    publicMessageViewModel.publicMessageStateRemoteList[i],
-                                                    user!!
-                                                )
-                                            }
-                                        }*/
-                                    //}
-
-                               // }
-
-                           // }
-                        //}
+                        )
                     }
                     // cette instruction permet de réactivé le reflesh
                     LaunchedEffect(isRefreshing) {
