@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +19,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.colorspace.RenderIntent.Companion.Saturation
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -27,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
 import com.android.wazzabysama.BuildConfig
 import com.android.wazzabysama.R
@@ -152,34 +157,32 @@ fun PublicMessageView(publicMessage: PublicMessage) {
         if (publicMessage.images.isNotEmpty()) {
             Row(
                 modifier = Modifier
-                    .padding(5.dp, 0.dp, 0.dp, 10.dp)
+                    .background(colorResource(R.color.gray_400))
                     .fillMaxSize(),
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Start,
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.photo),
-                    contentDescription = "",
+                    painter = rememberAsyncImagePainter(
+                        model = "${BuildConfig.BASE_URL_DEV}/images/${publicMessage.images[publicMessage.images.size - 1].imageName}",
+                        placeholder = painterResource(id = R.drawable.baseline_panorama_white_48),
+                        error = painterResource(id = R.drawable.baseline_error_white_48)
+                    ),
+                    contentDescription = "Profile picture description",
                     contentScale = ContentScale.Crop,
+                    /*colorFilter = ColorFilter.tint(
+                        colorResource(R.color.gray_400),
+                        BlendMode.Saturation
+                    ),*/
                     modifier = Modifier
-                        .fillMaxSize()
-                )
-
-                Image(
-                    painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${publicMessage.images[publicMessage.images.size - 1].imageName}"),
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .height(50.dp)
-                        .width(50.dp)
-                        .clip(RoundedCornerShape(corner = CornerSize(25.dp))),
-                    contentDescription = "Profile picture description"
-                )
+                        .fillMaxSize(),
+                    )
             }
         }
 
 
         Divider(
             color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier.padding(10.dp,0.dp,10.dp,10.dp)
         )
 
         Row(
