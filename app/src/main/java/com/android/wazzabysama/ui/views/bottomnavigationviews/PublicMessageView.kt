@@ -169,16 +169,11 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                     ),
                     contentDescription = "Profile picture description",
                     contentScale = ContentScale.Crop,
-                    /*colorFilter = ColorFilter.tint(
-                        colorResource(R.color.gray_400),
-                        BlendMode.Saturation
-                    ),*/
                     modifier = Modifier
                         .fillMaxSize(),
                     )
             }
         }
-
 
         Divider(
             color = MaterialTheme.colorScheme.onPrimary,
@@ -280,10 +275,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                             })
                     }
                 }
-
             }
-
         }
-
     }
 }
