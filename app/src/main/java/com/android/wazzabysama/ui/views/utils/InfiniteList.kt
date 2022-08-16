@@ -30,8 +30,6 @@ fun InfiniteListMessagePublicRemote(
     publicMessageViewModel: PublicMessageViewModel,
     problematic: Problematic,
     token: String,
-
-    //onLoadMore: () -> Unit
 ) {
 
     LazyColumn(
@@ -48,9 +46,6 @@ fun InfiniteListMessagePublicRemote(
         }
     }
 
-    /*InfiniteListHandler(listState = listState) {
-        onLoadMore()
-    }*/
     listState.OnBottomReached(buffer = 2) {
         publicMessageViewModel.getPublicMessage(problematic,publicMessageViewModel.currentPage.value + 1,token)
     }

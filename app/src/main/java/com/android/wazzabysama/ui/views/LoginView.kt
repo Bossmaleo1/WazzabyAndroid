@@ -191,15 +191,15 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         ) {
 
             OutlinedButton(
-                border = BorderStroke(1.dp, color = colorResource(R.color.Purple700)),
+                border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
                 onClick = {  navController.navigate("inscription_step_first") }) {
                 Icon(
                     imageVector = Icons.Outlined.ManageAccounts,
                     contentDescription = null,
-                    tint = colorResource(R.color.Purple700)
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(id = R.string.inscription), color = colorResource(R.color.Purple700))
+                Text(stringResource(id = R.string.inscription), color = MaterialTheme.colorScheme.primary)
             }
 
         }
@@ -224,7 +224,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             value = email,
             modifier = Modifier.padding(top = 10.dp),
             colors = TextFieldDefaults.textFieldColors(
-                containerColor = colorResource(R.color.blue_light)
+                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                 /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
                  focusedIndicatorColor = Color.Transparent,
                   unfocusedIndicatorColor = Color.Transparent*/
@@ -237,7 +237,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                     Icon(
                         imageVector = Icons.Outlined.Email,
                         contentDescription = "",
-                        tint = colorResource(R.color.Purple700)
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -246,7 +246,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
         OutlinedTextField(
             value = password,
             colors = TextFieldDefaults.textFieldColors(
-                containerColor = colorResource(R.color.blue_light),
+                containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                 /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
                  focusedIndicatorColor = Color.Transparent,
                   unfocusedIndicatorColor = Color.Transparent*/
@@ -261,7 +261,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                     Icon(
                         imageVector = Icons.Outlined.Lock,
                         contentDescription = "",
-                        tint = colorResource(R.color.Purple700)
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             },
@@ -274,7 +274,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                     Icon(
                         imageVector = visibilityIcon,
                         contentDescription = description,
-                        tint = colorResource(R.color.Purple700)
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             },
@@ -287,14 +287,14 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             modifier = Modifier
                 .width(280.dp)
                 .padding(top = 30.dp),
-            border = BorderStroke(1.dp, color = colorResource(R.color.Purple700)),
+            border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
             onClick = {
                 viewModelLogin(userViewModel, email,password, context)
             }) {
                 Icon(
                     imageVector = Icons.Outlined.Login,
                     contentDescription = null,
-                    tint = colorResource(R.color.Purple700)
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text(stringResource(R.string.connexion))
