@@ -1,5 +1,6 @@
 package com.android.wazzabysama.ui.views
 
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -57,6 +58,11 @@ fun AppDrawer(
             userName = user?.firstName + " " + user?.lastName
         }
     }
+    val springSpec = SpringSpec<Float>(
+        // Determined experimentally
+        stiffness = 800f,
+        dampingRatio = 0.8f
+    )
 
     Spacer(Modifier.size(15.dp))
 

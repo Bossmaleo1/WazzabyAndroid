@@ -3,6 +3,8 @@ package com.android.wazzabysama.ui.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
@@ -11,6 +13,7 @@ import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
@@ -52,7 +55,6 @@ fun MainHomeView(
     )
 
 
-
     Scaffold(topBar = {
         DrawerAppBar(
             scope,
@@ -73,7 +75,8 @@ fun MainHomeView(
                                 contentDescription = null
                             )
                         },
-                        label = { Text(item.title) },
+                        label = { Text(
+                            text = remember {item.title})},
                         selected = selectedItem == index,
                         onClick = {
                             selectedItem = index

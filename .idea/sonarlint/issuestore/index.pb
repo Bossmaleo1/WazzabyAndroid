@@ -1,12 +1,8 @@
 
-l
-<app/src/main/java/com/android/wazzabysama/ui/theme/Themes.kt,8/b/8bff4d01e75de267cca107c1f59e5a21177a17b8
 k
 ;app/src/main/java/com/android/wazzabysama/ui/theme/Color.kt,8/1/81b0fac6a8a4b303d61ea157ed14bf4bfd77bad9
 |
 Lapp/src/main/java/com/android/wazzabysama/ui/components/NavigationButtons.kt,9/4/9483b75a1e2f01249dd042e8c205ecfb93e32e99
-z
-Japp/src/main/java/com/android/wazzabysama/ui/model/BottomNavigationItem.kt,8/c/8cca8ba3cfaf651d85cd1b859f59944f419dcd07
 Ž
 ^app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PrivateMessageView.kt,a/5/a566bfee6daf4acd5b4d79c7836dbd15e0184420
 q
@@ -33,9 +29,11 @@ x
 Happ/src/main/java/com/android/wazzabysama/ui/views/utils/InfiniteList.kt,2/e/2edb2a0afe2d525c2830ef6d68c398e43abfbf9e
 ‚
 Rapp/src/main/java/com/android/wazzabysama/ui/views/shimmer/PublicMessageShimmer.kt,e/8/e8e6c6fe136395b334749a4e1197f95597f59cdd
-˜
-happ/src/main/java/com/android/wazzabysama/presentation/viewModel/publicMessage/PublicMessageViewModel.kt,1/9/190bf065682f73aae613be6221b1f3343bc8b26f
 p
 @app/src/main/java/com/android/wazzabysama/ui/views/LaunchView.kt,0/8/08a9d3998be03e42bac61f77298ec4a8620672af
 o
 ?app/src/main/java/com/android/wazzabysama/ui/views/LoginView.kt,1/f/1f138534c5d447e3c29eeca15cffa736f8d7e258
+
+]app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PublicMessageView.kt,9/c/9c1e86b9a5c43b30d6c9e96ebc48f5de74f03eee
+z
+Japp/src/main/java/com/android/wazzabysama/ui/model/BottomNavigationItem.kt,8/c/8cca8ba3cfaf651d85cd1b859f59944f419dcd07
