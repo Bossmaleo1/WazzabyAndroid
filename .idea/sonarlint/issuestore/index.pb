@@ -27,11 +27,13 @@ Japp/src/main/java/com/android/wazzabysama/ui/model/BottomNavigationItem.kt,8/c
 happ/src/main/java/com/android/wazzabysama/presentation/viewModel/publicMessage/PublicMessageViewModel.kt,1/9/190bf065682f73aae613be6221b1f3343bc8b26f
 é
 ^app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PrivateMessageView.kt,a/5/a566bfee6daf4acd5b4d79c7836dbd15e0184420
-ç
-]app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PublicMessageView.kt,9/c/9c1e86b9a5c43b30d6c9e96ebc48f5de74f03eee
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
 l
 <app/src/main/java/com/android/wazzabysama/ui/MainActivity.kt,4/a/4abf39e2545621f81c468e93a0c95450ba8ac78d
 @
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
+n
+>app/src/main/java/com/android/wazzabysama/ui/views/Problems.kt,5/5/5597e7842df53b1cf200eb12e56ff8b2319600d6
+k
+;app/src/main/java/com/android/wazzabysama/ui/theme/Color.kt,8/1/81b0fac6a8a4b303d61ea157ed14bf4bfd77bad9

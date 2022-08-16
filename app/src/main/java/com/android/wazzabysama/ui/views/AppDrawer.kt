@@ -1,6 +1,10 @@
 package com.android.wazzabysama.ui.views
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -32,8 +36,10 @@ import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.components.NavigationIcon
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.views.bottomnavigationviews.getOurPublicMessageImage
 import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,18 +57,16 @@ fun AppDrawer(
     userViewModel.getSavedToken()
     val token by userViewModel.tokenValue.observeAsState()
     val user by userViewModel.userValue.observeAsState()
+
     if (token?.token !== null) {
-        userViewModel.getSavedUserByToken(token?.token!!).observe(LocalContext.current as LifecycleOwner) {}
+        userViewModel.getSavedUserByToken(token?.token!!)
+            .observe(LocalContext.current as LifecycleOwner) {}
         if (user?.id != null) {
-            userViewModel.getSavedProblematic(user?.id!!).observe(LocalContext.current as LifecycleOwner) {}
+            userViewModel.getSavedProblematic(user?.id!!)
+                .observe(LocalContext.current as LifecycleOwner) {}
             userName = user?.firstName + " " + user?.lastName
         }
     }
-    val springSpec = SpringSpec<Float>(
-        // Determined experimentally
-        stiffness = 800f,
-        dampingRatio = 0.8f
-    )
 
     Spacer(Modifier.size(15.dp))
 
@@ -70,6 +74,7 @@ fun AppDrawer(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
+        // Content that needs to appear/disappear goes here:
         if (user?.imageUrl?.length == 0) {
             Image(
                 painter = painterResource(id = R.drawable.ic_profile_colorier),
@@ -88,6 +93,8 @@ fun AppDrawer(
                 contentDescription = "Profile picture description"
             )
         }
+
+
     }
 
     Spacer(Modifier.size(10.dp))
