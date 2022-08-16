@@ -3,7 +3,11 @@ package com.android.wazzabysama.ui.views.bottomnavigationviews
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -36,6 +40,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.android.wazzabysama.BuildConfig
 import com.android.wazzabysama.R
 import com.android.wazzabysama.data.model.data.PublicMessage
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -60,7 +65,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val countCommentaries by rememberSaveable { mutableStateOf("${publicMessage.comments.size}") }
     //val countDisLike by rememberSaveable { mutableStateOf("0") }
     var expandContentText by remember { mutableStateOf(false)}
-    Log.d("MyId", "${publicMessage.id}")
+    var visibleImage by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -77,16 +82,29 @@ fun PublicMessageView(publicMessage: PublicMessage) {
             horizontalArrangement = Arrangement.Start
         ) {
 
-            Image(
-                painter = getOurPublicMessageImage(publicMessage),
-                contentDescription = "Profile picture description",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .padding(4.dp)
-                    .height(50.dp)
-                    .width(50.dp)
-                    .clip(RoundedCornerShape(corner = CornerSize(25.dp)))
-            )
+            AnimatedVisibility(
+                visible = visibleImage,
+                enter = fadeIn(
+                    // Overwrites the initial value of alpha to 0.4f for fade in, 0 by default
+                    initialAlpha = 0.4f
+                ),
+                exit = fadeOut(
+                    // Overwrites the default animation with tween
+                    animationSpec = tween(durationMillis = 250)
+                )
+            ) {
+                // Content that needs to appear/disappear goes here:
+                Image(
+                    painter = getOurPublicMessageImage(publicMessage),
+                    contentDescription = "Profile picture description",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .height(50.dp)
+                        .width(50.dp)
+                        .clip(RoundedCornerShape(corner = CornerSize(25.dp)))
+                )
+            }
 
             Column(modifier = Modifier.padding(4.dp)) {
                 Text(
@@ -161,17 +179,29 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                     .fillMaxSize(),
                 horizontalArrangement = Arrangement.Start,
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = "${BuildConfig.BASE_URL_DEV}/images/${publicMessage.images[publicMessage.images.size - 1].imageName}",
-                        placeholder = painterResource(id = R.drawable.baseline_panorama_white_48),
-                        error = painterResource(id = R.drawable.baseline_error_white_48)
+                AnimatedVisibility(
+                    visible = visibleImage,
+                    enter = fadeIn(
+                        // Overwrites the initial value of alpha to 0.4f for fade in, 0 by default
+                        initialAlpha = 0.4f
                     ),
-                    contentDescription = "Profile picture description",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    exit = fadeOut(
+                        // Overwrites the default animation with tween
+                        animationSpec = tween(durationMillis = 250)
                     )
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            model = "${BuildConfig.BASE_URL_DEV}/images/${publicMessage.images[publicMessage.images.size - 1].imageName}",
+                            placeholder = painterResource(id = R.drawable.baseline_panorama_white_48),
+                            error = painterResource(id = R.drawable.baseline_error_white_48)
+                        ),
+                        contentDescription = "Profile picture description",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    )
+                }
             }
         }
 
@@ -277,5 +307,10 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 }
             }
         }
+    }
+
+    LaunchedEffect(true) {
+        delay(3)
+        visibleImage = true
     }
 }

@@ -3,9 +3,7 @@ package com.android.wazzabysama.ui.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.ModeEdit
@@ -13,7 +11,6 @@ import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +20,7 @@ import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.model.BottomNavigationItem
 import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -32,13 +30,15 @@ fun MainHomeView(
     drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
     publicMessageViewModel: PublicMessageViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    listStatePublicMessage: LazyListState
 ) {
     var switch by rememberSaveable { mutableStateOf(true) }
     var selectedItem by remember { mutableStateOf(0) }
     //This variable help use to dynamic our extended button
     var fabExtended by remember { mutableStateOf(true) }
-    val listStatePublicMessage = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
 
     viewItem.value = ConstValue.publicMessage
     val items = listOf(
@@ -109,7 +109,11 @@ fun MainHomeView(
                         Text(text = stringResource(R.string.new_message),
                             style = MaterialTheme.typography.titleSmall)
                     },
-                    onClick = {/*do something*/ },
+                    onClick = {
+                        coroutineScope.launch {
+                            listStatePublicMessage.animateScrollToItem(0)
+                        }
+                    },
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 )
             }
