@@ -4,6 +4,7 @@ package com.android.wazzabysama.ui.views
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.SpringSpec
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -187,7 +188,7 @@ fun DrawerAppBar(
                         problematic!!.language,
                         problematic!!.icon
                     )
-                    if (publicMessageViewModel.currentPage.value == 1) {
+                    if (publicMessageViewModel.currentPage.value == 1 && !isRefreshing) {
                         publicMessageViewModel.getPublicMessage(
                             problematicTemp, publicMessageViewModel.currentPage.value, token?.token!!
                         )
@@ -197,15 +198,12 @@ fun DrawerAppBar(
                     SwipeRefresh(
                         state = swipeRefreshState,
                         onRefresh = {
-                           isRefreshing = true
-                            //page = 1
+                            isRefreshing = true
                             publicMessageViewModel.currentPage.value = 1
                             publicMessageViewModel.initPublicMessage()
-                            /*publicMessageViewModel.getPublicMessage(
-                                problematicTemp, publicMessageViewModel.currentPage.value, token?.token!!
-                            )*/
                         },
                         indicator = { state, trigger ->
+                           // publicMessageViewModel.initPublicMessage()
                             SwipeRefreshIndicator(
                                 // Pass the SwipeRefreshState + trigger through
                                 state = state,
@@ -213,7 +211,7 @@ fun DrawerAppBar(
                                 // Enable the scale animation
                                 scale = true,
                                 // Change the color and shape
-                                backgroundColor = colorResource(R.color.Purple700),
+                                backgroundColor = colorResource(R.color.blue_light),
                                 shape = MaterialTheme.shapes.small,
                             )
                         }
