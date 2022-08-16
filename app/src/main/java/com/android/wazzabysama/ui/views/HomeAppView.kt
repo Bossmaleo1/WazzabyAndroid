@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.SpringSpec
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -38,6 +39,7 @@ import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.model.ConstValue
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
+import com.android.wazzabysama.ui.views.utils.chips
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -216,18 +218,26 @@ fun DrawerAppBar(
                             )
                         }
                     ) {
+                        Column {
 
-                        InfiniteListMessagePublicRemote(
-                            listState = listStatePublicMessage,
-                            listItems = remember { publicMessageViewModel.publicMessageStateRemoteList },
-                            paddingValues = PaddingValues(
+                            chips(paddingValues = PaddingValues(
                                 top = innerPadding.calculateTopPadding(),
-                                bottom = innerPadding.calculateBottomPadding() + 100.dp
-                            ),
-                            publicMessageViewModel = publicMessageViewModel,
-                            problematic = problematicTemp,
-                            token?.token!!
-                        )
+                                bottom = 0.dp
+                            ),rememberLazyListState())
+
+                            InfiniteListMessagePublicRemote(
+                                listState = listStatePublicMessage,
+                                listItems = remember { publicMessageViewModel.publicMessageStateRemoteList },
+                                paddingValues = PaddingValues(
+                                    top = 0.dp,
+                                    bottom = innerPadding.calculateBottomPadding() + 100.dp
+                                ),
+                                publicMessageViewModel = publicMessageViewModel,
+                                problematic = problematicTemp,
+                                token?.token!!
+                            )
+                        }
+
                     }
                     // cette instruction permet de réactivé le reflesh
                     LaunchedEffect(isRefreshing) {
