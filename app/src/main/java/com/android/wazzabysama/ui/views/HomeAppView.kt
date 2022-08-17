@@ -38,7 +38,7 @@ import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessag
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
-import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.Conversation
+import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.conversation.Conversation
 import com.android.wazzabysama.ui.views.model.ConstValue
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.android.wazzabysama.ui.views.utils.chips
