@@ -2,8 +2,11 @@ package com.android.wazzabysama.ui.views
 
 
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.ModeEdit
@@ -14,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -31,16 +35,26 @@ fun MainHomeView(
     viewItem: MutableLiveData<String>,
     publicMessageViewModel: PublicMessageViewModel,
     userViewModel: UserViewModel,
-    listStatePublicMessage: LazyListState
+    listStatePublicMessage: LazyListState,
+    listStatePrivateMessage: LazyListState,
+    navController: NavHostController
 ) {
     var switch by rememberSaveable { mutableStateOf(true) }
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by rememberSaveable { mutableStateOf(0) }
     //This variable help use to dynamic our extended button
-    var fabExtended by remember { mutableStateOf(true) }
+    var fabExtended by rememberSaveable { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
+    if (viewItem.value.isNullOrBlank()) {
+        viewItem.value = ConstValue.publicMessage
+    } else if (viewItem.value.equals(ConstValue.privateMessage)) {
+        switch = false
+        selectedItem = 1
+    } else if (viewItem.value.equals(ConstValue.publicMessage)) {
+        switch = true
+        selectedItem = 2
+    }
 
-    viewItem.value = ConstValue.publicMessage
     val items = listOf(
         BottomNavigationItem(
             Icons.Outlined.QuestionAnswer,
@@ -54,7 +68,6 @@ fun MainHomeView(
         )
     )
 
-
     Scaffold(topBar = {
         DrawerAppBar(
             scope,
@@ -62,7 +75,9 @@ fun MainHomeView(
             viewItem,
             publicMessageViewModel,
             userViewModel,
-            listStatePublicMessage
+            listStatePublicMessage,
+            listStatePrivateMessage,
+            navController
         )
     },
         bottomBar = {
@@ -101,6 +116,9 @@ fun MainHomeView(
                             prev = it
                         }
                 }
+                //We update our viewItem
+                viewItem.value = ConstValue.publicMessage
+                selectedItem = 0
 
                 ExtendedFloatingActionButton(
                     icon = { Icon(Icons.Outlined.ModeEdit, "") },

@@ -1,5 +1,6 @@
 package com.android.wazzabysama.ui.views
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.tween
@@ -141,8 +142,6 @@ fun AppDrawer(
                         viewItem.value = ConstValue.publicMessage
                     }
                 }
-
-
                 navController.navigate(WazzabyDrawerDestinations.HOME_ROUTE)
             }
         )

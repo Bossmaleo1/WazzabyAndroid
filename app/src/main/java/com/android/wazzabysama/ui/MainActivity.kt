@@ -24,6 +24,7 @@ import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.theme.WazzabySamaTheme
 import com.android.wazzabysama.ui.views.*
+import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.Conversation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +42,6 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var userFactory: UserViewModelFactory
-
     @Inject
     lateinit var publicMessageFactory: PublicMessageViewModelFactory
     private lateinit var userViewModel: UserViewModel //we call our login viewModel
@@ -57,7 +57,13 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     val navController = rememberNavController()
                     val listStatePublicMessage = rememberLazyListState()
-                    MainView(navController, this,listStatePublicMessage)
+                    val listStatePrivateMessage = rememberLazyListState()
+
+                    MainView(
+                        navController,
+                        this,
+                        listStatePublicMessage,
+                        listStatePrivateMessage)
                     userViewModel.getSavedToken().observe(this as LifecycleOwner) { token ->
                         this.token = token?.token
                     }
@@ -83,17 +89,24 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     @ExperimentalMaterial3Api
-    fun MainView(navController: NavHostController, context: Any,listStatePublicMessage: LazyListState) {
+    fun MainView(
+        navController: NavHostController,
+        context: Any,
+        listStatePublicMessage: LazyListState,
+        listStatePrivateMessage: LazyListState
+    ) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         val activity = (LocalContext.current as? Activity)
         //We call our init view model method
         this.initViewModel()
-        //val listStatePublicMessage = rememberLazyListState()
 
-        NavHost(navController = navController, startDestination = "LAUNCH_VIEW") {
-            composable(route = "LAUNCH_VIEW") {
+        NavHost(navController = navController, startDestination = WazzabyDrawerDestinations.LAUNCH_VIEW) {
+            composable(route = WazzabyDrawerDestinations.LAUNCH_VIEW) {
                 LaunchView()
+                BackHandler {
+                    activity?.finish()
+                }
             }
 
             composable(route = WazzabyDrawerDestinations.CONNEXION_VIEW) {
@@ -111,9 +124,9 @@ class MainActivity : ComponentActivity() {
                     userViewModel,
                     publicMessageViewModel
                 )
-                BackHandler {
+                /*BackHandler {
                     activity?.finish()
-                }
+                }*/
             }
 
             composable(route = WazzabyDrawerDestinations.INSCRIPTION_FIRST) {
