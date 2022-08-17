@@ -68,6 +68,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/privatemessage/Conversations.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/privatemessage/PrivateMessageView.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/shimmer/PublicMessageShimmer.kt">
           <value>
             <set />

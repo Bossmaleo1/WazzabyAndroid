@@ -9,6 +9,7 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -22,7 +23,8 @@ fun Problems(
     scope: CoroutineScope, drawerState: DrawerState,
     viewItem: MutableLiveData<String>,
     userViewModel: UserViewModel,
-    publicMessageViewModel: PublicMessageViewModel
+    publicMessageViewModel: PublicMessageViewModel,
+    navController: NavHostController
 ) {
     viewItem.value = ConstValue.problem
     DrawerAppBar(
@@ -31,6 +33,8 @@ fun Problems(
         viewItem,
         publicMessageViewModel,
         userViewModel,
-        rememberLazyListState()
+        rememberLazyListState(),
+        rememberLazyListState(),
+        navController
     )
 }

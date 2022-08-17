@@ -2,6 +2,8 @@ package com.android.wazzabysama.ui.views
 
 
 import android.os.Build
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
@@ -25,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -35,6 +38,7 @@ import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessag
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
+import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.Conversation
 import com.android.wazzabysama.ui.views.model.ConstValue
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.android.wazzabysama.ui.views.utils.chips
@@ -56,10 +60,10 @@ fun DrawerAppBar(
     viewItem: MutableLiveData<String>,
     publicMessageViewModel: PublicMessageViewModel,
     userViewModel: UserViewModel,
-    listStatePublicMessage: LazyListState
+    listStatePublicMessage: LazyListState,
+    listStatePrivateMessage: LazyListState,
+    navController: NavHostController
 ) {
-    val listStatePrivateMessage = rememberLazyListState()
-
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
     var saveValue by remember { mutableStateOf("") }
     val problematic by userViewModel.problematicValue.observeAsState()
@@ -329,8 +333,9 @@ fun DrawerAppBar(
                 }
             ConstValue.privateMessage ->
                 LazyColumn(contentPadding = innerPadding, state = listStatePrivateMessage) {
+                    expandedToolbar  = true
                     items(count = 2000) {
-                        PrivateMessageView()
+                        PrivateMessageView(navController)
                     }
                 }
         }
@@ -354,6 +359,7 @@ fun HomeApp(
         navBackStackEntry?.destination?.route ?: WazzabyDrawerDestinations.HOME_ROUTE
     val viewItem: MutableLiveData<String> = MutableLiveData()
     val listStatePublicMessage = rememberLazyListState()
+    val listStatePrivateMessage = rememberLazyListState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -383,7 +389,9 @@ fun HomeApp(
                     viewItem,
                     publicMessageViewModel,
                     userViewModel,
-                    listStatePublicMessage
+                    listStatePublicMessage,
+                    listStatePrivateMessage,
+                    navController
                 )
             }
 
@@ -393,8 +401,21 @@ fun HomeApp(
                     drawerState,
                     viewItem,
                     userViewModel,
-                    publicMessageViewModel
+                    publicMessageViewModel,
+                    navController
                 )
+            }
+
+            composable(route = WazzabyDrawerDestinations.CONVERSATION) {
+                Conversation(
+                    navController,
+                    viewItem
+                )
+
+                BackHandler {
+                    viewItem.value = ConstValue.privateMessage
+                    navController.navigate(WazzabyDrawerDestinations.HOME_ROUTE)
+                }
             }
 
         }

@@ -17,18 +17,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.android.wazzabysama.R
+import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.Conversation
 
 @ExperimentalMaterial3Api
 @Composable
-fun PrivateMessageView() {
-
+fun PrivateMessageView(navController: NavHostController) {
+    // .padding(top = 2.5.dp, bottom = 2.5.dp, end = 5.dp, start = 5.dp)
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable{
-                      Log.d("Bossmaleo191919","MALEO-SAMA !!")
+                navController.navigate(WazzabyDrawerDestinations.CONVERSATION)
             },
         shape = RoundedCornerShape(corner = CornerSize(10.dp)),
     ) {
@@ -60,8 +66,9 @@ fun PrivateMessageView() {
                 )
             }
         }
-        Divider(color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(10.dp))
+
     }
+    Divider(color = MaterialTheme.colorScheme.onPrimary)
 
 }
+

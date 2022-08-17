@@ -1,8 +1,6 @@
 
 |
 Lapp/src/main/java/com/android/wazzabysama/ui/components/NavigationButtons.kt,9/4/9483b75a1e2f01249dd042e8c205ecfb93e32e99
-q
-Aapp/src/main/java/com/android/wazzabysama/ui/views/Inscription.kt,b/f/bfd7805ca65dc8fbf897811336abed5679cdbbfe
 †
 Vapp/src/main/java/com/android/wazzabysama/domain/repository/PublicMessageRepository.kt,4/3/439f8103044fd3c83c6709d666c20c10a55483b0
 –
@@ -29,11 +27,7 @@ happ/src/main/java/com/android/wazzabysama/presentation/viewModel/publicMessage/
 ^app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PrivateMessageView.kt,a/5/a566bfee6daf4acd5b4d79c7836dbd15e0184420
 <
 build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-l
-<app/src/main/java/com/android/wazzabysama/ui/MainActivity.kt,4/a/4abf39e2545621f81c468e93a0c95450ba8ac78d
 @
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
-n
->app/src/main/java/com/android/wazzabysama/ui/views/Problems.kt,5/5/5597e7842df53b1cf200eb12e56ff8b2319600d6
 k
 ;app/src/main/java/com/android/wazzabysama/ui/theme/Color.kt,8/1/81b0fac6a8a4b303d61ea157ed14bf4bfd77bad9
