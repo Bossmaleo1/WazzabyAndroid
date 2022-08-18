@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -66,6 +67,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     //val countDisLike by rememberSaveable { mutableStateOf("0") }
     var expandContentText by remember { mutableStateOf(false)}
     var visibleImage by remember { mutableStateOf(false) }
+    val isDark = isSystemInDarkTheme()
 
     Card(
         modifier = Modifier
@@ -110,7 +112,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 Text(
                     text = userName,
                     style = MaterialTheme.typography.titleMedium,
-                    color = colorResource(R.color.black40)
+                    color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }
                 )
                 Row {
                     Image(
@@ -120,7 +122,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         modifier = Modifier
                             .height(18.dp)
                             .width(18.dp),
-                        colorFilter = ColorFilter.tint(color = colorResource(R.color.black40))
+                        colorFilter = ColorFilter.tint(color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  })
 
                     )
 
@@ -128,7 +130,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         text = postTime,
                         modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
                         style = MaterialTheme.typography.titleSmall,
-                        color = colorResource(R.color.black40)
+                        color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }
                     )
                 }
 
@@ -147,7 +149,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                     modifier = Modifier.padding(4.dp, 0.dp, 0.dp, 0.dp),
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Justify,
-                    color = colorResource(R.color.black40),
+                    color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                     overflow = TextOverflow.Ellipsis,
                     maxLines =  if (expandContentText) Int.MAX_VALUE else 3
                 )
@@ -163,10 +165,10 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 Icon(
                     imageVector = if(expandContentText) Icons.Outlined.KeyboardDoubleArrowUp else Icons.Outlined.KeyboardDoubleArrowDown,
                     contentDescription = null,
-                    tint = colorResource(R.color.black40)
+                    tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = if(expandContentText) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more), color = colorResource(R.color.black40))
+                Text(text = if(expandContentText) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more), color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  })
             }
 
 
@@ -206,8 +208,8 @@ fun PublicMessageView(publicMessage: PublicMessage) {
         }
 
         Divider(
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.padding(10.dp,0.dp,10.dp,10.dp)
+            color = if(!isDark) { MaterialTheme.colorScheme.onPrimary } else { Color.White},
+            modifier = Modifier.padding(bottom = 10.dp)
         )
 
         Row(
@@ -226,14 +228,14 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 ) {
                     Icon(
                         Icons.Outlined.QuestionAnswer,
-                        tint = colorResource(R.color.black40),
+                        tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                         contentDescription = null
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(countCommentaries, color = colorResource(R.color.black40))
+                    Text(countCommentaries, color =if (!isDark) { colorResource(R.color.black40) } else { Color.White  })
                     Text(
                         " ${stringResource(id = R.string.talk)}",
-                        style = MaterialTheme.typography.titleMedium, color = colorResource(R.color.black40)
+                        style = MaterialTheme.typography.titleMedium, color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 }
@@ -244,11 +246,11 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                 ) {
                     Icon(
                         Icons.Outlined.FavoriteBorder,
-                        tint = colorResource(R.color.black40),
+                        tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                         contentDescription = null,
                     )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text("0 ", color = colorResource(R.color.black40))
+                    Text("0 ", color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  })
                 }
 
                 Row(
@@ -262,7 +264,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.ArrowDropDownCircle,
-                            tint = colorResource(R.color.black40),
+                            tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                             contentDescription = "Localized description"
                         )
                     }
@@ -273,33 +275,33 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                         onDismissRequest = { expanded = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.edit_post), color = colorResource(R.color.black40)) },
+                            text = { Text(stringResource(id = R.string.edit_post), color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }) },
                             onClick = { /* Handle edit! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Edit,
-                                    tint = colorResource(R.color.black40),
+                                    tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                                     contentDescription = null
                                 )
                             })
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.delete_post), color = colorResource(R.color.black40)) },
+                            text = { Text(stringResource(id = R.string.delete_post), color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }) },
                             onClick = { /* Handle settings! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Delete,
-                                    tint = colorResource(R.color.black40),
+                                    tint =if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                                     contentDescription = null
                                 )
                             })
 
                         DropdownMenuItem(
-                            text = { Text(stringResource(id = R.string.report_post), color = colorResource(R.color.black40)) },
+                            text = { Text(stringResource(id = R.string.report_post), color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }) },
                             onClick = { /* Handle send feedback! */ },
                             leadingIcon = {
                                 Icon(
                                     Icons.Outlined.Flag,
-                                    tint = colorResource(R.color.black40),
+                                    tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                                     contentDescription = null
                                 )
                             })
