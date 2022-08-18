@@ -63,6 +63,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/UiExtras.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PublicMessageView.kt">
           <value>
             <set />
@@ -74,6 +79,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/privatemessage/PrivateMessageView.kt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/privatemessage/conversation/BackPressHandler.kt">
           <value>
             <set />
           </value>
