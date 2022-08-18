@@ -13,6 +13,8 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PhoneEnabled
+import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,6 +36,7 @@ import com.android.wazzabysama.R
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.data.exampleUiState
 import com.android.wazzabysama.ui.views.model.ConstValue
+import kotlinx.coroutines.launch
 
 private val ChatBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
 const val ConversationTestTag = "ConversationTestTag"
@@ -50,19 +53,49 @@ const val ConversationTestTag = "ConversationTestTag"
 @Composable
 fun ConversationContent(
     uiState: ConversationUiState,
-    navigateToProfile: (String) -> Unit) {
+    navigateToProfile: (String) -> Unit,
+    modifier: Modifier = Modifier) {
     val scrollState = rememberLazyListState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val scope = rememberCoroutineScope()
     Column(
         Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ) {
-        Messages(
-            messages = uiState.messages,
-            navigateToProfile = navigateToProfile,
-            scrollState = scrollState
-        )
+        Surface(modifier = modifier) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                ){
+                    Messages(
+                        messages = uiState.messages,
+                        navigateToProfile = navigateToProfile,
+                        modifier = Modifier.weight(1f),
+                        scrollState = scrollState
+                    )
+                    UserInput(
+                        onMessageSent = { content ->
+                            uiState.addMessage(
+                                Message("me", content, "now")
+                            )
+                        },
+                        resetScroll = {
+                            scope.launch {
+                                scrollState.scrollToItem(0)
+                            }
+                        },
+                        // Use navigationBarsPadding() imePadding() and , to move the input panel above both the
+                        // navigation bar, and on-screen keyboard (IME)
+                        modifier = Modifier
+                            .navigationBarsPadding()
+                            .imePadding(),
+                    )
+                }
+            }
+        }
     }
 
 }
@@ -122,6 +155,22 @@ fun Conversation(
             },
             actions = {
                 var expanded by remember { mutableStateOf(false) }
+
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = Icons.Outlined.Videocam,
+                        tint = colorResource(R.color.black40),
+                        contentDescription = "Localized description"
+                    )
+                }
+
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = Icons.Outlined.PhoneEnabled,
+                        tint = colorResource(R.color.black40),
+                        contentDescription = "Localized description"
+                    )
+                }
 
                 IconButton(onClick = {
                     expanded = true

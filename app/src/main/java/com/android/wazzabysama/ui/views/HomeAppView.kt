@@ -411,10 +411,7 @@ fun HomeApp(
                     viewItem
                 )
 
-                BackHandler {
-                    viewItem.value = ConstValue.privateMessage
-                    navController.navigate(WazzabyDrawerDestinations.HOME_ROUTE)
-                }
+                /**/
             }
 
         }
