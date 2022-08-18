@@ -25,9 +25,5 @@ Japp/src/main/java/com/android/wazzabysama/ui/model/BottomNavigationItem.kt,8/c
 happ/src/main/java/com/android/wazzabysama/presentation/viewModel/publicMessage/PublicMessageViewModel.kt,1/9/190bf065682f73aae613be6221b1f3343bc8b26f
 Ž
 ^app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/PrivateMessageView.kt,a/5/a566bfee6daf4acd5b4d79c7836dbd15e0184420
-<
-build.gradle,f/0/f07866736216be0ee2aba49e392191aeae700a35
-@
-app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
 k
 ;app/src/main/java/com/android/wazzabysama/ui/theme/Color.kt,8/1/81b0fac6a8a4b303d61ea157ed14bf4bfd77bad9

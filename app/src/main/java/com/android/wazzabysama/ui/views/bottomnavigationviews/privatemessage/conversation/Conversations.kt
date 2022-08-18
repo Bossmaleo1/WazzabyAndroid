@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.*
@@ -28,12 +27,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import androidx.navigation.findNavController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.data.exampleUiState
@@ -54,12 +50,9 @@ const val ConversationTestTag = "ConversationTestTag"
 @Composable
 fun ConversationContent(
     uiState: ConversationUiState,
-    navigateToProfile: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    onNavIconPressed: () -> Unit = { }
-) {
+    navigateToProfile: (String) -> Unit) {
     val scrollState = rememberLazyListState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Column(
         Modifier
             .fillMaxSize()
@@ -68,7 +61,6 @@ fun ConversationContent(
         Messages(
             messages = uiState.messages,
             navigateToProfile = navigateToProfile,
-            //modifier = Modifier.weight(1f),
             scrollState = scrollState
         )
     }
@@ -82,7 +74,7 @@ fun Conversation(
     viewItem: MutableLiveData<String>,
 ) {
     viewItem.value = ConstValue.privateMessage
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(topBar = {
         SmallTopAppBar(
@@ -115,13 +107,15 @@ fun Conversation(
                         Text(
                             text = "Sidney MALEO",
                             color = colorResource(R.color.black40),
-                            modifier = Modifier.padding( start = 3.dp)
+                            modifier = Modifier.padding( start = 3.dp),
+                            maxLines = 1
                         )
 
                         Text(
                             text = "en ligne",
                             color = colorResource(R.color.black40),
-                            modifier = Modifier.padding( start = 3.dp)
+                            modifier = Modifier.padding( start = 3.dp),
+                            maxLines = 1
                         )
                     }
                 }
@@ -148,7 +142,8 @@ fun Conversation(
                         text = {
                             Text(
                                 stringResource(id = R.string.profile),
-                                color = colorResource(R.color.black40)
+                                color = colorResource(R.color.black40),
+                                maxLines = 1
                             )
                         },
                         onClick = { /* Handle edit! */ })
@@ -157,7 +152,8 @@ fun Conversation(
                         text = {
                             Text(
                                 text = "Bloquer",
-                                color = colorResource(R.color.black40)
+                                color = colorResource(R.color.black40),
+                                maxLines = 1
                             )
                         },
                         onClick = { /* Handle edit! */ })
@@ -166,7 +162,8 @@ fun Conversation(
                         text = {
                             Text(
                                 text = "Rechercher",
-                                color = colorResource(R.color.black40)
+                                color = colorResource(R.color.black40),
+                                maxLines = 1
                             )
                         },
                         onClick = { /* Handle edit! */ })
@@ -175,7 +172,8 @@ fun Conversation(
                         text = {
                             Text(
                                 text = "Signaler",
-                                color = colorResource(R.color.black40)
+                                color = colorResource(R.color.black40),
+                                maxLines = 1
                             )
                         },
                         onClick = { /* Handle edit! */ })
@@ -185,27 +183,11 @@ fun Conversation(
             scrollBehavior = scrollBehavior,
             title = {}
         )
-    }) {innerPadding ->
+    }) { innerPadding ->
         //paddingValues: PaddingValues
         ConversationContent(
             uiState = exampleUiState,
-            navigateToProfile = { user ->
-                // Click callback
-                /*val bundle = bundleOf("userId" to user)
-                findNavController().navigate(
-                    R.id.nav_profile,
-                    bundle
-                )*/
-            },
-            onNavIconPressed = {
-                //activityViewModel.openDrawer()
-            },
-            // Add padding so that we are inset from any navigation bars
-            modifier = Modifier.windowInsetsPadding(
-                WindowInsets
-                    .navigationBars
-                    .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-            )
+            navigateToProfile = { user -> }
         )
     }
 
@@ -262,8 +244,6 @@ fun Message(
                     .clickable(onClick = { onAuthorClick(msg.author) })
                     .padding(horizontal = 16.dp)
                     .size(42.dp)
-                    .border(1.5.dp, borderColor, CircleShape)
-                    .border(3.dp, MaterialTheme.colorScheme.surface, CircleShape)
                     .clip(CircleShape)
                     .align(Alignment.Top),
                 painter = painterResource(id = msg.authorImage),
@@ -413,8 +393,6 @@ fun Messages(
     scrollState: LazyListState,
     modifier: Modifier = Modifier
 ) {
-    val scope = rememberCoroutineScope()
-
     Box(modifier = modifier) {
         val authorMe = "me"
         LazyColumn(

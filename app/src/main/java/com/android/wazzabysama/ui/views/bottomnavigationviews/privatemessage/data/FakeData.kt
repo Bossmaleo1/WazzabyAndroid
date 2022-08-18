@@ -95,7 +95,7 @@ private val initialMessages = listOf(
     ),
     Message(
         "Taylor Brooks",
-        "@aliconors Take a look at the `Flow.collectAsState()` APIs",
+        "@aliconors Take a look at the `Flow.collectAsState()` APIs `WindowInsets.statusBars.add(WindowInsets(top = 90.dp)).asPaddingValues()`",
         "8:05 PM"
     ),
     Message(
