@@ -2,7 +2,6 @@ package com.android.wazzabysama.ui.views
 
 
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
@@ -64,7 +63,7 @@ fun DrawerAppBar(
     listStatePrivateMessage: LazyListState,
     navController: NavHostController
 ) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var saveValue by remember { mutableStateOf("") }
     val problematic by userViewModel.problematicValue.observeAsState()
     val user by userViewModel.userValue.observeAsState()
@@ -197,7 +196,7 @@ fun DrawerAppBar(
                                         contentDescription = null
                                     )
                                 })
-                            MenuDefaults.Divider()
+                           // MenuDefaults.
                             DropdownMenuItem(
                                 text = {
                                     Text(
@@ -364,17 +363,17 @@ fun HomeApp(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            AppDrawer(
-                navController = navController,
-                currentRoute = currentRoute,
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .navigationBarsPadding(),
-                scope,
-                drawerState,
-                viewItem,
-                userViewModel
-            )
+            ModalDrawerSheet {
+                AppDrawer(
+                    navController = navController,
+                    currentRoute = currentRoute,
+                    modifier = Modifier,
+                    scope,
+                    drawerState,
+                    viewItem,
+                    userViewModel
+                )
+            }
         }
     ) {
         NavHost(
