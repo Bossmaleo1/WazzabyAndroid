@@ -24,19 +24,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.colorspace.RenderIntent.Companion.Saturation
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
 import com.android.wazzabysama.BuildConfig
 import com.android.wazzabysama.R
@@ -65,7 +63,9 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val content by rememberSaveable { mutableStateOf(publicMessage.content) }
     val countCommentaries by rememberSaveable { mutableStateOf("${publicMessage.comments.size}") }
     //val countDisLike by rememberSaveable { mutableStateOf("0") }
-    var expandContentText by remember { mutableStateOf(false)}
+    var expandedContentText by remember { mutableStateOf(true)}
+    var expandedButtonVisibility by remember { mutableStateOf(false) }
+    var expandedIntermediate by remember {mutableStateOf(true)}
     var visibleImage by remember { mutableStateOf(false) }
     val isDark = isSystemInDarkTheme()
 
@@ -139,7 +139,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
 
         Row(
             modifier = Modifier
-                .padding(5.dp, 0.dp, 5.dp, 0.dp)
+                .padding(start = 5.dp, top = 0.dp, end = 5.dp, bottom = 0.dp)
                 .animateContentSize(),
             horizontalArrangement = Arrangement.Center
         ) {
@@ -151,27 +151,37 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                     textAlign = TextAlign.Justify,
                     color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  },
                     overflow = TextOverflow.Ellipsis,
-                    maxLines =  if (expandContentText) Int.MAX_VALUE else 3
+                    maxLines =  if (expandedContentText) Int.MAX_VALUE else 3,
+                    onTextLayout = {textLayoutResult: TextLayoutResult ->
+                        if (expandedIntermediate) {
+                            if (textLayoutResult.lineCount > 3) {
+                                expandedButtonVisibility = true
+                                expandedContentText = false
+                            }
+                            expandedIntermediate = false
+                        }/*else {
+                            expandedContentText = true
+                        }*/
+                    }
                 )
             }
         }
-
-        Row(
-            modifier = Modifier
-                .padding(0.dp, 0.dp, 0.dp, 0.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            TextButton(onClick = {  expandContentText = !expandContentText }) {
-                Icon(
-                    imageVector = if(expandContentText) Icons.Outlined.KeyboardDoubleArrowUp else Icons.Outlined.KeyboardDoubleArrowDown,
-                    contentDescription = null,
-                    tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = if(expandContentText) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more), color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  })
+        if (expandedButtonVisibility) {
+            Row(
+                modifier = Modifier
+                    .padding(0.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TextButton(onClick = {  expandedContentText = !expandedContentText }) {
+                    Icon(
+                        imageVector = if(expandedContentText) Icons.Outlined.KeyboardDoubleArrowUp else Icons.Outlined.KeyboardDoubleArrowDown,
+                        contentDescription = null,
+                        tint = if (!isDark) { colorResource(R.color.black40) } else { Color.White  }
+                    )
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = if(expandedContentText) stringResource(id = R.string.read_less) else stringResource(id = R.string.read_more), color = if (!isDark) { colorResource(R.color.black40) } else { Color.White  })
+                }
             }
-
-
         }
 
         if (publicMessage.images.isNotEmpty()) {
@@ -209,7 +219,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
 
         Divider(
             color = if(!isDark) { MaterialTheme.colorScheme.onPrimary } else { Color.White},
-            modifier = Modifier.padding(bottom = 10.dp)
+            modifier = Modifier.padding(bottom = 10.dp, top = 10.dp)
         )
 
         Row(
@@ -220,7 +230,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(5.dp)
+                modifier = Modifier.padding(0.dp)
             ) {
                 Row(
                     modifier = Modifier
