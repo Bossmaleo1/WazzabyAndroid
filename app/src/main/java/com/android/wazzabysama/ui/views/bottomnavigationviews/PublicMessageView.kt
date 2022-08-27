@@ -62,7 +62,6 @@ fun PublicMessageView(publicMessage: PublicMessage) {
     val postTime by rememberSaveable { mutableStateOf(published) }
     val content by rememberSaveable { mutableStateOf(publicMessage.content) }
     val countCommentaries by rememberSaveable { mutableStateOf("${publicMessage.comments.size}") }
-    //val countDisLike by rememberSaveable { mutableStateOf("0") }
     var expandedContentText by remember { mutableStateOf(true)}
     var expandedButtonVisibility by remember { mutableStateOf(false) }
     var expandedIntermediate by remember {mutableStateOf(true)}
@@ -159,9 +158,7 @@ fun PublicMessageView(publicMessage: PublicMessage) {
                                 expandedContentText = false
                             }
                             expandedIntermediate = false
-                        }/*else {
-                            expandedContentText = true
-                        }*/
+                        }
                     }
                 )
             }
