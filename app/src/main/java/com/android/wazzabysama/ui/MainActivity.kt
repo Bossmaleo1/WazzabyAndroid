@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     CoroutineScope(Dispatchers.Main).launch {
-                        delay(100)
+                        delay(200)
                         if (token === null) {
                             navController.navigate("connexion_view")
                         } else {
