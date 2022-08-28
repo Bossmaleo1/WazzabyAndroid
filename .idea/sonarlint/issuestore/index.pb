@@ -39,8 +39,6 @@ r
 Bapp/src/main/java/com/android/wazzabysama/ui/views/MainHomeView.kt,b/8/b830bf0a81efe6741593f23b2366e3b5db2aa317
 x
 Happ/src/main/java/com/android/wazzabysama/ui/views/utils/InfiniteList.kt,2/e/2edb2a0afe2d525c2830ef6d68c398e43abfbf9e
-l
-<app/src/main/java/com/android/wazzabysama/ui/MainActivity.kt,4/a/4abf39e2545621f81c468e93a0c95450ba8ac78d
 ?
 settings.gradle,0/5/05efc8b1657769a27696d478ded1e95f38737233
 ˜
