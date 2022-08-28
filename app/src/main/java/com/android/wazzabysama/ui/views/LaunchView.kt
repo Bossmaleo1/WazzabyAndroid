@@ -58,7 +58,7 @@ fun LaunchView() {
                            .padding(60.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "©WazzabySama 2021 version 1.0",
+        Text(text = "©WazzabySama 2021 V 1.0",
             color = colorResource(R.color.Purple700))
     }
 
