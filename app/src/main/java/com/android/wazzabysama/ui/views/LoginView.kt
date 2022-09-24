@@ -231,6 +231,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             ),
             onValueChange = { email = it },
             label = { Text(stringResource(id = R.string.your_email)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             placeholder = { Text("") },
             leadingIcon = {
                 IconButton(onClick = { }) {
