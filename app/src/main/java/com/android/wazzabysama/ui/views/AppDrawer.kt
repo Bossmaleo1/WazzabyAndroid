@@ -116,7 +116,7 @@ fun AppDrawer(
                 onCheckedChange = { checkedState.value = it },
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.Red,
-                    checkedTrackColor = colorResource(R.color.blue_light),
+                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
                     uncheckedThumbColor = Color.Gray
                 )
             )

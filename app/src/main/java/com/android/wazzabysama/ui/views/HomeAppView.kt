@@ -2,11 +2,11 @@ package com.android.wazzabysama.ui.views
 
 
 import android.os.Build
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -41,8 +41,6 @@ import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.con
 import com.android.wazzabysama.ui.views.model.ConstValue
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.android.wazzabysama.ui.views.utils.chips
-import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -93,7 +91,13 @@ fun DrawerAppBar(
                 exit = slideOutVertically() + shrinkVertically() + fadeOut()
             ) {
 
-                SmallTopAppBar(
+                TopAppBar(title = {
+                    Text(
+                        if (saveValue == ConstValue.problem) stringResource(R.string.problematic_app) else stringResource(
+                            id = R.string.app_name
+                        ), color = colorResource(R.color.black40)
+                    )
+                },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
@@ -196,7 +200,7 @@ fun DrawerAppBar(
                                         contentDescription = null
                                     )
                                 })
-                           // MenuDefaults.
+                            // MenuDefaults.
                             DropdownMenuItem(
                                 text = {
                                     Text(
@@ -210,22 +214,14 @@ fun DrawerAppBar(
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Outlined.PowerSettingsNew,
+                                        Icons.Outlined.Logout,
                                         tint = colorResource(R.color.black40),
                                         contentDescription = null
                                     )
                                 })
 
                         }
-                    },
-                    scrollBehavior = scrollBehavior,
-                    title = {
-                        Text(
-                            if (saveValue == ConstValue.problem) stringResource(R.string.problematic_app) else stringResource(
-                                id = R.string.app_name
-                            ), color = colorResource(R.color.black40)
-                        )
-                    }
+                    }, scrollBehavior = scrollBehavior
                 )
 
             }
@@ -278,7 +274,7 @@ fun DrawerAppBar(
                                 // Enable the scale animation
                                 scale = true,
                                 // Change the color and shape
-                                backgroundColor = colorResource(R.color.blue_light),
+                                backgroundColor = androidx.compose.material.MaterialTheme.colors.primary.copy(alpha = 0.08f),
                                 shape = MaterialTheme.shapes.small,
                             )
                         }
