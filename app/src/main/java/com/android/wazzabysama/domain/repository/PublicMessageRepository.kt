@@ -19,4 +19,6 @@ interface PublicMessageRepository {
     //Flow for Room Data backup
     fun getSavedPublicMessage(publicMessageProblematic: String): Flow<List<PublicMessageRoom>>
 
+    suspend fun deletePublicMessageTable()
+
 }

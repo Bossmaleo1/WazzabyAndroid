@@ -49,6 +49,14 @@ class UserRepositoryImpl(
         return userLocalDataSource.getSavedToken()
     }
 
+    override suspend fun deleteUserTable() {
+        userLocalDataSource.deleteUserTable()
+    }
+
+    override suspend fun deleteTokenTable() {
+        userLocalDataSource.deleteTokenTable()
+    }
+
     override suspend fun getToken(userName: String, password: String): Resource<ApiTokenResponse> {
         return responseToResourceToken(userRemoteDataSource.getToken(userName, password))
     }

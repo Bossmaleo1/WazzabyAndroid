@@ -30,4 +30,8 @@ interface UserRepository {
     //Flow for Room Data backup
     fun getSavedToken(): Flow<TokenRoom>
 
+    suspend fun deleteUserTable()
+
+    suspend fun deleteTokenTable()
+
 }

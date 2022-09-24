@@ -36,10 +36,14 @@ class PublicMessageRepositoryImpl(
 
 
     override suspend fun deletePublicMessage(publicMessage: PublicMessage) {
-        TODO("Not yet implemented")
+        publicMessageLocalDataSource.deleTablePublicMessage()
     }
 
     override fun getSavedPublicMessage(publicMessageProblematic: String): Flow<List<PublicMessageRoom>> {
         return publicMessageLocalDataSource.getSavedPublicMessage(publicMessageProblematic)
+    }
+
+    override suspend fun deletePublicMessageTable() {
+        publicMessageLocalDataSource.deleTablePublicMessage()
     }
 }

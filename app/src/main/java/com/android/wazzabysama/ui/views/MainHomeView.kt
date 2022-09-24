@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
+import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.model.BottomNavigationItem
@@ -32,9 +33,11 @@ fun MainHomeView(
     viewItem: MutableLiveData<String>,
     publicMessageViewModel: PublicMessageViewModel,
     userViewModel: UserViewModel,
+    dropViewModel: DropViewModel,
     listStatePublicMessage: LazyListState,
     listStatePrivateMessage: LazyListState,
-    navController: NavHostController
+    navController: NavHostController,
+    navController0: NavHostController
 ) {
     var switch by rememberSaveable { mutableStateOf(true) }
     var selectedItem by rememberSaveable { mutableStateOf(0) }
@@ -72,9 +75,11 @@ fun MainHomeView(
             viewItem,
             publicMessageViewModel,
             userViewModel,
+            dropViewModel,
             listStatePublicMessage,
             listStatePrivateMessage,
-            navController
+            navController,
+            navController0
         )
     },
         bottomBar = {

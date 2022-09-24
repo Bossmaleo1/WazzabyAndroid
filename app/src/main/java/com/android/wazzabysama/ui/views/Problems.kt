@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
+import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.views.model.ConstValue
@@ -24,7 +25,9 @@ fun Problems(
     viewItem: MutableLiveData<String>,
     userViewModel: UserViewModel,
     publicMessageViewModel: PublicMessageViewModel,
-    navController: NavHostController
+    dropViewModel: DropViewModel,
+    navController: NavHostController,
+    navController0: NavHostController
 ) {
     viewItem.value = ConstValue.problem
     DrawerAppBar(
@@ -33,8 +36,10 @@ fun Problems(
         viewItem,
         publicMessageViewModel,
         userViewModel,
+        dropViewModel,
         rememberLazyListState(),
         rememberLazyListState(),
-        navController
+        navController,
+        navController0
     )
 }

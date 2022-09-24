@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.data.model.data.Problematic
+import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
@@ -57,9 +58,11 @@ fun DrawerAppBar(
     viewItem: MutableLiveData<String>,
     publicMessageViewModel: PublicMessageViewModel,
     userViewModel: UserViewModel,
+    dropViewModel: DropViewModel,
     listStatePublicMessage: LazyListState,
     listStatePrivateMessage: LazyListState,
-    navController: NavHostController
+    navController: NavHostController,
+    navController0: NavHostController
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var saveValue by remember { mutableStateOf("") }
@@ -209,8 +212,8 @@ fun DrawerAppBar(
                                     )
                                 },
                                 onClick = {
-                                    /* Handle settings! */
-
+                                    dropViewModel.deleteAll()
+                                    navController0.navigate(WazzabyDrawerDestinations.LOGIN)
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -346,7 +349,9 @@ fun DrawerAppBar(
 fun HomeApp(
     scope: CoroutineScope, drawerState: DrawerState,
     userViewModel: UserViewModel,
-    publicMessageViewModel: PublicMessageViewModel
+    publicMessageViewModel: PublicMessageViewModel,
+    dropViewModel: DropViewModel,
+    navController0: NavHostController
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -384,9 +389,11 @@ fun HomeApp(
                     viewItem,
                     publicMessageViewModel,
                     userViewModel,
+                    dropViewModel,
                     listStatePublicMessage,
                     listStatePrivateMessage,
-                    navController
+                    navController,
+                    navController0
                 )
             }
 
@@ -397,7 +404,9 @@ fun HomeApp(
                     viewItem,
                     userViewModel,
                     publicMessageViewModel,
-                    navController
+                    dropViewModel,
+                    navController,
+                    navController0
                 )
             }
 

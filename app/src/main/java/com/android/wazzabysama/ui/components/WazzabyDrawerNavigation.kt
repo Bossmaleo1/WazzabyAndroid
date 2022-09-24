@@ -11,4 +11,5 @@ object WazzabyDrawerDestinations {
     const val CONNEXION_VIEW = "connexion_view"
     const val LAUNCH_VIEW = "LAUNCH_VIEW"
     const val CONVERSATION = "CONVERSATION"
+    const val LOGIN = "connexion_view"
 }

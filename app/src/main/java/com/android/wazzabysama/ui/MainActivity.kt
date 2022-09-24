@@ -17,6 +17,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
+import com.android.wazzabysama.presentation.viewModel.drop.DropViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -41,8 +43,11 @@ class MainActivity : ComponentActivity() {
     lateinit var userFactory: UserViewModelFactory
     @Inject
     lateinit var publicMessageFactory: PublicMessageViewModelFactory
+    @Inject
+    lateinit var dropFactory: DropViewModelFactory
     private lateinit var userViewModel: UserViewModel //we call our login viewModel
     private lateinit var publicMessageViewModel: PublicMessageViewModel
+    private lateinit var dropViewModel: DropViewModel
     var token: String? = null
 
     @SuppressLint("CoroutineCreationDuringComposition")
@@ -68,7 +73,7 @@ class MainActivity : ComponentActivity() {
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(200)
                         if (token === null) {
-                            navController.navigate("connexion_view")
+                            navController.navigate(WazzabyDrawerDestinations.LOGIN)
                         } else {
                             navController.navigate(WazzabyDrawerDestinations.HOME)
                         }
@@ -82,6 +87,7 @@ class MainActivity : ComponentActivity() {
         userViewModel = ViewModelProvider(this, userFactory)[UserViewModel::class.java]
         publicMessageViewModel =
             ViewModelProvider(this, publicMessageFactory)[PublicMessageViewModel::class.java]
+        dropViewModel = ViewModelProvider(this, dropFactory)[DropViewModel::class.java]
     }
 
     @Composable
@@ -106,7 +112,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            composable(route = WazzabyDrawerDestinations.CONNEXION_VIEW) {
+            composable(route = WazzabyDrawerDestinations.LOGIN) {
                 Login(navController, userViewModel, context)
                 BackHandler {
                     activity?.finish()
@@ -119,7 +125,9 @@ class MainActivity : ComponentActivity() {
                     scope,
                     drawerState,
                     userViewModel,
-                    publicMessageViewModel
+                    publicMessageViewModel,
+                    dropViewModel,
+                    navController
                 )
                 /*BackHandler {
                     activity?.finish()

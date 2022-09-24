@@ -2,10 +2,7 @@ package com.android.wazzabysama.presentation.di
 
 import com.android.wazzabysama.domain.repository.PublicMessageRepository
 import com.android.wazzabysama.domain.repository.UserRepository
-import com.android.wazzabysama.domain.usecase.publicmessage.DeleteSavedPublicMessageUseCase
-import com.android.wazzabysama.domain.usecase.publicmessage.GetPublicMessageUseCase
-import com.android.wazzabysama.domain.usecase.publicmessage.GetSavedPublicMessageUseCase
-import com.android.wazzabysama.domain.usecase.publicmessage.SavePublicMessageUseCase
+import com.android.wazzabysama.domain.usecase.publicmessage.*
 import com.android.wazzabysama.domain.usecase.user.GetTokenUseCase
 import dagger.Module
 import dagger.Provides
@@ -46,5 +43,13 @@ class PublicMessageUseCaseModule {
         publicMessageRepository: PublicMessageRepository
     ): DeleteSavedPublicMessageUseCase {
         return DeleteSavedPublicMessageUseCase(publicMessageRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteTablePublicMessageUseCase(
+        publicMessageRepository: PublicMessageRepository
+    ): DeleteTablePublicMessageUseCase {
+        return DeleteTablePublicMessageUseCase(publicMessageRepository)
     }
 }
