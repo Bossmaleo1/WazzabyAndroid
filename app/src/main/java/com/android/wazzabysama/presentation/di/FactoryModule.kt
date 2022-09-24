@@ -5,6 +5,7 @@ import com.android.wazzabysama.domain.usecase.problematic.GetSavedProblematicUse
 import com.android.wazzabysama.domain.usecase.problematic.SaveProblematicUseCase
 import com.android.wazzabysama.domain.usecase.publicmessage.*
 import com.android.wazzabysama.domain.usecase.user.*
+import com.android.wazzabysama.presentation.viewModel.drop.DropViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import dagger.Module
@@ -62,6 +63,22 @@ class FactoryModule {
             getSavedPublicMessageUseCase,
             //updateSavedPublicMessageUseCase,
             savePublicMessageUseCase
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideDropViewModelFactory(
+        application: Application,
+        deleteTableUserUseCase: DeleteTableUserUseCase,
+        deleteTableTokenUseCase: DeleteTableTokenUseCase,
+        deleteTablePublicMessageUseCase: DeleteTablePublicMessageUseCase
+    ): DropViewModelFactory {
+        return DropViewModelFactory(
+            application,
+            deleteTableUserUseCase,
+            deleteTableTokenUseCase,
+            deleteTablePublicMessageUseCase
         )
     }
 }

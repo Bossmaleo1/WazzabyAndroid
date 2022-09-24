@@ -7,4 +7,5 @@ interface PublicMessageLocalDataSource {
     suspend fun savePublicMessageToDB(publicMessage: PublicMessageRoom)
     fun getSavedPublicMessage(publicMessageProblematic: String): Flow<List<PublicMessageRoom>>
     suspend fun deletePublicMessageFromDB(publicMessage: PublicMessageRoom)
+    suspend fun deleTablePublicMessage()
 }

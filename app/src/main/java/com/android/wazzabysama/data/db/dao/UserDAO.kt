@@ -27,4 +27,10 @@ interface UserDAO {
 
     @Delete()
     suspend fun deleteToken(token: TokenRoom)
+
+    @Query("DELETE  FROM user_data_table")
+    suspend fun deleteTableUser();
+
+    @Query("DELETE  FROM token_data_table")
+    suspend fun deleteTableToken();
 }

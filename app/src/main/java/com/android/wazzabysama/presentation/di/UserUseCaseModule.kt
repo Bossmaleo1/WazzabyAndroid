@@ -86,4 +86,20 @@ class UserUseCaseModule {
         return DeleteSavedUserUseCase(userRepository)
     }
 
+    @Singleton
+    @Provides
+    fun provideDeleteTablePublicMessageUseCase(
+        userRepository: UserRepository
+    ): DeleteTableUserUseCase {
+        return DeleteTableUserUseCase(userRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteTableTokenUseCase(
+        userRepository: UserRepository
+    ): DeleteTableTokenUseCase {
+        return DeleteTableTokenUseCase(userRepository)
+    }
+
 }

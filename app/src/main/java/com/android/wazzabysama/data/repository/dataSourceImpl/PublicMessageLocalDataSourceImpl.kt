@@ -19,4 +19,8 @@ class PublicMessageLocalDataSourceImpl(
     override suspend fun deletePublicMessageFromDB(publicMessage: PublicMessageRoom) {
         return publicMessageDAO.deletePublicMessage(publicMessage)
     }
+
+    override suspend fun deleTablePublicMessage() {
+        return publicMessageDAO.deleteTablePublicMessage()
+    }
 }
