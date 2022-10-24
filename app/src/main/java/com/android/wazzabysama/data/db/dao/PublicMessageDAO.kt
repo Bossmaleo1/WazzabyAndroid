@@ -16,5 +16,5 @@ interface PublicMessageDAO {
     suspend fun deletePublicMessage(publicMessage: PublicMessageRoom)
 
     @Query("DELETE  FROM public_message_data_table")
-    suspend fun deleteTablePublicMessage();
+    suspend fun deleteTablePublicMessage()
 }

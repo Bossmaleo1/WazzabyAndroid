@@ -1,4 +1,4 @@
-package com.android.wazzabysama.ui
+package com.android.wazzabysama.ui.views
 
 import android.annotation.SuppressLint
 import android.app.Activity

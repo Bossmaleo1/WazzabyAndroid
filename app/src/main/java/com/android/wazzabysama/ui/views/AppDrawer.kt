@@ -52,7 +52,7 @@ fun AppDrawer(
     val token by userViewModel.tokenValue.observeAsState()
     val user by userViewModel.userValue.observeAsState()
 
-    if (token?.token !== null) {
+    if (!token?.token.isNullOrBlank()) {
         userViewModel.getSavedUserByToken(token?.token!!)
             .observe(LocalContext.current as LifecycleOwner) {}
         if (user?.id != null) {

@@ -44,14 +44,6 @@ class PublicMessageViewModel @Inject constructor(
                         publicMessageList.postValue(it.publicMessageList)
                         publicMessageStateRemoteList.addAll(it.publicMessageList)
                         currentPage.value = page
-                        for(i in 0..it.publicMessageList.size) {
-                            Log.d("RemoteResponse","${it.publicMessageList[i].id}")
-                        }
-
-                        for(i in 0..publicMessageStateRemoteList.size) {
-                            Log.d("RemoteResponse","${it.publicMessageList[i].id}")
-                        }
-
                     }
                     //isRefreshing = true
                 } else {
