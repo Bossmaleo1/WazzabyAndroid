@@ -92,8 +92,11 @@ fun MainHomeView(
                                 contentDescription = null
                             )
                         },
-                        label = { Text(
-                            text = remember {item.title})},
+                        label = {
+                                Text(
+                                    text = remember {item.title}
+                                )
+                                },
                         selected = selectedItem == index,
                         onClick = {
                             selectedItem = index

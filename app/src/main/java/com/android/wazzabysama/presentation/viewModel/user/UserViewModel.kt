@@ -70,6 +70,7 @@ class UserViewModel @Inject constructor(
             } else {
                 token.postValue(Resource.Error("Internet is available"))
             }
+
         }catch (e:Exception) {
             token.postValue(Resource.Error(e.message.toString()))
         }
@@ -80,6 +81,7 @@ class UserViewModel @Inject constructor(
         try {
             if (isNetworkAvailable(app)) {
                 val apiResult = getUserUseCase.execute(userName, token)
+                Log.d("MALEOTEST", "MALEOTEST ${apiResult.data?.Users?.get(0)?.firstName}")
                 user.postValue(apiResult)
             } else {
                 user.postValue(Resource.Error("Internet is available"))
