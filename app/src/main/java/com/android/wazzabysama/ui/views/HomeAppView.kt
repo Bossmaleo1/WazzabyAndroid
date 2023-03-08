@@ -1,7 +1,11 @@
 package com.android.wazzabysama.ui.views
 
 
+import android.Manifest
 import android.os.Build
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
@@ -22,6 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
@@ -42,12 +48,16 @@ import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.con
 import com.android.wazzabysama.ui.views.model.ConstValue
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.android.wazzabysama.ui.views.utils.chips
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -94,13 +104,14 @@ fun DrawerAppBar(
                 exit = slideOutVertically() + shrinkVertically() + fadeOut()
             ) {
 
-                TopAppBar(title = {
-                    Text(
-                        if (saveValue == ConstValue.problem) stringResource(R.string.problematic_app) else stringResource(
-                            id = R.string.app_name
-                        ), color = colorResource(R.color.black40)
-                    )
-                },
+                TopAppBar(
+                    title = {
+                        Text(
+                            if (saveValue == ConstValue.problem) stringResource(R.string.problematic_app) else stringResource(
+                                id = R.string.app_name
+                            ), color = colorResource(R.color.black40)
+                        )
+                    },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
@@ -114,17 +125,25 @@ fun DrawerAppBar(
                     },
                     actions = {
                         var expanded by remember { mutableStateOf(false) }
-                        // RowScope here, so these icons will be placed horizontally
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            //We add our badges
-                            BadgedBox(badge = { Badge { Text("8") } }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Notifications,
-                                    tint = colorResource(R.color.black40),
-                                    contentDescription = "Localized description"
+                        //We add our badges
+                        BadgedBox(badge = {
+                            Badge {
+                                val badgeNumber = "8"
+                                Text(
+                                    badgeNumber,
+                                    modifier = Modifier.semantics {
+                                        contentDescription = "$badgeNumber new notifications"
+                                    }
                                 )
                             }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Outlined.Notifications,
+                                tint = colorResource(R.color.black40),
+                                contentDescription = "Localized description"
+                            )
                         }
+                        //}
 
                         IconButton(onClick = {
                             expanded = true
@@ -277,7 +296,9 @@ fun DrawerAppBar(
                                 // Enable the scale animation
                                 scale = true,
                                 // Change the color and shape
-                                backgroundColor = androidx.compose.material.MaterialTheme.colors.primary.copy(alpha = 0.08f),
+                                backgroundColor = androidx.compose.material.MaterialTheme.colors.primary.copy(
+                                    alpha = 0.08f
+                                ),
                                 shape = MaterialTheme.shapes.small,
                             )
                         }
@@ -331,7 +352,7 @@ fun DrawerAppBar(
                 }
             ConstValue.privateMessage ->
                 LazyColumn(contentPadding = innerPadding, state = listStatePrivateMessage) {
-                    expandedToolbar  = true
+                    expandedToolbar = true
                     items(count = 2000) {
                         PrivateMessageView(navController)
                     }
@@ -361,6 +382,9 @@ fun HomeApp(
     val listStatePublicMessage = rememberLazyListState()
     val listStatePrivateMessage = rememberLazyListState()
 
+    //We request our location permission
+    RequestLocationPermission()
+    //we draw our Modal Navigation
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -419,5 +443,35 @@ fun HomeApp(
 
         }
     }
+
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestLocationPermission() {
+    val locationPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
+    )
+
+    if (locationPermissionsState.allPermissionsGranted) {
+        Log.d("MALEO939393", "The permission is allow")
+        Timber.d("Only approximate location access granted.")
+    } else {
+        CoroutineScope(Dispatchers.Main).launch {
+            locationPermissionsState.launchMultiplePermissionRequest()
+        }
+
+
+    }
+
+    if (locationPermissionsState.shouldShowRationale) {
+        Log.d("MALEO9393", " important. Please grant all of them for the app to function properly.")
+    } else {
+        Log.d("MALEO9393", "denied. The app cannot function without them.")
+    }
+
 
 }
