@@ -1,11 +1,16 @@
 package com.android.wazzabysama.ui.views
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
@@ -50,6 +55,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var dropViewModel: DropViewModel
     var token: String? = null
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +87,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val locationPermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    // Precise location access granted.
+                }
+                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    // Only approximate location access granted.
+                } else -> {
+                // No location access granted.
+            }
+            }
+        }
     }
 
     private fun initViewModel() {
@@ -90,6 +111,7 @@ class MainActivity : ComponentActivity() {
         dropViewModel = ViewModelProvider(this, dropFactory)[DropViewModel::class.java]
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     @ExperimentalMaterial3Api
     fun MainView(
@@ -120,7 +142,6 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(route = WazzabyDrawerDestinations.HOME) {
-                RequestLocationPermission()
                 HomeApp(
                     scope,
                     drawerState,
@@ -144,25 +165,6 @@ class MainActivity : ComponentActivity() {
 
             composable(route = WazzabyDrawerDestinations.INSCRIPTION_DONE) {
                 FormStepDoneView(navController)
-            }
-        }
-    }
-
-    @OptIn(ExperimentalPermissionsApi::class)
-    @Composable
-    fun RequestLocationPermission() {
-        val locationPermissionsState = rememberMultiplePermissionsState(
-            listOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-            )
-        )
-
-        if (locationPermissionsState.allPermissionsGranted) {
-            //Text("Thanks! I can access your exact location :D")
-        } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                locationPermissionsState.launchMultiplePermissionRequest()
             }
         }
     }
