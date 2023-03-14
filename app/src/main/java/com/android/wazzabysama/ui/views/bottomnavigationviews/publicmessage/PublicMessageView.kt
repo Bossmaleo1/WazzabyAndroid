@@ -1,7 +1,6 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -54,7 +53,7 @@ fun getOurPublicMessageImage(publicMessage: PublicMessage): Painter {
 @RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterial3Api
 @Composable
-fun PublicMessageView(publicMessage: PublicMessage) {
+fun PublicMessageViewItem(publicMessage: PublicMessage) {
     val formatter: SimpleDateFormat = SimpleDateFormat("EEE d MMM yy", Locale.getDefault())
     val published = formatter.format(publicMessage.published)
 
