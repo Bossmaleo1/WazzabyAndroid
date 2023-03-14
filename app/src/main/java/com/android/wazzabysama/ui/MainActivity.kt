@@ -1,11 +1,10 @@
-package com.android.wazzabysama.ui.views
+package com.android.wazzabysama.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -31,8 +30,6 @@ import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.theme.WazzabySamaTheme
 import com.android.wazzabysama.ui.views.*
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

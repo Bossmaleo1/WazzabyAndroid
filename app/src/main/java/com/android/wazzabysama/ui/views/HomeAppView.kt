@@ -2,6 +2,7 @@ package com.android.wazzabysama.ui.views
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -11,11 +12,13 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material.Scaffold
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -43,6 +46,8 @@ import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
+import com.android.wazzabysama.ui.UIEvent.Event.PublicMessageEvent
+import com.android.wazzabysama.ui.UIEvent.UIEvent
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.conversation.Conversation
@@ -57,6 +62,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -77,14 +83,13 @@ fun DrawerAppBar(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     var saveValue by remember { mutableStateOf("") }
-    val problematic by userViewModel.problematicValue.observeAsState()
-    val user by userViewModel.userValue.observeAsState()
-    val token by userViewModel.tokenValue.observeAsState()
 
     var expandedToolbar by remember { mutableStateOf(true) }
     val density = LocalDensity.current
+    val screenStateUser = userViewModel.screenState.value
+    val screenState = publicMessageViewModel.screenState.value
+    val scaffoldState = rememberScaffoldState()
 
-    //var page = 0
     var isRefreshing by remember { mutableStateOf(false) }
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
     Scaffold(
@@ -249,117 +254,141 @@ fun DrawerAppBar(
 
             }
 
-        }) { innerPadding ->
-        viewItem.observe(LocalContext.current as LifecycleOwner) {
-            saveValue = it
-        }
 
-        when (saveValue) {
-            ConstValue.publicMessage ->
-                if (problematic !== null && token !== null && user !== null) {
-                    val problematicTemp = Problematic(
-                        problematic!!.id,
-                        problematic!!.wording,
-                        problematic!!.language,
-                        problematic!!.icon
-                    )
-                    if (publicMessageViewModel.currentPage.value == 1 && !isRefreshing) {
-                        publicMessageViewModel.getPublicMessage(
-                            problematicTemp,
-                            publicMessageViewModel.currentPage.value,
-                            token?.token!!
-                        )
-                    }
+        },
+        scaffoldState = scaffoldState,
+        content = {innerPadding ->
 
-                    LaunchedEffect(listStatePublicMessage) {
-                        var prev = 0
-                        snapshotFlow { listStatePublicMessage.firstVisibleItemIndex }
-                            .collect {
-                                expandedToolbar = it <= prev
-                                prev = it
-                            }
-                    }
+            viewItem.observe(LocalContext.current as LifecycleOwner) {
+                saveValue = it
+            }
 
-
-                    SwipeRefresh(
-                        state = swipeRefreshState,
-                        onRefresh = {
-                            isRefreshing = true
-                            publicMessageViewModel.currentPage.value = 1
-                            publicMessageViewModel.initPublicMessage()
-                        },
-                        indicator = { state, trigger ->
-                            SwipeRefreshIndicator(
-                                // Pass the SwipeRefreshState + trigger through
-                                state = state,
-                                refreshTriggerDistance = trigger,
-                                // Enable the scale animation
-                                scale = true,
-                                // Change the color and shape
-                                backgroundColor = androidx.compose.material.MaterialTheme.colors.primary.copy(
-                                    alpha = 0.08f
-                                ),
-                                shape = MaterialTheme.shapes.small,
-                            )
-                        }
+            when (saveValue) {
+                ConstValue.publicMessage -> {
+                    if (screenStateUser.userRoom.isNotEmpty() && screenStateUser.userRoom[0] !== null
+                        && screenStateUser.tokenRoom.isNotEmpty() && screenStateUser.tokenRoom[0] !== null
+                        && screenStateUser.problematicRoom.isNotEmpty() && screenStateUser.problematicRoom[0] !== null
                     ) {
 
-                        Column {
-                            AnimatedVisibility(
-                                visible = expandedToolbar,
-                                enter = slideInVertically {
-                                    // Slide in from 40 dp from the top.
-                                    with(density) { -40.dp.roundToPx() }
-                                } + expandVertically(
-                                    // Expand from the top.
-                                    expandFrom = Alignment.Top
-                                ) + fadeIn(
-                                    // Fade in with the initial alpha of 0.3f.
-                                    initialAlpha = 0.3f
-                                ),
-                                exit = slideOutVertically() + shrinkVertically() + fadeOut()
-                            ) {
-                                chips(
+                        val problematicTemp = Problematic(
+                            id = screenStateUser.problematicRoom[0].id,
+                            wording = screenStateUser.problematicRoom[0].wording,
+                            language = screenStateUser.problematicRoom[0].language,
+                            icon = screenStateUser.problematicRoom[0].icon
+                        )
+                        if (screenState.currentPage == 1 && !isRefreshing) {
+                            publicMessageViewModel.getPublicMessage(
+                                problematic = problematicTemp,
+                                token = screenStateUser.tokenRoom[0].token
+                            )
+                        }
+
+                        LaunchedEffect(listStatePublicMessage) {
+                            var prev = 0
+                            snapshotFlow { listStatePublicMessage.firstVisibleItemIndex }
+                                .collect {
+                                    expandedToolbar = it <= prev
+                                    prev = it
+                                }
+                        }
+
+                        SwipeRefresh(
+                            state = swipeRefreshState,
+                            onRefresh = {
+                                isRefreshing = true
+                                publicMessageViewModel.currentPage.value = 1
+                                publicMessageViewModel.initPublicMessage()
+                            },
+                            indicator = { state, trigger ->
+                                SwipeRefreshIndicator(
+                                    // Pass the SwipeRefreshState + trigger through
+                                    state = state,
+                                    refreshTriggerDistance = trigger,
+                                    // Enable the scale animation
+                                    scale = true,
+                                    // Change the color and shape
+                                    backgroundColor = androidx.compose.material.MaterialTheme.colors.primary.copy(
+                                        alpha = 0.08f
+                                    ),
+                                    shape = MaterialTheme.shapes.small,
+                                )
+                            }
+                        ) {
+
+                            Column {
+                                AnimatedVisibility(
+                                    visible = expandedToolbar,
+                                    enter = slideInVertically {
+                                        // Slide in from 40 dp from the top.
+                                        with(density) { -40.dp.roundToPx() }
+                                    } + expandVertically(
+                                        // Expand from the top.
+                                        expandFrom = Alignment.Top
+                                    ) + fadeIn(
+                                        // Fade in with the initial alpha of 0.3f.
+                                        initialAlpha = 0.3f
+                                    ),
+                                    exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                                ) {
+                                    chips(
+                                        paddingValues = PaddingValues(
+                                            top = 0.dp,
+                                            bottom = innerPadding.calculateBottomPadding()
+                                        ), rememberLazyListState()
+                                    )
+                                }
+
+                                InfiniteListMessagePublicRemote(
+                                    listState = listStatePublicMessage,
                                     paddingValues = PaddingValues(
-                                        top = 60.dp,
-                                        bottom = innerPadding.calculateBottomPadding()
-                                    ), rememberLazyListState()
+                                        top = 0.dp,
+                                        bottom = innerPadding.calculateBottomPadding() + 100.dp
+                                    ),
+                                    publicMessageViewModel = publicMessageViewModel,
+                                    problematic = problematicTemp,
+                                    token = screenStateUser.tokenRoom[0].token
                                 )
                             }
 
-                            InfiniteListMessagePublicRemote(
-                                listState = listStatePublicMessage,
-                                listItems = remember { publicMessageViewModel.publicMessageStateRemoteList },
-                                paddingValues = PaddingValues(
-                                    top = 0.dp,
-                                    bottom = innerPadding.calculateBottomPadding() + 100.dp
-                                ),
-                                publicMessageViewModel = publicMessageViewModel,
-                                problematic = problematicTemp,
-                                token?.token!!
-                            )
+                        }
+
+                        if (screenState.isNetworkError) {
+                            publicMessageViewModel.onEvent(PublicMessageEvent.IsNetworkError)
+                        } else if (!screenState.isNetworkConnected) {
+                            publicMessageViewModel.onEvent(PublicMessageEvent.IsNetworkConnected)
+                        }
+
+                        // cette instruction permet de réactivé le reflesh
+                        LaunchedEffect(isRefreshing) {
+                            if (isRefreshing) {
+                                delay(1000L)
+                                isRefreshing = false
+                            }
                         }
 
                     }
-                    // cette instruction permet de réactivé le reflesh
-                    LaunchedEffect(isRefreshing) {
-                        if (isRefreshing) {
-                            delay(1000L)
-                            isRefreshing = false
+                    LaunchedEffect(key1 = true) {
+                        publicMessageViewModel.uiEventFlow.collectLatest { event ->
+                            when (event) {
+                                is UIEvent.ShowMessage -> {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        message = event.message
+                                    )
+                                }
+                                else -> {}
+                            }
                         }
                     }
-
                 }
-            ConstValue.privateMessage ->
-                LazyColumn(contentPadding = innerPadding, state = listStatePrivateMessage) {
-                    expandedToolbar = true
-                    items(count = 2000) {
-                        PrivateMessageView(navController)
+                ConstValue.privateMessage ->
+                    LazyColumn(contentPadding = innerPadding, state = listStatePrivateMessage) {
+                        expandedToolbar = true
+                        items(count = 2000) {
+                            PrivateMessageView(navController)
+                        }
                     }
-                }
-        }
-
-    }
+            }
+        })
 
 }
 
@@ -446,6 +475,7 @@ fun HomeApp(
 
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestLocationPermission() {

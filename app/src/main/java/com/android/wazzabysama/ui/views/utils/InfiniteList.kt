@@ -6,48 +6,74 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import com.android.wazzabysama.R
+import androidx.compose.ui.res.stringResource
 import com.android.wazzabysama.data.model.data.Problematic
-import com.android.wazzabysama.data.model.data.PublicMessage
-import com.android.wazzabysama.data.model.data.Token
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
-import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageView
+import com.android.wazzabysama.ui.UIEvent.UIEvent
+import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageViewItem
 import com.android.wazzabysama.ui.views.shimmer.PublicMessageShimmer
-import kotlinx.coroutines.flow.distinctUntilChanged
+import com.android.wazzabysama.ui.views.viewsError.networkError
+import kotlinx.coroutines.flow.collectLatest
+import com.android.wazzabysama.R
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfiniteListMessagePublicRemote(
     listState: LazyListState,
-    listItems: List<PublicMessage>,
     paddingValues: PaddingValues,
     publicMessageViewModel: PublicMessageViewModel,
     problematic: Problematic,
     token: String,
 ) {
 
+    val screenState = publicMessageViewModel.screenState.value
+    val scaffoldState = rememberScaffoldState()
+
     LazyColumn(
         contentPadding = paddingValues,
         state = listState
     ) {
 
-        items(listItems) { publicMessage ->
-            PublicMessageView(publicMessage)
+        items(screenState.publicMessageList) { publicMessage ->
+            PublicMessageViewItem(publicMessage)
         }
 
-        items(count = 1) {
-            PublicMessageShimmer()
+        if (screenState.isLoad) {
+            items(count = 1) {
+                PublicMessageShimmer()
+            }
         }
+
+        if (!screenState.isNetworkConnected) {
+            items(count = 1) {
+                networkError(
+                    title = stringResource(R.string.network_error),
+                    iconValue = 0
+                )
+            }
+        } else if (screenState.isNetworkError) {
+            items(count = 1) {
+                networkError(
+                    title = stringResource(R.string.is_connect_error),
+                    iconValue = 1
+                )
+            }
+        }
+
+
     }
 
+
+
     listState.OnBottomReached(buffer = 2) {
-        publicMessageViewModel.getPublicMessage(problematic,publicMessageViewModel.currentPage.value + 1,token)
+        publicMessageViewModel.getPublicMessage(
+            problematic = problematic,
+            token = token
+        )
     }
 
 }

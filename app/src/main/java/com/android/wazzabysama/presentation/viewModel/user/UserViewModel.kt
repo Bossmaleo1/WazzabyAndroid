@@ -48,19 +48,6 @@ class UserViewModel @Inject constructor(
     private val deleteSavedUserUseCase: DeleteSavedUserUseCase
 ) : AndroidViewModel(app) {
 
-
-    val token: MutableLiveData<Resource<ApiTokenResponse>> = MutableLiveData()
-    val user: MutableLiveData<Resource<ApiUserResponse>> = MutableLiveData()
-
-    private val tokenMutable: MutableLiveData<TokenRoom> = MutableLiveData()
-    val tokenValue: LiveData<TokenRoom> = tokenMutable
-
-    private val userMutable: MutableLiveData<UserRoom> = MutableLiveData()
-    val userValue: LiveData<UserRoom> = userMutable
-
-    private val problematic: MutableLiveData<ProblematicRoom> = MutableLiveData()
-    val problematicValue: LiveData<ProblematicRoom> = problematic
-
     private val _screenState = mutableStateOf(
         AuthScreenState(
             emailInputValue = "",
@@ -182,19 +169,7 @@ class UserViewModel @Inject constructor(
     fun getSavedToken() = liveData {
         getSavedTokenUseCase.execute().collect {
             emit(it)
-            tokenMutable.value = it
         }
-    }
-
-    fun getSavedProblematic(userId: Int) = liveData {
-        getSavedProblematic.execute(userId).collect {
-            emit(it)
-            problematic.value = it
-        }
-    }
-
-    fun deleteUser(user: UserRoom) = viewModelScope.launch {
-        deleteSavedUserUseCase.execute(user)
     }
 
     private fun isNetworkAvailable(context: Context?): Boolean {

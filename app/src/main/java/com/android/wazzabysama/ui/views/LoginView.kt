@@ -1,8 +1,5 @@
 package com.android.wazzabysama.ui.views
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -13,7 +10,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
@@ -23,20 +19,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
-import com.android.wazzabysama.data.model.data.Problematic
-import com.android.wazzabysama.data.model.data.User
-import com.android.wazzabysama.data.model.dataRoom.ProblematicRoom
-import com.android.wazzabysama.data.model.dataRoom.TokenRoom
-import com.android.wazzabysama.data.model.dataRoom.UserRoom
-import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
 import com.android.wazzabysama.ui.UIEvent.UIEvent
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
-import com.android.wazzabysama.ui.model.Route
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -49,16 +37,6 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
 
     val screenState = userViewModel.screenState.value
     val scaffoldState = rememberScaffoldState()
-
-    val isLoading = remember { mutableStateOf(false) }
-
-    fun showProgressBar() {
-        isLoading.value = true
-    }
-
-    fun hideProgressBar() {
-        isLoading.value = false
-    }
 
     Column {
         if (screenState.isLoad) {
