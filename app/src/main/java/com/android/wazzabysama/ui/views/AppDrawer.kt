@@ -29,6 +29,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.android.wazzabysama.BuildConfig
 import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
+import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
 import com.android.wazzabysama.ui.components.NavigationIcon
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.getOurPublicMessageImage
@@ -49,46 +50,43 @@ fun AppDrawer(
 ) {
     var userName by rememberSaveable { mutableStateOf("") }
     userViewModel.getSavedToken()
-    val token by userViewModel.tokenValue.observeAsState()
-    val user by userViewModel.userValue.observeAsState()
+    val screenState = userViewModel.screenState.value
 
-    if (!token?.token.isNullOrBlank()) {
-        userViewModel.getSavedUserByToken(token?.token!!)
-            .observe(LocalContext.current as LifecycleOwner) {}
-        if (user?.id != null) {
-            userViewModel.getSavedProblematic(user?.id!!)
-                .observe(LocalContext.current as LifecycleOwner) {}
-            userName = user?.firstName + " " + user?.lastName
-        }
+    userViewModel.onEvent(AuthEvent.GetSavedToken)
+    //We test is the token exist
+    if (screenState.tokenRoom.isNotEmpty() && screenState.tokenRoom[0] !== null) {
+        userViewModel.onEvent(AuthEvent.GetSavedUserByToken)
     }
 
+
     Spacer(Modifier.size(15.dp))
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        // Content that needs to appear/disappear goes here:
-        if (user?.imageUrl?.length == 0) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_profile_colorier),
-                modifier = Modifier.size(72.dp),
-                contentScale = ContentScale.Crop,
-                contentDescription = "Profile picture description"
-            )
-        } else {
-            Image(
-                painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${user?.imageUrl}"),
-                modifier = Modifier
-                    .padding(4.dp)
-                    .height(100.dp)
-                    .width(100.dp)
-                    .clip(RoundedCornerShape(corner = CornerSize(50.dp))),
-                contentDescription = "Profile picture description"
-            )
+    if (screenState.userRoom.isNotEmpty() && screenState.userRoom[0] !== null) {
+        userViewModel.onEvent(AuthEvent.GetSavedProblematic)
+        userName = screenState.userRoom[0].firstName + " " + screenState.userRoom[0].lastName
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            // Content that needs to appear/disappear goes here:
+            if (screenState.userRoom[0].imageUrl?.length == 0) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_profile_colorier),
+                    modifier = Modifier.size(72.dp),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Profile picture description"
+                )
+            } else {
+                Image(
+                    painter = rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${screenState.userRoom[0].imageUrl}"),
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .height(100.dp)
+                        .width(100.dp)
+                        .clip(RoundedCornerShape(corner = CornerSize(50.dp))),
+                    contentDescription = "Profile picture description"
+                )
+            }
         }
-
-
     }
 
     Spacer(Modifier.size(10.dp))

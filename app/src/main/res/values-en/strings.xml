@@ -22,6 +22,11 @@
     <string name="logout">Logout</string>
     <string name="wait">Please Wait ...</string>
     <string name="report_post">Report this post</string>
+    <string name="is_login_empty_2_field">Your password and email fields are empty, please fill them in</string>
+    <string name="is_login_empty_email_field">Your email field is empty, please fill it in</string>
+    <string name="is_login_empty_password_field">Your password field is empty, please fill them in</string>
+    <string name="network_error">A server error has just occurred</string>
+    <string name="is_connect_error">You are disconnected, please review your connection</string>
     <string name="delete_post">Delete this post</string>
     <string name="edit_post">Edit this post</string>
     <string name="read_more">Read More</string>
