@@ -22,9 +22,14 @@
     <string name="logout">Выйти</string>
     <string name="wait">Пожалуйста  ...</string>
     <string name="report_post">Сообщить об этом сообщении</string>
+    <string name="is_login_empty_2_field">Поля для пароля и электронной почты пусты, пожалуйста, заполните их</string>
+    <string name="is_login_empty_email_field">Ваше поле электронной почты пусто, пожалуйста, заполните его</string>
+    <string name="is_login_empty_password_field">Поле для пароля пусто, пожалуйста, заполните его</string>
     <string name="delete_post">Удалить этот пост</string>
     <string name="edit_post">Изменить этот пост</string>
     <string name="read_more">Читать далее</string>
     <string name="read_less">Читать меньше</string>
+    <string name="network_error">Вы отключены, пожалуйста, проверьте подключение</string>
+    <string name="is_connect_error">Только что произошла ошибка сервера</string>
 
 </resources>

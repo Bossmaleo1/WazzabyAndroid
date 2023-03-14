@@ -33,7 +33,7 @@ fun InfiniteListMessagePublicRemote(
 ) {
 
     LazyColumn(
-        contentPadding = paddingValues, //PaddingValues(),
+        contentPadding = paddingValues,
         state = listState
     ) {
 

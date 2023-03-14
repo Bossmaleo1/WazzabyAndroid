@@ -42,6 +42,7 @@ import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
+import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.conversation.Conversation
@@ -143,7 +144,6 @@ fun DrawerAppBar(
                                 contentDescription = "Localized description"
                             )
                         }
-                        //}
 
                         IconButton(onClick = {
                             expanded = true
@@ -232,6 +232,7 @@ fun DrawerAppBar(
                                 },
                                 onClick = {
                                     dropViewModel.deleteAll()
+                                    userViewModel.onEvent(AuthEvent.InitUserState)
                                     navController0.navigate(WazzabyDrawerDestinations.LOGIN)
                                 },
                                 leadingIcon = {
@@ -288,7 +289,6 @@ fun DrawerAppBar(
                             publicMessageViewModel.initPublicMessage()
                         },
                         indicator = { state, trigger ->
-                            // publicMessageViewModel.initPublicMessage()
                             SwipeRefreshIndicator(
                                 // Pass the SwipeRefreshState + trigger through
                                 state = state,

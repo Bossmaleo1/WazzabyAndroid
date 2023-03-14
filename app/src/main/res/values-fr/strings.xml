@@ -21,9 +21,14 @@
     <string name="about">A propos</string>
     <string name="logout">Déconnexion</string>
     <string name="wait">Connexion en cours ...</string>
+    <string name="is_login_empty_2_field">Vos champs mot de passe et email sont vides, veuillez les remplir</string>
+    <string name="is_login_empty_email_field">Votre champ email est vide, veuillez le remplir</string>
+    <string name="is_login_empty_password_field">Votre champ mot de passe est vide, veuillez les remplir</string>
     <string name="report_post">Signaler ce post</string>
     <string name="delete_post">Supprimer ce post</string>
     <string name="edit_post">Modifier ce post</string>
     <string name="read_more">Lire Plus</string>
     <string name="read_less">Lire Moins</string>
+    <string name="network_error">Une erreur serveur vient de  se produire</string>
+    <string name="is_connect_error">You are disconnected, please review your connection</string>
 </resources>

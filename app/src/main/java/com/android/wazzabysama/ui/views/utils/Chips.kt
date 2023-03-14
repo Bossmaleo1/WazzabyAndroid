@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 
 data class ChipData(var label: String, var check: Boolean)
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun chips(
     paddingValues: PaddingValues,

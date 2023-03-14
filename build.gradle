@@ -3,7 +3,6 @@ buildscript {
 
     ext {
         compose_version = '1.4.0-beta02'
-        compose_version1 = '1.4.0-beta02'
         navVersion = '2.5.3'
         lifecycle_version = "2.6.0-alpha02"
         coroutines_version = "1.6.4"

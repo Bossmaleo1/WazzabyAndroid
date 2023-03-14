@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +33,11 @@ import com.android.wazzabysama.data.model.dataRoom.TokenRoom
 import com.android.wazzabysama.data.model.dataRoom.UserRoom
 import com.android.wazzabysama.data.util.Resource
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
+import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
+import com.android.wazzabysama.ui.UIEvent.UIEvent
+import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.model.Route
+import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
@@ -40,31 +46,36 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
     var email by rememberSaveable { mutableStateOf("sidneymaleoregis@gmail.com") }
     var password by rememberSaveable { mutableStateOf("Nfkol3324012020@!") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
+
+    val screenState = userViewModel.screenState.value
+    val scaffoldState = rememberScaffoldState()
+
     val isLoading = remember { mutableStateOf(false) }
 
-    fun showProgressBar(){
+    fun showProgressBar() {
         isLoading.value = true
     }
 
-    fun hideProgressBar(){
+    fun hideProgressBar() {
         isLoading.value = false
     }
 
     Column {
-        if (isLoading.value) {
+        if (screenState.isLoad) {
             AlertDialog(
                 onDismissRequest = {
                     // Dismiss the dialog when the user clicks outside the dialog or on the back
                     // button. If you want to disable that functionality, simply use an empty
                     // onCloseRequest.
-                    isLoading.value = true
                 },
                 title = {
 
                 },
                 text = {
-                    Column( modifier = Modifier
-                        .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Row {
                             CircularProgressIndicator()
                             Row(Modifier.padding(10.dp)) {
@@ -81,95 +92,6 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
 
                 }
             )
-        }
-    }
-
-    fun getUser(userViewModel: UserViewModel, userName: String, token: String, context: Any) {
-        userViewModel.getUser(userName, token)
-        userViewModel.user.observe(context as LifecycleOwner) { user->
-            when (user) {
-                is Resource.Success -> {
-                    Log.d("Test1", "'user':'${user.data?.Users?.get(0)?.lastName}'");
-                    val user = user.data?.Users?.get(0) as User
-                    val problematic = user.problematic as Problematic
-                    //we save the user Token
-                    userViewModel.saveToken(
-                        TokenRoom(
-                            1,
-                            //we split the bear characters
-                            token.split(" ")[1])
-                    )
-                    //We save the user Problematic
-                    userViewModel.saveProblematic(
-                        ProblematicRoom(
-                        problematic.id,
-                        problematic.wording,
-                        problematic.language,
-                        problematic.icon
-                    )
-                    )
-
-                    //We save the user
-                    userViewModel.saveUser(
-                        UserRoom(
-                        user.id,
-                        user.online,
-                        user.anonymous,
-                        problematic.id,
-                        user.email,
-                        user.firstName,
-                        user.lastName,
-                        (if (user.images.isNotEmpty())  user.images[0].imageName else  ""),
-                        "",
-                        user.roles[0],
-                        user.username,
-                        //we split the bear characters
-                        token.split(" ")[1]
-                    )
-                    )
-                    hideProgressBar()
-                    navController.navigate("home")
-                }
-
-                is Resource.Error -> {
-                    hideProgressBar()
-                    user.message?.let {
-                        Toast.makeText(context as Context, "An error occurred : $it", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-
-                is Resource.Loading -> {
-                    showProgressBar()
-                }
-            }
-        }
-    }
-
-    fun viewModelLogin(userViewModel: UserViewModel, userName: String, password: String, context: Any) {
-        userViewModel.getToken(userName, password)
-        userViewModel.token.observe(context as LifecycleOwner) {token->
-            when (token) {
-                is Resource.Success -> {
-                    Log.d("Test1", "'token':'${token.data?.token}'");
-                    token.data?.token?.let {
-                        getUser(userViewModel, userName,
-                            "Bearer $it",context as LifecycleOwner)
-                    }
-                }
-
-                is Resource.Error -> {
-                    hideProgressBar()
-                    token.message?.let {
-                        Toast.makeText(context as Context, "An error occurred : $it", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-
-                is Resource.Loading -> {
-                    showProgressBar()
-                }
-            }
         }
     }
 
@@ -192,14 +114,17 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
 
             OutlinedButton(
                 border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
-                onClick = {  navController.navigate("inscription_step_first") }) {
+                onClick = { navController.navigate("inscription_step_first") }) {
                 Icon(
                     imageVector = Icons.Outlined.ManageAccounts,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(id = R.string.inscription), color = MaterialTheme.colorScheme.primary)
+                Text(
+                    stringResource(id = R.string.inscription),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
 
         }
@@ -225,11 +150,13 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             modifier = Modifier.padding(top = 10.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
-                 focusedIndicatorColor = Color.Transparent,
-                  unfocusedIndicatorColor = Color.Transparent*/
             ),
-            onValueChange = { email = it },
+            onValueChange = {
+                email = it
+                userViewModel.onEvent(
+                    AuthEvent.EmailValueEntered(it)
+                )
+            },
             label = { Text(stringResource(id = R.string.your_email)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             placeholder = { Text("") },
@@ -248,11 +175,13 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
             value = password,
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-                /*cursorColor = Color.Black, disabledLabelColor = lightBlue,
-                 focusedIndicatorColor = Color.Transparent,
-                  unfocusedIndicatorColor = Color.Transparent*/
             ),
-            onValueChange = { password = it },
+            onValueChange = {
+                password = it
+                userViewModel.onEvent(
+                    AuthEvent.PasswordValueEntered(it)
+                )
+            },
             label = { Text(stringResource(id = R.string.your_password)) },
             visualTransformation =
             if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
@@ -290,15 +219,59 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
                 .padding(top = 30.dp),
             border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
             onClick = {
-                viewModelLogin(userViewModel, email,password, context)
-            }) {
-                Icon(
-                    imageVector = Icons.Outlined.Login,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                //we init our fields
+                userViewModel.onEvent(
+                    AuthEvent.IsInitField(email, password)
                 )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.connexion))
+                //we test if fields is Empties
+                userViewModel.onEvent(
+                    AuthEvent.IsEmptyField
+                )
+
+                //We initialize the connection parameters
+                userViewModel.onEvent(
+                    AuthEvent.ConnectionAction
+                )
+
+                //We get our token
+                userViewModel.onEvent(
+                    AuthEvent.GetToken(
+                        userName = email,
+                        password = password
+                    )
+                )
+            }) {
+            Icon(
+                imageVector = Icons.Outlined.Login,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            Text(stringResource(R.string.connexion))
+        }
+
+        if (screenState.isNetworkError) {
+            userViewModel.onEvent(AuthEvent.IsNetworkError)
+        } else if (!screenState.isNetworkConnected) {
+            userViewModel.onEvent(AuthEvent.IsNetworkConnected)
+        }
+
+        LaunchedEffect(key1 = true) {
+            userViewModel.uiEventFlow.collectLatest {event->
+                when(event) {
+                    is UIEvent.ShowMessage-> {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = event.message
+                        )
+                    }
+                }
+            }
+        }
+
+        LaunchedEffect(key1 = screenState.user.isNotEmpty() && screenState.token.isNotEmpty()) {
+            if (screenState.user.isNotEmpty() && screenState.token.isNotEmpty()) {
+                navController.navigate(WazzabyDrawerDestinations.HOME)
+            }
         }
 
     }

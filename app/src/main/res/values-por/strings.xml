@@ -21,10 +21,15 @@
     <string name="about">Sobre</string>
     <string name="logout">Sair</string>
     <string name="wait">Por favor, espere ...</string>
+    <string name="is_login_empty_2_field">Seus campos de senha e e-mail estão vazios, preencha-os</string>
+    <string name="is_login_empty_email_field">Seu campo de e-mail está vazio, por favor preencha-o</string>
+    <string name="is_login_empty_password_field">Seu campo de senha está vazio, por favor preencha-os</string>
     <string name="report_post">Denunciar esta postagem</string>
     <string name="delete_post">Excluir esta postagem</string>
     <string name="edit_post">Editar esta postagem</string>
     <string name="read_more">Consulte Mais informação</string>
     <string name="read_less">Leia menos</string>
+    <string name="network_error">Você está desconectado, revise sua conexão</string>
+    <string name="is_connect_error">Um erro de servidor acabou de ocorrer</string>
 
 </resources>
