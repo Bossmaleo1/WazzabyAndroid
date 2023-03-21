@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Psychology
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -74,7 +75,7 @@ fun chips(
                     colors = AssistChipDefaults.assistChipColors(),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Filled.Psychology,
+                            imageVector = Icons.Outlined.Psychology,
                             tint = if (problematic.check) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                             contentDescription = "Localized description",
                             modifier = Modifier.size(AssistChipDefaults.IconSize)

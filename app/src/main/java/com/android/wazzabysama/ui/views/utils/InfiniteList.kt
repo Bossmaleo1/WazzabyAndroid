@@ -70,6 +70,7 @@ fun InfiniteListMessagePublicRemote(
 
 
     listState.OnBottomReached(buffer = 2) {
+        screenState.isLoad = true
         publicMessageViewModel.getPublicMessage(
             problematic = problematic,
             token = token
