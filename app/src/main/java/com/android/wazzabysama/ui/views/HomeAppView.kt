@@ -3,6 +3,7 @@ package com.android.wazzabysama.ui.views
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -42,6 +43,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.android.wazzabysama.R
 import com.android.wazzabysama.data.model.data.Problematic
+import com.android.wazzabysama.presentation.util.LocationData
+import com.android.wazzabysama.presentation.util.LocationLiveData
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -92,6 +95,7 @@ fun DrawerAppBar(
 
     var isRefreshing by remember { mutableStateOf(false) }
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
+    lateinit var locationLiveDate: LocationLiveData
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -265,6 +269,8 @@ fun DrawerAppBar(
 
             when (saveValue) {
                 ConstValue.publicMessage -> {
+                    //We request our location permission
+                    RequestLocationPermission()
                     if (screenStateUser.userRoom.isNotEmpty() && screenStateUser.userRoom[0] !== null
                         && screenStateUser.tokenRoom.isNotEmpty() && screenStateUser.tokenRoom[0] !== null
                         && screenStateUser.problematicRoom.isNotEmpty() && screenStateUser.problematicRoom[0] !== null
@@ -411,8 +417,6 @@ fun HomeApp(
     val listStatePublicMessage = rememberLazyListState()
     val listStatePrivateMessage = rememberLazyListState()
 
-    //We request our location permission
-    RequestLocationPermission()
     //we draw our Modal Navigation
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -488,7 +492,9 @@ fun RequestLocationPermission() {
 
     if (locationPermissionsState.allPermissionsGranted) {
         Log.d("MALEO939393", "The permission is allow")
-        Timber.d("Only approximate location access granted.")
+        LocationLiveData(LocalContext.current).observe(LocalContext.current as LifecycleOwner) {
+            handleLocationData(it!!)
+        }
     } else {
         CoroutineScope(Dispatchers.Main).launch {
             locationPermissionsState.launchMultiplePermissionRequest()
@@ -502,6 +508,29 @@ fun RequestLocationPermission() {
     } else {
         Log.d("MALEO9393", "denied. The app cannot function without them.")
     }
+}
+
+fun handleLocationData(locationData: LocationData) {
+    if(handleLocationException(locationData.exception)) {
+        return
+    }
+
+    Timber.i("Last location ${locationData.addressLocation}")
+    Log.d("MALEO9393", "Last location ${locationData.addressLocation}")
+    //Log.d("MALEO93939393939393", "Latitude : ${locationData.location!!.latitude}")
+    //Log.d("MALEO93939393939393", "Longitude :  ${locationData.location!!.longitude}")
+    Log.d("MALEO9393", "Last location ${locationData.addressLocation!!.country}")
+    Log.d("MALEO9393", "Last location ${locationData.addressLocation!!.city}")
+}
 
 
+ fun handleLocationException(exception: Exception?): Boolean {
+    exception ?: return false
+    Timber.e(exception, "handleLocationException()")
+    when(exception) {
+        is SecurityException -> {
+            Log.d("MALEO9393", "Testing !!")
+        }
+    }
+    return true
 }
