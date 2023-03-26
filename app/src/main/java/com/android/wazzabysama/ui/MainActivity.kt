@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -16,11 +17,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.android.wazzabysama.presentation.util.LocationData
+import com.android.wazzabysama.presentation.util.LocationLiveData
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
@@ -29,12 +33,16 @@ import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.theme.WazzabySamaTheme
+import com.android.wazzabysama.ui.util.Util
 import com.android.wazzabysama.ui.views.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @ExperimentalMaterial3Api
@@ -51,8 +59,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var publicMessageViewModel: PublicMessageViewModel
     private lateinit var dropViewModel: DropViewModel
     var token: String? = null
-
-    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,21 +90,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        val locationPermissionRequest = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            when {
-                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                    // Precise location access granted.
-                }
-                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                    // Only approximate location access granted.
-                } else -> {
-                // No location access granted.
-            }
-            }
-        }
     }
 
     private fun initViewModel() {
@@ -108,7 +99,6 @@ class MainActivity : ComponentActivity() {
         dropViewModel = ViewModelProvider(this, dropFactory)[DropViewModel::class.java]
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     @ExperimentalMaterial3Api
     fun MainView(
@@ -147,9 +137,6 @@ class MainActivity : ComponentActivity() {
                     dropViewModel,
                     navController
                 )
-                /*BackHandler {
-                    activity?.finish()
-                }*/
             }
 
             composable(route = WazzabyDrawerDestinations.INSCRIPTION_FIRST) {
