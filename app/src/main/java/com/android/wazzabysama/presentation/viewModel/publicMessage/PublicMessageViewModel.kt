@@ -44,7 +44,7 @@ class PublicMessageViewModel @Inject constructor(
 
     private val _screenState = mutableStateOf(
         PublicMessageScreenState(
-            publicMessageList = mutableListOf()
+            publicMessageList = mutableStateListOf()
         )
     )
 
@@ -59,14 +59,17 @@ class PublicMessageViewModel @Inject constructor(
                     val apiResult = getPublicMessageUseCase.execute(problematic, screenState.value.currentPage, "Bearer $token")
                     apiResult.data?.let {apiPublicMessageResponse ->
                         screenState.value.publicMessageList.addAll(apiPublicMessageResponse.publicMessageList)
+                        if (apiPublicMessageResponse.publicMessageList.size < 10) {
+                            _screenState.value = _screenState.value.copy(
+                                isNetworkConnected = true,
+                                isLoad = false,
+                                isNetworkError = false,
+                                initCall = screenState.value.initCall++,
+                                currentPage = screenState.value.currentPage++
+                            )
+                        }
                     }
-                    _screenState.value = _screenState.value.copy(
-                        isNetworkConnected = true,
-                        isLoad = false,
-                        isNetworkError = false,
-                        initCall = screenState.value.initCall++,
-                        currentPage = screenState.value.currentPage++
-                    )
+
                 } catch (e: Exception) {
                     _screenState.value = _screenState.value.copy(
                         isNetworkError = true,
