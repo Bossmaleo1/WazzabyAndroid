@@ -1,8 +1,6 @@
 package com.android.wazzabysama.ui.views
 
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
@@ -24,7 +22,6 @@ import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
 fun MainHomeView(
@@ -93,10 +90,10 @@ fun MainHomeView(
                             )
                         },
                         label = {
-                                Text(
-                                    text = remember {item.title}
-                                )
-                                },
+                            Text(
+                                text = remember { item.title }
+                            )
+                        },
                         selected = selectedItem == index,
                         onClick = {
                             selectedItem = index
@@ -144,8 +141,10 @@ fun MainHomeView(
                     icon = { Icon(Icons.Outlined.ChatBubbleOutline, "") },
                     expanded = false,
                     text = {
-                        Text(text = stringResource(R.string.new_message),
-                            style = MaterialTheme.typography.titleSmall)
+                        Text(
+                            text = stringResource(R.string.new_message),
+                            style = MaterialTheme.typography.titleSmall
+                        )
                     },
                     onClick = {
                         coroutineScope.launch {

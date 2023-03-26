@@ -95,7 +95,6 @@ fun DrawerAppBar(
 
     var isRefreshing by remember { mutableStateOf(false) }
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
-    lateinit var locationLiveDate: LocationLiveData
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -352,7 +351,9 @@ fun DrawerAppBar(
                                     ),
                                     publicMessageViewModel = publicMessageViewModel,
                                     problematic = problematicTemp,
-                                    token = screenStateUser.tokenRoom[0].token
+                                    token = screenStateUser.tokenRoom[0].token,
+                                    navController = navController,
+                                    listItems = remember { screenState.publicMessageList  }
                                 )
                             }
 

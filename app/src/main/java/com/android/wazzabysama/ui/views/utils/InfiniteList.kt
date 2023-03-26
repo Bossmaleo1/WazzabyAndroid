@@ -1,44 +1,41 @@
 package com.android.wazzabysama.ui.views.utils
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.android.wazzabysama.data.model.data.Problematic
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
-import com.android.wazzabysama.ui.UIEvent.UIEvent
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PublicMessageViewItem
 import com.android.wazzabysama.ui.views.shimmer.PublicMessageShimmer
 import com.android.wazzabysama.ui.views.viewsError.networkError
-import kotlinx.coroutines.flow.collectLatest
 import com.android.wazzabysama.R
+import com.android.wazzabysama.data.model.data.PublicMessage
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InfiniteListMessagePublicRemote(
+    navController: NavHostController,
     listState: LazyListState,
     paddingValues: PaddingValues,
     publicMessageViewModel: PublicMessageViewModel,
     problematic: Problematic,
     token: String,
+    listItems: List<PublicMessage>,
 ) {
 
     val screenState = publicMessageViewModel.screenState.value
-    val scaffoldState = rememberScaffoldState()
 
     LazyColumn(
         contentPadding = paddingValues,
         state = listState
     ) {
 
-        items(screenState.publicMessageList) { publicMessage ->
+        items(listItems) { publicMessage ->
             PublicMessageViewItem(publicMessage)
         }
 
