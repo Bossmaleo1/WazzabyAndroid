@@ -54,6 +54,7 @@ import com.android.wazzabysama.ui.UIEvent.UIEvent
 import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.conversation.Conversation
+import com.android.wazzabysama.ui.views.bottomnavigationviews.publicmessage.newPublicMessage.NewPublicMessage
 import com.android.wazzabysama.ui.views.model.ConstValue
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.android.wazzabysama.ui.views.utils.chips
@@ -69,7 +70,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
 fun DrawerAppBar(
@@ -400,7 +400,6 @@ fun DrawerAppBar(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @ExperimentalMaterial3Api
 fun HomeApp(
@@ -472,6 +471,12 @@ fun HomeApp(
                 Conversation(
                     navController,
                     viewItem
+                )
+            }
+
+            composable(route = WazzabyDrawerDestinations.PUBLIC_NEW_MESSAGE) {
+                NewPublicMessage(
+                    navController
                 )
             }
 
