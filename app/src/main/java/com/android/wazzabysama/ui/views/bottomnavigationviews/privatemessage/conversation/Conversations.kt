@@ -110,7 +110,7 @@ fun Conversation(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
     Scaffold(topBar = {
-        SmallTopAppBar(
+        TopAppBar(
             navigationIcon = {
                 Row {
                     IconButton(onClick = {

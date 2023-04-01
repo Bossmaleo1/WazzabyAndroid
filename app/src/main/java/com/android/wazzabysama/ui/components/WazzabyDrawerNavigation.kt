@@ -7,6 +7,7 @@ object WazzabyDrawerDestinations {
     const val INSCRIPTION_FIRST = "inscription_step_first"
     const val INSCRIPTION_SECOND = "inscription_step_second"
     const val INSCRIPTION_DONE = "inscription_step_done"
+    const val PUBLIC_NEW_MESSAGE = "public_new_message"
     const val HOME = "home"
     const val CONNEXION_VIEW = "connexion_view"
     const val LAUNCH_VIEW = "LAUNCH_VIEW"

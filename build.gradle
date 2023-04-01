@@ -18,6 +18,7 @@ buildscript {
         accompanist_version = '0.25.1'
         j_unit_version = '4.13.2'
         coil_compose = '2.1.0'
+        camerax_version = '1.2.2'
     }
     repositories {
         google()
