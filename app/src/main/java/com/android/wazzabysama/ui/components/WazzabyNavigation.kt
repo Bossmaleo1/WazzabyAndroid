@@ -1,7 +1,7 @@
 package com.android.wazzabysama.ui.components
 
 
-object WazzabyDrawerDestinations {
+object WazzabyNavigation {
     const val HOME_ROUTE = "home_in_app"
     const val PROBLEM_ROUTE = "problematic_app"
     const val INSCRIPTION_FIRST = "inscription_step_first"
@@ -13,4 +13,6 @@ object WazzabyDrawerDestinations {
     const val LAUNCH_VIEW = "LAUNCH_VIEW"
     const val CONVERSATION = "CONVERSATION"
     const val LOGIN = "connexion_view"
+    const val CAMERA = "camera"
+    const val CAMERA_IMAGE_DETAILS = "camera_image_details"
 }

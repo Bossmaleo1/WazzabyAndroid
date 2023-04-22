@@ -1,7 +1,5 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -50,7 +48,6 @@ fun getOurPublicMessageImage(publicMessage: PublicMessage): Painter {
     return  rememberAsyncImagePainter("${BuildConfig.BASE_URL_DEV}/images/${publicMessage.user.images[publicMessage.user.images.size - 1].imageName}")
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterial3Api
 @Composable
 fun PublicMessageViewItem(publicMessage: PublicMessage) {

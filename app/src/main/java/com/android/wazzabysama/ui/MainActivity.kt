@@ -1,48 +1,41 @@
 package com.android.wazzabysama.ui
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.android.wazzabysama.presentation.util.LocationData
-import com.android.wazzabysama.presentation.util.LocationLiveData
+import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
+import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
-import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.theme.WazzabySamaTheme
-import com.android.wazzabysama.ui.util.Util
 import com.android.wazzabysama.ui.views.*
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.android.wazzabysama.ui.views.bottomnavigationviews.publicmessage.newPublicMessage.NewPublicMessage
+import com.android.wazzabysama.ui.views.camera.CameraUI
+import com.android.wazzabysama.ui.views.camera.ImageDetails
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @ExperimentalMaterial3Api
@@ -55,9 +48,13 @@ class MainActivity : ComponentActivity() {
     lateinit var publicMessageFactory: PublicMessageViewModelFactory
     @Inject
     lateinit var dropFactory: DropViewModelFactory
+
+    @Inject
+    lateinit var cameraFactory: CameraViewModelFactory
     private lateinit var userViewModel: UserViewModel //we call our login viewModel
     private lateinit var publicMessageViewModel: PublicMessageViewModel
     private lateinit var dropViewModel: DropViewModel
+    private lateinit var cameraViewModel: CameraViewModel
     var token: String? = null
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,11 +78,12 @@ class MainActivity : ComponentActivity() {
 
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(200)
-                        if (token === null) {
+                        navController.navigate(WazzabyNavigation.PUBLIC_NEW_MESSAGE)
+                        /*if (token === null) {
                             navController.navigate(WazzabyDrawerDestinations.LOGIN)
                         } else {
                             navController.navigate(WazzabyDrawerDestinations.HOME)
-                        }
+                        }*/
                     }
                 }
             }
@@ -97,6 +95,7 @@ class MainActivity : ComponentActivity() {
         publicMessageViewModel =
             ViewModelProvider(this, publicMessageFactory)[PublicMessageViewModel::class.java]
         dropViewModel = ViewModelProvider(this, dropFactory)[DropViewModel::class.java]
+        cameraViewModel = ViewModelProvider(this, cameraFactory)[CameraViewModel::class.java]
     }
 
     @Composable
@@ -113,22 +112,22 @@ class MainActivity : ComponentActivity() {
         //We call our init view model method
         this.initViewModel()
 
-        NavHost(navController = navController, startDestination = WazzabyDrawerDestinations.LAUNCH_VIEW) {
-            composable(route = WazzabyDrawerDestinations.LAUNCH_VIEW) {
+        NavHost(navController = navController, startDestination = WazzabyNavigation.LAUNCH_VIEW) {
+            composable(route = WazzabyNavigation.LAUNCH_VIEW) {
                 LaunchView()
                 BackHandler {
                     activity?.finish()
                 }
             }
 
-            composable(route = WazzabyDrawerDestinations.LOGIN) {
+            composable(route = WazzabyNavigation.LOGIN) {
                 Login(navController, userViewModel, context)
                 BackHandler {
                     activity?.finish()
                 }
             }
 
-            composable(route = WazzabyDrawerDestinations.HOME) {
+            composable(route = WazzabyNavigation.HOME) {
                 HomeApp(
                     scope,
                     drawerState,
@@ -139,16 +138,36 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            composable(route = WazzabyDrawerDestinations.INSCRIPTION_FIRST) {
+            composable(route = WazzabyNavigation.INSCRIPTION_FIRST) {
                 FormStepFirstView(navController)
             }
 
-            composable(route = WazzabyDrawerDestinations.INSCRIPTION_SECOND) {
+            composable(route = WazzabyNavigation.INSCRIPTION_SECOND) {
                 FormStepSecondView(navController)
             }
 
-            composable(route = WazzabyDrawerDestinations.INSCRIPTION_DONE) {
+            composable(route = WazzabyNavigation.INSCRIPTION_DONE) {
                 FormStepDoneView(navController)
+            }
+
+            composable(route = WazzabyNavigation.PUBLIC_NEW_MESSAGE) {
+                NewPublicMessage(
+                    navController
+                )
+            }
+
+            composable(route = WazzabyNavigation.CAMERA) {
+                CameraUI(
+                    navController,
+                    cameraViewModel = cameraViewModel
+                )
+            }
+
+            composable(route = WazzabyNavigation.CAMERA_IMAGE_DETAILS) {
+                ImageDetails(
+                    navController,
+                    cameraViewModel = cameraViewModel
+                )
             }
         }
     }

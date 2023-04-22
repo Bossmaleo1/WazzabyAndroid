@@ -1,8 +1,0 @@
-
-kkotlin:S107H"HThis function has 10 parameters, which is greater than the 7 authorized.(²—¡áÿÿÿÿÿ8ĞÂÖŠî0
-Mkotlin:S108ú")Either remove or fill this block of code.(€¸¦’üÿÿÿÿ8ÑÂÖŠî0
-9kotlin:S1128"Remove this unused import.(­Ä‚˜8áÂÖŠî0
->kotlin:S1128	"Remove this unused import.(úœË§ıÿÿÿÿ8áÂÖŠî0
-9kotlin:S1128"Remove this unused import.(¹ñ®Æ8áÂÖŠî0
->kotlin:S1128"Remove this unused import.(€¤™ùÿÿÿÿ8áÂÖŠî0
-vkotlin:S3776H"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(²—¡áÿÿÿÿÿ8éÂÖŠî0

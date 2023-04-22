@@ -24,7 +24,7 @@ import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
 import com.android.wazzabysama.ui.UIEvent.UIEvent
-import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -248,7 +248,7 @@ fun Login(navController: NavHostController, userViewModel: UserViewModel, contex
 
         LaunchedEffect(key1 = screenState.user.isNotEmpty() && screenState.token.isNotEmpty()) {
             if (screenState.user.isNotEmpty() && screenState.token.isNotEmpty()) {
-                navController.navigate(WazzabyDrawerDestinations.HOME)
+                navController.navigate(WazzabyNavigation.HOME)
             }
         }
 

@@ -1,7 +1,6 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.conversation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.android.wazzabysama.R
-import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.data.exampleUiState
 import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.launch
@@ -115,7 +114,7 @@ fun Conversation(
                 Row {
                     IconButton(onClick = {
                         viewItem.value = ConstValue.privateMessage
-                        navController.navigate(WazzabyDrawerDestinations.HOME_ROUTE)
+                        navController.navigate(WazzabyNavigation.HOME_ROUTE)
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.ArrowBack,

@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Psychology
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,12 +16,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
@@ -31,8 +27,7 @@ import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
 import com.android.wazzabysama.ui.components.NavigationIcon
-import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
-import com.android.wazzabysama.ui.views.bottomnavigationviews.getOurPublicMessageImage
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -125,31 +120,31 @@ fun AppDrawer(
         DrawerButton(
             icon = Icons.Outlined.Home,
             label = stringResource(id = R.string.home_app),
-            isSelected = currentRoute == WazzabyDrawerDestinations.HOME_ROUTE,
+            isSelected = currentRoute == WazzabyNavigation.HOME_ROUTE,
             action = {
                 scope.launch {
                     drawerState.close()
-                    if (currentRoute == WazzabyDrawerDestinations.HOME_ROUTE) {
+                    if (currentRoute == WazzabyNavigation.HOME_ROUTE) {
                         viewItem.value = ConstValue.publicMessage
                     }
                 }
-                navController.navigate(WazzabyDrawerDestinations.HOME_ROUTE)
+                navController.navigate(WazzabyNavigation.HOME_ROUTE)
             }
         )
 
         DrawerButton(
             icon = Icons.Outlined.Psychology,
             label = stringResource(id = R.string.problematic_app),
-            isSelected = currentRoute == WazzabyDrawerDestinations.PROBLEM_ROUTE,
+            isSelected = currentRoute == WazzabyNavigation.PROBLEM_ROUTE,
             action = {
                 scope.launch {
                     drawerState.close()
-                    if (currentRoute == WazzabyDrawerDestinations.PROBLEM_ROUTE) {
+                    if (currentRoute == WazzabyNavigation.PROBLEM_ROUTE) {
                         viewItem.value = ConstValue.problem
                     }
                 }
 
-                navController.navigate(WazzabyDrawerDestinations.PROBLEM_ROUTE)
+                navController.navigate(WazzabyNavigation.PROBLEM_ROUTE)
             }
         )
     }
