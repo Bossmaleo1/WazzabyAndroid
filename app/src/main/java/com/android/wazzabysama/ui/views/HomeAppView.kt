@@ -3,16 +3,10 @@ package com.android.wazzabysama.ui.views
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.Scaffold
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -22,7 +16,6 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -51,10 +44,9 @@ import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.AuthEvent
 import com.android.wazzabysama.ui.UIEvent.Event.PublicMessageEvent
 import com.android.wazzabysama.ui.UIEvent.UIEvent
-import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.bottomnavigationviews.PrivateMessageView
 import com.android.wazzabysama.ui.views.bottomnavigationviews.privatemessage.conversation.Conversation
-import com.android.wazzabysama.ui.views.bottomnavigationviews.publicmessage.newPublicMessage.NewPublicMessage
 import com.android.wazzabysama.ui.views.model.ConstValue
 import com.android.wazzabysama.ui.views.utils.InfiniteListMessagePublicRemote
 import com.android.wazzabysama.ui.views.utils.chips
@@ -241,7 +233,7 @@ fun DrawerAppBar(
                                 onClick = {
                                     dropViewModel.deleteAll()
                                     userViewModel.onEvent(AuthEvent.InitUserState)
-                                    navController0.navigate(WazzabyDrawerDestinations.LOGIN)
+                                    navController0.navigate(WazzabyNavigation.LOGIN)
                                 },
                                 leadingIcon = {
                                     Icon(
@@ -412,7 +404,7 @@ fun HomeApp(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute =
-        navBackStackEntry?.destination?.route ?: WazzabyDrawerDestinations.HOME_ROUTE
+        navBackStackEntry?.destination?.route ?: WazzabyNavigation.HOME_ROUTE
     val viewItem: MutableLiveData<String> = MutableLiveData()
     val listStatePublicMessage = rememberLazyListState()
     val listStatePrivateMessage = rememberLazyListState()
@@ -436,10 +428,10 @@ fun HomeApp(
     ) {
         NavHost(
             navController = navController,
-            startDestination = WazzabyDrawerDestinations.HOME_ROUTE
+            startDestination = WazzabyNavigation.HOME_ROUTE
         ) {
 
-            composable(route = WazzabyDrawerDestinations.HOME_ROUTE) {
+            composable(route = WazzabyNavigation.HOME_ROUTE) {
                 MainHomeView(
                     scope,
                     drawerState,
@@ -454,7 +446,7 @@ fun HomeApp(
                 )
             }
 
-            composable(route = WazzabyDrawerDestinations.PROBLEM_ROUTE) {
+            composable(route = WazzabyNavigation.PROBLEM_ROUTE) {
                 Problems(
                     scope,
                     drawerState,
@@ -467,16 +459,10 @@ fun HomeApp(
                 )
             }
 
-            composable(route = WazzabyDrawerDestinations.CONVERSATION) {
+            composable(route = WazzabyNavigation.CONVERSATION) {
                 Conversation(
                     navController,
                     viewItem
-                )
-            }
-
-            composable(route = WazzabyDrawerDestinations.PUBLIC_NEW_MESSAGE) {
-                NewPublicMessage(
-                    navController
                 )
             }
 
@@ -505,8 +491,6 @@ fun RequestLocationPermission() {
         CoroutineScope(Dispatchers.Main).launch {
             locationPermissionsState.launchMultiplePermissionRequest()
         }
-
-
     }
 
     if (locationPermissionsState.shouldShowRationale) {

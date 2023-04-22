@@ -17,7 +17,7 @@ import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
-import com.android.wazzabysama.ui.components.WazzabyDrawerDestinations
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.model.BottomNavigationItem
 import com.android.wazzabysama.ui.views.model.ConstValue
 import kotlinx.coroutines.CoroutineScope
@@ -134,7 +134,7 @@ fun MainHomeView(
                         /*coroutineScope.launch {
                             listStatePublicMessage.animateScrollToItem(0)
                         }*/
-                        navController.navigate(WazzabyDrawerDestinations.PUBLIC_NEW_MESSAGE)
+                        navController0.navigate(WazzabyNavigation.PUBLIC_NEW_MESSAGE)
                     },
                     elevation = FloatingActionButtonDefaults.elevation(8.dp),
                 )

@@ -1,40 +1,33 @@
 package com.android.wazzabysama.ui.views.bottomnavigationviews.publicmessage.newPublicMessage
 
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.util.Log
-import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
+import androidx.camera.extensions.ExtensionMode
+import androidx.camera.extensions.ExtensionsManager
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.AddAPhoto
-import androidx.compose.material.icons.outlined.Done
-import androidx.compose.material.icons.sharp.Lens
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.R
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -44,10 +37,7 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -57,11 +47,30 @@ import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
+import com.android.wazzabysama.R
+import com.android.wazzabysama.presentation.util.LocationLiveData
+import com.android.wazzabysama.ui.components.WazzabyNavigation
+import com.android.wazzabysama.ui.views.handleLocationData
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 lateinit var outputDirectory: File
 lateinit var cameraExecutor: ExecutorService
 
-var shouldShowCamera: MutableState<Boolean> = mutableStateOf(true)
+var shouldShowCamera: MutableState<Boolean> = mutableStateOf(false)
+var displayTopBar: MutableState<Boolean> = mutableStateOf(true)
 var shouldShowPhoto: MutableState<Boolean> = mutableStateOf(false)
 lateinit var photoUri: Uri
 
@@ -81,252 +90,135 @@ fun NewPublicMessage(navController: NavHostController) {
         android.Manifest.permission.CAMERA
     )
 
-    outputDirectory = getOutputDirectory()
-    cameraExecutor = Executors.newSingleThreadExecutor()
+    val cameraPermissionListState = rememberMultiplePermissionsState(
+        mutableListOf(
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.RECORD_AUDIO
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
+    )
+
+    var contentText by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
         scaffoldState = scaffoldState,
+        backgroundColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "",
-                            /*tint = if (!isDark) {
-                                colorResource(R.color.black40)
-                            } else {
-                                Color.White
-                            }*/
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(
-                        modifier = Modifier,
-                        onClick = {
-                            //navController.navigate(Route.paymentView)
-                            cameraPermissionState.launchPermissionRequest()
+            if (displayTopBar.value) {
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            navController.navigateUp()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = ""
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.AddAPhoto,
-                            contentDescription = "Localized description",
-                            /*tint = if (!isDark) {
-                                colorResource(R.color.black40)
-                            } else {
-                                Color.White
-                            }*/
-                        )
-                    }
+                    },
+                    actions = {
+                        IconButton(
+                            modifier = Modifier,
+                            onClick = {
+                                if (cameraPermissionListState.allPermissionsGranted) {
+                                    navController.navigate(WazzabyNavigation.CAMERA)
+                                } else {
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        cameraPermissionListState.launchMultiplePermissionRequest()
+                                    }
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.AddAPhoto,
+                                contentDescription = "Localized description"
+                            )
+                        }
 
 
-                    IconButton(
-                        modifier = Modifier,
-                        onClick = {
-                            //navController.navigate(Route.paymentView)
+                        IconButton(
+                            modifier = Modifier,
+                            onClick = {
+                                //navController.navigate(Route.paymentView)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Done,
+                                contentDescription = "Localized description",
+                            )
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Done,
-                            contentDescription = "Localized description",
-                            /*tint = if (!isDark) {
-                                colorResource(R.color.black40)
-                            } else {
-                                Color.White
-                            }*/
+                    },
+                    scrollBehavior = scrollBehavior,
+                    title = {
+                        Text(
+                            text = "New Message",
+                            fontWeight = FontWeight.Normal
                         )
                     }
-                },
-                scrollBehavior = scrollBehavior,
-                title = {
-                    Text(
-                        text = "New Message",//stringResource(R.string.notifications),
-                        /*color = if (!isDark) {
-                            colorResource(R.color.black40)
-                        } else {
-                            Color.White
-                        },*/
-                        fontWeight = FontWeight.Normal
-                    )
-                }
-            )
+                )
+
+            }
         },
         content = { innerPadding ->
-            SwipeRefresh(
-                state = swipeRefreshState,
-                onRefresh = {
-                    isRefreshing = true
-                    /*announcementViewModel.screenState.value.currentPage = 1
-                    announcementViewModel.initAnnouncement()*/
-                },
-                indicator = { state, trigger ->
-                    SwipeRefreshIndicator(
-                        // Pass the SwipeRefreshState + trigger through
-                        state = state,
-                        refreshTriggerDistance = trigger,
-                        // Enable the scale animation
-                        scale = true,
-                        // Change the color and shape
-                        backgroundColor = MaterialTheme.colors.primary.copy(
-                            alpha = 0.08f
-                        ),
-                        shape = androidx.compose.material3.MaterialTheme.shapes.small,
-                    )
-                }
-            ) {
-                LazyColumn(
-                    contentPadding = PaddingValues(
-                        top = 0.dp,
-                        bottom = innerPadding.calculateBottomPadding() + 100.dp
+
+
+                OutlinedTextField(
+                    value = contentText,
+                    singleLine = false,
+                    textStyle = TextStyle(fontSize = 12.sp),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                     ),
-                    state = listState
-                ) {
-
-                }
-            }
-
-            if (cameraPermissionState.status.isGranted) {
-
-                if (shouldShowCamera.value) {
-                    CameraView(
-                        outputDirectory = outputDirectory,
-                        executor = cameraExecutor,
-                        onImageCaptured = ::handleImageCapture,
-                        onError = { Log.e("kilo", "View error:", it) }
-                    )
-                }
-
-                if (shouldShowPhoto.value) {
-                    Image(
-                        painter = rememberImagePainter(photoUri),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-            }
+                    onValueChange = {
+                        contentText = it
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(top = 0.dp, bottom = 0.dp, start = 5.dp, end = 5.dp),
+                    shape = RoundedCornerShape(15.dp)
+                )
         })
 
+        //permission handler
+        if (cameraPermissionListState.shouldShowRationale) {
+            Log.d("MALEO9393", " important. Please grant all of them for the app to function properly.")
+        } else {
+            Log.d("MALEO9393", "denied. The app cannot function without them.")
+        }
 }
 
-suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
-    ProcessCameraProvider.getInstance(this).also { cameraProvider ->
-        cameraProvider.addListener({
-            continuation.resume(cameraProvider.get())
-        }, ContextCompat.getMainExecutor(this))
-    }
-}
-
-private fun takePhoto(
-    filenameFormat: String,
-    imageCapture: ImageCapture,
-    outputDirectory: File,
-    executor: Executor,
-    onImageCaptured: (Uri) -> Unit,
-    onError: (ImageCaptureException) -> Unit
-) {
-
-    val photoFile = File(
-        outputDirectory,
-        SimpleDateFormat(filenameFormat, Locale.US).format(System.currentTimeMillis()) + ".jpg"
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalPermissionsApi::class)
+@ExperimentalMaterial3Api
+@Composable
+fun RequestCameraPermission(navController: NavHostController) {
+    val cameraPermissionListState = rememberMultiplePermissionsState(
+        mutableListOf(
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.RECORD_AUDIO
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
     )
 
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
-    imageCapture.takePicture(outputOptions, executor, object: ImageCapture.OnImageSavedCallback {
-        override fun onError(exception: ImageCaptureException) {
-            Log.e("kilo", "Take photo error:", exception)
-            onError(exception)
+    if (cameraPermissionListState.allPermissionsGranted) {
+        //
+    } else {
+        CoroutineScope(Dispatchers.Main).launch {
+            cameraPermissionListState.launchMultiplePermissionRequest()
         }
-
-        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-            val savedUri = Uri.fromFile(photoFile)
-            onImageCaptured(savedUri)
-        }
-    })
-}
-
-
-fun handleImageCapture(uri: Uri) {
-    Log.i("kilo", "Image captured: $uri")
-    shouldShowCamera.value = false
-    photoUri = uri
-    shouldShowPhoto.value = true
-}
-
-@Composable
-fun getOutputDirectory(): File {
-    val context = LocalContext.current
-    val mediaDir = context.externalMediaDirs.firstOrNull()?.let {
-        File(it, "Hello World").apply { mkdirs() }
     }
 
-    return if (mediaDir != null && mediaDir.exists()) mediaDir else context.filesDir
-}
-
-@Composable
-fun CameraView(
-    outputDirectory: File,
-    executor: Executor,
-    onImageCaptured: (Uri) -> Unit,
-    onError: (ImageCaptureException) -> Unit
-) {
-    // 1
-    val lensFacing = CameraSelector.LENS_FACING_BACK
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    val preview = Preview.Builder().build()
-    val previewView = remember { PreviewView(context) }
-    val imageCapture: ImageCapture = remember { ImageCapture.Builder().build() }
-    val cameraSelector = CameraSelector.Builder()
-        .requireLensFacing(lensFacing)
-        .build()
-
-    // 2
-    LaunchedEffect(lensFacing) {
-        val cameraProvider = context.getCameraProvider()
-        cameraProvider.unbindAll()
-        cameraProvider.bindToLifecycle(
-            lifecycleOwner,
-            cameraSelector,
-            preview,
-            imageCapture
-        )
-
-        preview.setSurfaceProvider(previewView.surfaceProvider)
-    }
-
-    // 3
-    Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
-        AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
-
-        IconButton(
-            modifier = Modifier.padding(bottom = 20.dp),
-            onClick = {
-                Log.i("kilo", "ON CLICK")
-                takePhoto(
-                    filenameFormat = "yyyy-MM-dd-HH-mm-ss-SSS",
-                    imageCapture = imageCapture,
-                    outputDirectory = outputDirectory,
-                    executor = executor,
-                    onImageCaptured = onImageCaptured,
-                    onError = onError
-                )
-            },
-            content = {
-                Icon(
-                    imageVector = Icons.Sharp.Lens,
-                    contentDescription = "Take picture",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(1.dp)
-                        .border(1.dp, Color.White, CircleShape)
-                )
-            }
-        )
+    if (cameraPermissionListState.shouldShowRationale) {
+        Log.d("MALEO9393", " important. Please grant all of them for the app to function properly.")
+    } else {
+        Log.d("MALEO9393", "denied. The app cannot function without them.")
     }
 }

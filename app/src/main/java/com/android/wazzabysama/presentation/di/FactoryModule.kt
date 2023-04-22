@@ -5,6 +5,8 @@ import com.android.wazzabysama.domain.usecase.problematic.GetSavedProblematicUse
 import com.android.wazzabysama.domain.usecase.problematic.SaveProblematicUseCase
 import com.android.wazzabysama.domain.usecase.publicmessage.*
 import com.android.wazzabysama.domain.usecase.user.*
+import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
+import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
@@ -80,5 +82,13 @@ class FactoryModule {
             deleteTableTokenUseCase,
             deleteTablePublicMessageUseCase
         )
+    }
+
+    @Singleton
+    @Provides
+    fun provideCameViewModelFactory(
+        application: Application
+    ): CameraViewModelFactory {
+        return  CameraViewModelFactory(application)
     }
 }
