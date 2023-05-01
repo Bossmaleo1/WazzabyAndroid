@@ -35,7 +35,6 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.io.File
@@ -120,6 +119,20 @@ fun NewPublicMessage(navController: NavHostController) {
                         }
                     },
                     actions = {
+
+                        IconButton(
+                            modifier = Modifier,
+                            onClick = {
+                                navController.navigate("video")
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.EmergencyRecording,
+                                contentDescription = "Localized description"
+                            )
+                        }
+
+
                         IconButton(
                             modifier = Modifier,
                             onClick = {
@@ -130,6 +143,7 @@ fun NewPublicMessage(navController: NavHostController) {
                                         cameraPermissionListState.launchMultiplePermissionRequest()
                                     }
                                 }
+                                //navController.navigate("video")
                             }
                         ) {
                             Icon(
@@ -137,7 +151,6 @@ fun NewPublicMessage(navController: NavHostController) {
                                 contentDescription = "Localized description"
                             )
                         }
-
 
                         IconButton(
                             modifier = Modifier,

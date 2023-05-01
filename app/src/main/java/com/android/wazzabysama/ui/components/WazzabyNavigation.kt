@@ -15,4 +15,5 @@ object WazzabyNavigation {
     const val LOGIN = "connexion_view"
     const val CAMERA = "camera"
     const val CAMERA_IMAGE_DETAILS = "camera_image_details"
+    const val VIDEO_DETAILS = "video_details"
 }

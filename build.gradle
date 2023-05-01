@@ -19,6 +19,8 @@ buildscript {
         j_unit_version = '4.13.2'
         coil_compose = '2.1.0'
         camerax_version = '1.2.2'
+        // ExoPlayer
+        exoPlayerVersion = '2.18.1'
     }
     repositories {
         google()

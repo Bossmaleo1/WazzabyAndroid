@@ -31,6 +31,9 @@ import com.android.wazzabysama.ui.views.*
 import com.android.wazzabysama.ui.views.bottomnavigationviews.publicmessage.newPublicMessage.NewPublicMessage
 import com.android.wazzabysama.ui.views.camera.CameraUI
 import com.android.wazzabysama.ui.views.camera.ImageDetails
+import com.android.wazzabysama.ui.views.camera.VideoCaptureScreen
+import com.android.wazzabysama.ui.views.camera.VideoDetails
+import com.android.wazzabysama.ui.views.camera.VideoPreviewScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -169,7 +172,31 @@ class MainActivity : ComponentActivity() {
                     cameraViewModel = cameraViewModel
                 )
             }
+
+            composable(route = WazzabyNavigation.VIDEO_DETAILS) {
+                //val uri = it.arguments?.getString("uri") ?: ""
+                VideoDetails(
+                    navController,
+                    cameraViewModel = cameraViewModel
+                )
+            }
+
+            composable(Route.VIDEO) {
+                VideoCaptureScreen(navController = navController)
+            }
+
+            composable(Route.VIDEO_PREVIEW_FULL_ROUTE) {
+                val uri = it.arguments?.getString("uri") ?: ""
+                VideoPreviewScreen(uri = uri)
+            }
         }
+    }
+
+    object Route {
+        const val VIDEO = "video"
+        const val VIDEO_PREVIEW_FULL_ROUTE = "video_preview/{uri}"
+        const val VIDEO_PREVIEW = "video_preview"
+        const val VIDEO_PREVIEW_ARG = "uri"
     }
 
 }

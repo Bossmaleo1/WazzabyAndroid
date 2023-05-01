@@ -8,10 +8,13 @@ import androidx.camera.extensions.ExtensionMode
 import androidx.camera.extensions.ExtensionsManager
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FallbackStrategy
+import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
+import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -26,6 +29,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,18 +44,29 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
+import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.util.getCameraButtomTint
 import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.CameraEvent
 import kotlinx.coroutines.delay
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import android.Manifest
+import android.net.Uri
+import com.android.wazzabysama.ui.components.WazzabyNavigation
+import com.android.wazzabysama.ui.views.utils.camera.createVideoCaptureUseCase
+import com.android.wazzabysama.ui.views.utils.camera.getCameraProvider
+import com.android.wazzabysama.ui.views.utils.camera.startRecordingVideo
+
 
 lateinit var cameraExecutor: ExecutorService
 
-suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
+/*suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
     ProcessCameraProvider.getInstance(this).also { cameraProvider ->
         val extensionsManagerFuture =
             ExtensionsManager.getInstanceAsync(applicationContext, cameraProvider.get())
@@ -104,7 +119,7 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
             continuation.resume(cameraProvider.get())
         }, ContextCompat.getMainExecutor(this))
     }
-}
+}*/
 
 @ExperimentalMaterial3Api
 @Composable
@@ -123,8 +138,9 @@ fun BindVideoUI() {
             FallbackStrategy.higherQualityOrLowerThan(Quality.SD)
         )
 
-    fun getResolutions(selector:CameraSelector,
-                       provider:ProcessCameraProvider
+    fun getResolutions(
+        selector: CameraSelector,
+        provider: ProcessCameraProvider
     ): Map<Quality, Size> {
         return selector.filter(provider.availableCameraInfos).firstOrNull()
             ?.let { camInfo ->
@@ -148,6 +164,11 @@ fun BindCameraUseCases(
     var clickedVideoButton = remember { mutableStateOf(value = false) }
     var displayPhotoView = remember { mutableStateOf(value = true) }
 
+    var recording: Recording? = remember { null }
+    val recordingStarted: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val audioEnabled: MutableState<Boolean> = remember { mutableStateOf(true) }
+
+
     val context = LocalContext.current
     //The preview use case
     val preview = Preview.Builder().build()
@@ -160,7 +181,6 @@ fun BindCameraUseCases(
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
             .build()
     }
-
     //the camera select use case
     val cameraSelector = CameraSelector.Builder()
         .requireLensFacing(screenState.lensFacing)
@@ -186,8 +206,7 @@ fun BindCameraUseCases(
             lifecycleOwner,
             cameraSelector,
             preview,
-            //imageCapture
-            videoCapture
+            imageCapture
         )
 
 
@@ -207,9 +226,7 @@ fun BindCameraUseCases(
     val isDark = isSystemInDarkTheme()
 
     Box(Modifier.fillMaxSize()) {
-        if (displayPhotoView.value) {
             AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
-        }
         Box(
             Modifier
                 .align(Alignment.BottomCenter)
@@ -218,11 +235,9 @@ fun BindCameraUseCases(
             Box(
                 Modifier.align(Alignment.TopCenter)
             ) {
-
-
                 Box(
                     Modifier
-                        .align(Alignment.TopStart)
+                        .align(Alignment.BottomStart)
                         .padding(horizontal = 40.dp)
                 ) {
 
@@ -244,7 +259,7 @@ fun BindCameraUseCases(
 
 
                 Box(
-                    Modifier.align(Alignment.TopCenter)
+                    Modifier.align(Alignment.BottomCenter)
                 ) {
                     IconButton(
                         modifier = Modifier,
@@ -273,7 +288,7 @@ fun BindCameraUseCases(
 
                 Box(
                     Modifier
-                        .align(Alignment.TopEnd)
+                        .align(Alignment.BottomEnd)
                         .padding(horizontal = 40.dp)
                 ) {
 
@@ -320,7 +335,7 @@ fun BindCameraUseCases(
                 }
             }
 
-            Box(
+            /*Box(
                 Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
@@ -343,9 +358,11 @@ fun BindCameraUseCases(
                             label = {
                                 Text(
                                     text = "Video",
-                                    color =  getCameraButtomTint(clickedButton = clickedVideoButton, isDark = isDark
+                                    color = getCameraButtomTint(
+                                        clickedButton = clickedVideoButton, isDark = isDark
+                                    )
                                 )
-                            ) },
+                            },
                             border = if (clickedVideoButton.value) AssistChipDefaults.assistChipBorder(
                                 disabledBorderColor = Color.Red,
                                 borderWidth = 1.dp,
@@ -356,7 +373,10 @@ fun BindCameraUseCases(
                                     Icons.Outlined.Videocam,
                                     contentDescription = "Localized description",
                                     Modifier.size(AssistChipDefaults.IconSize),
-                                    tint =  getCameraButtomTint(clickedButton = clickedVideoButton, isDark = isDark)
+                                    tint = getCameraButtomTint(
+                                        clickedButton = clickedVideoButton,
+                                        isDark = isDark
+                                    )
                                 )
                             }
                         )
@@ -365,14 +385,17 @@ fun BindCameraUseCases(
 
                         AssistChip(
                             onClick = {
-                                clickedPhotoButton.value =  true
+                                clickedPhotoButton.value = true
                                 clickedVideoButton.value = false
                                 displayPhotoView.value = true
                             },
                             label = {
                                 Text(
                                     text = "Photo",
-                                    color = getCameraButtomTint(clickedButton = clickedPhotoButton, isDark = isDark)
+                                    color = getCameraButtomTint(
+                                        clickedButton = clickedPhotoButton,
+                                        isDark = isDark
+                                    )
                                 )
                             },
                             border = if (clickedPhotoButton.value) AssistChipDefaults.assistChipBorder(
@@ -385,165 +408,19 @@ fun BindCameraUseCases(
                                     Icons.Outlined.PhotoCamera,
                                     contentDescription = "Localized description",
                                     Modifier.size(AssistChipDefaults.IconSize),
-                                    tint = getCameraButtomTint(clickedButton = clickedPhotoButton, isDark = isDark)
+                                    tint = getCameraButtomTint(
+                                        clickedButton = clickedPhotoButton,
+                                        isDark = isDark
+                                    )
                                 )
                             }
                         )
                     }
                 }
-            }
+            }*/
         }
 
     }
 
-
-
-
-    /*Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
-        AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
-        Column(
-            modifier = Modifier,
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End
-        ) {
-
-            OutlinedButton(
-                border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
-                onClick = { }) {
-                Icon(
-                    imageVector = Icons.Outlined.ManageAccounts,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(
-                    stringResource(id = R.string.inscription),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-        }
-
-    }*/
 }
 
-
-/*@SuppressLint("WrongConstant")
-@OptIn(ExperimentalPermissionsApi::class)
-@ExperimentalMaterial3Api
-@Composable
-fun Testing() {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
-    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-
-    val preview = Preview.Builder().build()
-    val previewView = remember { PreviewView(context) }
-
-    cameraProviderFuture.addListener({
-        // Camera provider is now guaranteed to be available
-        val cameraProvider = cameraProviderFuture.get()
-        // Set up the capture use case to allow users to take photos.
-        val imageCapture = ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-            //.setTargetResolution(Size(metrics.width, metrics.))
-            //.setTargetAspectRatio(preview.targetRotation)
-            //.setFlashMode()
-            .build()
-
-        // Choose the camera by requiring a lens facing
-        val cameraSelector = CameraSelector.Builder()
-            .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
-            .build()
-
-        // Attach use cases to the camera with the same lifecycle owner
-        val camera = cameraProvider.bindToLifecycle(
-            lifecycleOwner, cameraSelector, preview, imageCapture
-        )
-
-        // Connect the preview use case to the previewView
-        preview.setSurfaceProvider(
-            previewView.surfaceProvider
-        )
-    }, ContextCompat.getMainExecutor(context))
-}
-
-
-//How to select the back Camera
-@androidx.annotation.OptIn(ExperimentalCamera2Interop::class)
-fun isBackCameraLevel3Device(cameraProvider: ProcessCameraProvider): Boolean {
-    return CameraSelector.DEFAULT_BACK_CAMERA
-        .filter(cameraProvider.availableCameraInfos)
-        .firstOrNull()
-        ?.let { Camera2CameraInfo.from(it) }
-        ?.getCameraCharacteristic(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL) ==
-            CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3
-}*/
-
-
-// How to make rotation
-/**
-
-override fun onCreate() {
-val imageCapture = ImageCapture.Builder().build()
-
-val orientationEventListener = object : OrientationEventListener(this as Context) {
-override fun onOrientationChanged(orientation : Int) {
-// Monitors orientation values to determine the target rotation value
-val rotation : Int = when (orientation) {
-in 45..134 -> Surface.ROTATION_270
-in 135..224 -> Surface.ROTATION_180
-in 225..314 -> Surface.ROTATION_90
-else -> Surface.ROTATION_0
-}
-
-imageCapture.targetRotation = rotation
-}
-}
-orientationEventListener.enable()
-}
-
-
- */
-
-//How to crop camera
-/*
-val viewPort =  ViewPort.Builder(Rational(width, height), display.rotation).build()
-val useCaseGroup = UseCaseGroup.Builder()
-    .addUseCase(preview)
-    .addUseCase(imageAnalysis)
-    .addUseCase(imageCapture)
-    .setViewPort(viewPort)
-    .build()
-cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, useCaseGroup)*/
-
-
-//How to select the best camera
-/*
-fun selectExternalOrBestCamera(provider: ProcessCameraProvider):CameraSelector? {
-    val cam2Infos = provider.availableCameraInfos.map {
-        Camera2CameraInfo.from(it)
-    }.sortedByDescending {
-        // HARDWARE_LEVEL is Int type, with the order of:
-        // LEGACY < LIMITED < FULL < LEVEL_3 < EXTERNAL
-        it.getCameraCharacteristic(CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL)
-    }
-
-    return when {
-        cam2Infos.isNotEmpty() -> {
-            CameraSelector.Builder()
-                .addCameraFilter {
-                    it.filter { camInfo ->
-                        // cam2Infos[0] is either EXTERNAL or best built-in camera
-                        val thisCamId = Camera2CameraInfo.from(camInfo).cameraId
-                        thisCamId == cam2Infos[0].cameraId
-                    }
-                }.build()
-        }
-        else -> null
-    }
-}
-
-// create a CameraSelector for the USB camera (or highest level internal camera)
-val selector = selectExternalOrBestCamera(processCameraProvider)
-processCameraProvider.bindToLifecycle(this, selector, preview, analysis)*/
