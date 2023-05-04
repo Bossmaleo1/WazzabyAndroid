@@ -58,77 +58,44 @@ import java.util.concurrent.Executors
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import android.Manifest
 import android.net.Uri
+import android.os.Build
 import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.utils.camera.createVideoCaptureUseCase
 import com.android.wazzabysama.ui.views.utils.camera.getCameraProvider
 import com.android.wazzabysama.ui.views.utils.camera.startRecordingVideo
+import com.google.accompanist.permissions.PermissionsRequired
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 
 lateinit var cameraExecutor: ExecutorService
 
-/*suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
-    ProcessCameraProvider.getInstance(this).also { cameraProvider ->
-        val extensionsManagerFuture =
-            ExtensionsManager.getInstanceAsync(applicationContext, cameraProvider.get())
-        cameraProvider.addListener({
-            // Obtain an instance of the extensions manager
-            // The extensions manager enables a camera to use extension capabilities available on
-            // the device.
-            val extensionsManager = extensionsManagerFuture.get()
-
-            // Select the camera
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            // Query if extension is available.
-            // Not all devices will support extensions or might only support a subset of
-            // extensions.
-            if (extensionsManager.isExtensionAvailable(cameraSelector, ExtensionMode.NIGHT)) {
-                try {
-                    cameraProvider.get().unbindAll()
-
-                    // Retrieve a night extension enabled camera selector
-                    val nightCameraSelector =
-                        extensionsManager.getExtensionEnabledCameraSelector(
-                            cameraSelector,
-                            ExtensionMode.NIGHT
-                        )
-
-                    // Bind image capture and preview use cases with the extension enabled camera
-                    // selector.
-                    val imageCapture = ImageCapture.Builder().build()
-                    val preview = Preview.Builder().build()
-                    // Connect the preview to receive the surface the camera outputs the frames
-                    // to. This will allow displaying the camera frames in either a TextureView
-                    // or SurfaceView. The SurfaceProvider can be obtained from the PreviewView.
-                    //preview.setSurfaceProvider(surfaceProvider)
-
-                    // Returns an instance of the camera bound to the lifecycle
-                    // Use this camera object to control various operations with the camera
-                    // Example: flash, zoom, focus metering etc.
-                    val camera = cameraProvider.get().bindToLifecycle(
-                        applicationContext as LifecycleOwner,
-                        nightCameraSelector,
-                        imageCapture,
-                        preview
-                    )
-                } catch (e: Exception) {
-                    Log.e("MALEO9393MALEO9393", "Use case binding failed", e)
-                }
-            }
-
-            continuation.resume(cameraProvider.get())
-        }, ContextCompat.getMainExecutor(this))
-    }
-}*/
-
+@OptIn(ExperimentalPermissionsApi::class)
 @ExperimentalMaterial3Api
 @Composable
 fun CameraUI(
     navController: NavHostController,
     cameraViewModel: CameraViewModel
 ) {
+    val permissionState = rememberMultiplePermissionsState(
+        permissions = mutableListOf(
+            Manifest.permission.CAMERA
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
+    )
+    LaunchedEffect(Unit) {
+        permissionState.launchMultiplePermissionRequest()
+    }
     cameraExecutor = Executors.newSingleThreadExecutor()
-    BindCameraUseCases(navController, cameraViewModel)
+    PermissionsRequired(
+        multiplePermissionsState = permissionState,
+        permissionsNotGrantedContent = { /* ... */ },
+        permissionsNotAvailableContent = { /* ... */ }
+    ) {
+        BindCameraUseCases(navController, cameraViewModel)
+    }
 }
 
 fun BindVideoUI() {
@@ -160,14 +127,6 @@ fun BindCameraUseCases(
 ) {
     val screenState = cameraViewModel.screenState.value
     var visibleRotateImage by remember { mutableStateOf(value = true) }
-    var clickedPhotoButton = remember { mutableStateOf(value = true) }
-    var clickedVideoButton = remember { mutableStateOf(value = false) }
-    var displayPhotoView = remember { mutableStateOf(value = true) }
-
-    var recording: Recording? = remember { null }
-    val recordingStarted: MutableState<Boolean> = remember { mutableStateOf(false) }
-    val audioEnabled: MutableState<Boolean> = remember { mutableStateOf(true) }
-
 
     val context = LocalContext.current
     //The preview use case
@@ -185,18 +144,6 @@ fun BindCameraUseCases(
     val cameraSelector = CameraSelector.Builder()
         .requireLensFacing(screenState.lensFacing)
         .build()
-
-    val qualityVideoSelector = QualitySelector
-        .from(
-            Quality.UHD,
-            FallbackStrategy.higherQualityOrLowerThan(Quality.SD)
-        )
-
-    val recorder = Recorder.Builder()
-        .setQualitySelector(qualityVideoSelector)
-        .build()
-
-    val videoCapture = VideoCapture.withOutput(recorder)
 
     suspend fun cameraDisplayPreview() {
         val cameraProvider = context.getCameraProvider()
@@ -223,14 +170,11 @@ fun BindCameraUseCases(
         visibleRotateImage = true
     }
 
-    val isDark = isSystemInDarkTheme()
-
     Box(Modifier.fillMaxSize()) {
             AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
         Box(
             Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth()
         ) {
             Box(
                 Modifier.align(Alignment.TopCenter)
@@ -242,7 +186,7 @@ fun BindCameraUseCases(
                 ) {
 
                     IconButton(
-                        modifier = Modifier,
+                        modifier = Modifier.padding(bottom = 32.dp),
                         onClick = {},
                         content = {
                             Icon(
@@ -262,7 +206,7 @@ fun BindCameraUseCases(
                     Modifier.align(Alignment.BottomCenter)
                 ) {
                     IconButton(
-                        modifier = Modifier,
+                        modifier = Modifier.padding(bottom = 32.dp),
                         onClick = {
                             cameraViewModel.onEvent(
                                 CameraEvent.CapturedButtonClicked(
@@ -274,7 +218,6 @@ fun BindCameraUseCases(
                             )
                         },
                         content = {
-
                             Icon(
                                 imageVector = Icons.Outlined.Lens,
                                 contentDescription = "Take picture",
@@ -304,7 +247,7 @@ fun BindCameraUseCases(
                         exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
                     ) {
                         IconButton(
-                            modifier = Modifier,
+                            modifier = Modifier.padding(bottom = 32.dp),
                             onClick = {
                                 visibleRotateImage = false
                                 cameraViewModel.onEvent(
@@ -334,90 +277,6 @@ fun BindCameraUseCases(
                 ) {
                 }
             }
-
-            /*Box(
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.6f))
-            ) {
-                Box(
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(5.dp)
-                    ) {
-                        AssistChip(
-                            onClick = {
-                                clickedPhotoButton.value =  false
-                                clickedVideoButton.value = true
-                                displayPhotoView.value = false
-                            },
-                            label = {
-                                Text(
-                                    text = "Video",
-                                    color = getCameraButtomTint(
-                                        clickedButton = clickedVideoButton, isDark = isDark
-                                    )
-                                )
-                            },
-                            border = if (clickedVideoButton.value) AssistChipDefaults.assistChipBorder(
-                                disabledBorderColor = Color.Red,
-                                borderWidth = 1.dp,
-                                borderColor = MaterialTheme.colorScheme.primary
-                            ) else AssistChipDefaults.assistChipBorder(),
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.Videocam,
-                                    contentDescription = "Localized description",
-                                    Modifier.size(AssistChipDefaults.IconSize),
-                                    tint = getCameraButtomTint(
-                                        clickedButton = clickedVideoButton,
-                                        isDark = isDark
-                                    )
-                                )
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.size(10.dp))
-
-                        AssistChip(
-                            onClick = {
-                                clickedPhotoButton.value = true
-                                clickedVideoButton.value = false
-                                displayPhotoView.value = true
-                            },
-                            label = {
-                                Text(
-                                    text = "Photo",
-                                    color = getCameraButtomTint(
-                                        clickedButton = clickedPhotoButton,
-                                        isDark = isDark
-                                    )
-                                )
-                            },
-                            border = if (clickedPhotoButton.value) AssistChipDefaults.assistChipBorder(
-                                disabledBorderColor = Color.Red,
-                                borderWidth = 1.dp,
-                                borderColor = MaterialTheme.colorScheme.primary
-                            ) else AssistChipDefaults.assistChipBorder(),
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.PhotoCamera,
-                                    contentDescription = "Localized description",
-                                    Modifier.size(AssistChipDefaults.IconSize),
-                                    tint = getCameraButtomTint(
-                                        clickedButton = clickedPhotoButton,
-                                        isDark = isDark
-                                    )
-                                )
-                            }
-                        )
-                    }
-                }
-            }*/
         }
 
     }

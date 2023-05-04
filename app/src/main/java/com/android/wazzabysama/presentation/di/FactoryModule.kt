@@ -8,6 +8,7 @@ import com.android.wazzabysama.domain.usecase.user.*
 import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
 import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModelFactory
+import com.android.wazzabysama.presentation.viewModel.gallery.GalleryViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModelFactory
 import dagger.Module
@@ -90,5 +91,13 @@ class FactoryModule {
         application: Application
     ): CameraViewModelFactory {
         return  CameraViewModelFactory(application)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGalleryViewModelFactory(
+        application: Application
+    ): GalleryViewModelFactory {
+        return GalleryViewModelFactory(application)
     }
 }

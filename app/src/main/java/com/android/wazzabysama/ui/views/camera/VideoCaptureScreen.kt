@@ -2,6 +2,7 @@ package com.android.wazzabysama.ui.views.camera
 
 import android.Manifest
 import android.net.Uri
+import android.os.Build
 import androidx.camera.core.CameraSelector
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
@@ -36,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.utils.camera.createVideoCaptureUseCase
 import com.android.wazzabysama.ui.views.utils.camera.startRecordingVideo
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -49,17 +52,23 @@ import java.nio.charset.StandardCharsets
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun VideoCaptureScreen(
-    navController: NavController
+    navController: NavController,
+    cameraViewModel: CameraViewModel
 ) {
 
+    val screenState = cameraViewModel.screenState.value
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val permissionState = rememberMultiplePermissionsState(
-        permissions = listOf(
+        permissions = mutableListOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
-        )
+        ).apply {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
     )
 
     var recording: Recording? = remember { null }
@@ -120,6 +129,8 @@ fun VideoCaptureScreen(
                                             uri.toString(),
                                             StandardCharsets.UTF_8.toString()
                                         )
+                                        screenState.videoCaptureUriEncoded = uri
+                                        screenState.videoFile = File(uri.toString())
                                         navController.navigate("video_preview/$uriEncoded")
                                     }
                                 }

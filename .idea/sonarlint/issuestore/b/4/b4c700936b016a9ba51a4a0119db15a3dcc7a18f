@@ -1,15 +1,14 @@
 
-Nkotlin:S1172*"6Remove this unused function parameter "navController".(«×‰†
-7kotlin:S1128"Remove this unused import.(ò“ì­üÿÿÿÿ
-2kotlin:S1128	"Remove this unused import.(ÔÍÀï
-7kotlin:S1128
-"Remove this unused import.(ô¿Ş†øÿÿÿÿ
-1kotlin:S1128"Remove this unused import.(†ùÎ&
-2kotlin:S1128"Remove this unused import.(„ºö
-7kotlin:S1128"Remove this unused import.(‰¾Ğìüÿÿÿÿ
-7kotlin:S1128"Remove this unused import.(¤­‹üÿÿÿÿ
-2kotlin:S1128"Remove this unused import.(°°–—
-7kotlin:S1128"Remove this unused import.(ÉÁ¸şÿÿÿÿ
-7kotlin:S1128"Remove this unused import.(¸çÁßûÿÿÿÿ
-jkotlin:S1192@"MDefine a constant instead of duplicating this literal "Take picture" 4 times.(•ğ×¡øÿÿÿÿ
-;kotlin:S18741"#Deprecated code should not be used.(êñ›
+>kotlin:S1128"Remove this unused import.(ò“ì­üÿÿÿÿ8­£ş0
+9kotlin:S1128	"Remove this unused import.(ÔÍÀï8®£ş0
+>kotlin:S1128
+"Remove this unused import.(ô¿Ş†øÿÿÿÿ8®£ş0
+8kotlin:S1128"Remove this unused import.(†ùÎ&8®£ş0
+9kotlin:S1128"Remove this unused import.(„ºö8®£ş0
+>kotlin:S1128"Remove this unused import.(‰¾Ğìüÿÿÿÿ8®£ş0
+>kotlin:S1128"Remove this unused import.(¤­‹üÿÿÿÿ8®£ş0
+9kotlin:S1128"Remove this unused import.(°°–—8®£ş0
+>kotlin:S1128"Remove this unused import.(ÉÁ¸şÿÿÿÿ8®£ş0
+>kotlin:S1128"Remove this unused import.(¸çÁßûÿÿÿÿ8®£ş0
+qkotlin:S1192D"MDefine a constant instead of duplicating this literal "Take picture" 4 times.(•ğ×¡øÿÿÿÿ8®£ş0
+Bkotlin:S18742"#Deprecated code should not be used.(êñ›8¯£ş0

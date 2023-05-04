@@ -1,2 +1,7 @@
 
-7kotlin:S1128"Remove this unused import.(´ÓÉ®øÿÿÿÿ
+Lkotlin:S1082")Either remove or fill this block of code.(ü§è½ùÿÿÿÿ8øË‘”ş0
+Ikotlin:S14810"*Remove this unused "count" local variable.(Ù÷¨Ë8ùË‘”ş0
+9kotlin:S1128"Remove this unused import.(öı™Ê8úË‘”ş0
+=kotlin:S1256"Remove this commented out code.(Œû¿’8ûË‘”ş0
+Bkotlin:S1874E"#Deprecated code should not be used.(¼£õø8ûË‘”ş0
+Bkotlin:S1874E"#Deprecated code should not be used.(¼£õø8ûË‘”ş0

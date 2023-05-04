@@ -32,6 +32,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.CameraEvent
+import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.bottomnavigationviews.getOurPublicMessageImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
@@ -57,6 +58,9 @@ fun ImageDetails(
             IconButton(
                 modifier = Modifier,
                 onClick = {
+                    screenState.imageCapturedUri = null
+                    screenState.photoFile = null
+                    navController.navigate(WazzabyNavigation.CAMERA)
                 },
                 content = {
                     Icon(
@@ -105,6 +109,7 @@ fun ImageDetails(
                 IconButton(
                     modifier = Modifier,
                     onClick = {
+                        navController.navigate(WazzabyNavigation.PUBLIC_NEW_MESSAGE)
                     },
                     content = {
                         Icon(
