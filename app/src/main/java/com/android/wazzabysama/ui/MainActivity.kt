@@ -21,6 +21,8 @@ import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
 import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModel
 import com.android.wazzabysama.presentation.viewModel.drop.DropViewModelFactory
+import com.android.wazzabysama.presentation.viewModel.gallery.GalleryViewModel
+import com.android.wazzabysama.presentation.viewModel.gallery.GalleryViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModel
 import com.android.wazzabysama.presentation.viewModel.publicMessage.PublicMessageViewModelFactory
 import com.android.wazzabysama.presentation.viewModel.user.UserViewModel
@@ -30,7 +32,11 @@ import com.android.wazzabysama.ui.theme.WazzabySamaTheme
 import com.android.wazzabysama.ui.views.*
 import com.android.wazzabysama.ui.views.bottomnavigationviews.publicmessage.newPublicMessage.NewPublicMessage
 import com.android.wazzabysama.ui.views.camera.CameraUI
+import com.android.wazzabysama.ui.views.camera.GalleryUI
 import com.android.wazzabysama.ui.views.camera.ImageDetails
+import com.android.wazzabysama.ui.views.camera.VideoCaptureScreen
+import com.android.wazzabysama.ui.views.camera.VideoDetails
+import com.android.wazzabysama.ui.views.camera.VideoPreviewScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,13 +54,15 @@ class MainActivity : ComponentActivity() {
     lateinit var publicMessageFactory: PublicMessageViewModelFactory
     @Inject
     lateinit var dropFactory: DropViewModelFactory
-
     @Inject
     lateinit var cameraFactory: CameraViewModelFactory
+    @Inject
+    lateinit var galleryFactory: GalleryViewModelFactory
     private lateinit var userViewModel: UserViewModel //we call our login viewModel
     private lateinit var publicMessageViewModel: PublicMessageViewModel
     private lateinit var dropViewModel: DropViewModel
     private lateinit var cameraViewModel: CameraViewModel
+    private lateinit var galleryViewModel: GalleryViewModel
     var token: String? = null
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,6 +104,7 @@ class MainActivity : ComponentActivity() {
             ViewModelProvider(this, publicMessageFactory)[PublicMessageViewModel::class.java]
         dropViewModel = ViewModelProvider(this, dropFactory)[DropViewModel::class.java]
         cameraViewModel = ViewModelProvider(this, cameraFactory)[CameraViewModel::class.java]
+        galleryViewModel = ViewModelProvider(this, galleryFactory)[GalleryViewModel::class.java]
     }
 
     @Composable
@@ -152,7 +161,8 @@ class MainActivity : ComponentActivity() {
 
             composable(route = WazzabyNavigation.PUBLIC_NEW_MESSAGE) {
                 NewPublicMessage(
-                    navController
+                    navController,
+                    cameraViewModel
                 )
             }
 
@@ -169,7 +179,44 @@ class MainActivity : ComponentActivity() {
                     cameraViewModel = cameraViewModel
                 )
             }
+
+            /*composable(route = WazzabyNavigation.VIDEO_DETAILS) {
+                VideoDetails(
+                    navController,
+                    cameraViewModel = cameraViewModel
+                )
+            }*/
+
+            composable(Route.VIDEO) {
+                VideoCaptureScreen(
+                    navController = navController,
+                    cameraViewModel = cameraViewModel
+                )
+            }
+
+            composable(route = Route.VIDEO_PREVIEW_FULL_ROUTE) {
+                val uri = it.arguments?.getString("uri") ?: ""
+                VideoPreviewScreen(
+                    uri = uri,
+                    navController = navController,
+                    cameraViewModel = cameraViewModel
+                )
+            }
+
+            composable(route = WazzabyNavigation.GALLERY) {
+                GalleryUI(
+                    navController = navController,
+                    galleryViewModel = galleryViewModel
+                )
+            }
         }
+    }
+
+    object Route {
+        const val VIDEO = "video"
+        const val VIDEO_PREVIEW_FULL_ROUTE = "video_preview/{uri}"
+        const val VIDEO_PREVIEW = "video_preview"
+        const val VIDEO_PREVIEW_ARG = "uri"
     }
 
 }
