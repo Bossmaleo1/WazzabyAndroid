@@ -3,7 +3,6 @@ package com.android.wazzabysama.ui.views.bottomnavigationviews.publicmessage.new
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import androidx.compose.foundation.Image
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -17,43 +16,40 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import java.io.File
-import java.util.*
-import java.util.concurrent.ExecutorService
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.semantics.Role.Companion.Image
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.substring
-import androidx.compose.ui.text.toLowerCase
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.android.wazzabysama.presentation.viewModel.camera.CameraViewModel
 import com.android.wazzabysama.ui.UIEvent.Event.CameraEvent
 import com.android.wazzabysama.ui.components.WazzabyNavigation
-import com.google.accompanist.permissions.PermissionsRequired
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.common.base.Ascii.toLowerCase
+import java.io.File
+import java.util.*
+import java.util.concurrent.ExecutorService
 
 lateinit var outputDirectory: File
 lateinit var cameraExecutor: ExecutorService
@@ -129,11 +125,11 @@ fun NewPublicMessage(
 
     var contentText by rememberSaveable { mutableStateOf("") }
 
-    PermissionsRequired(
+    /*PermissionsRequired(
         multiplePermissionsState = permissionState,
         permissionsNotGrantedContent = { /* ... */ },
         permissionsNotAvailableContent = { /* ... */ }
-    ) {}
+    ) {}*/
 
     Scaffold(
         scaffoldState = scaffoldState,

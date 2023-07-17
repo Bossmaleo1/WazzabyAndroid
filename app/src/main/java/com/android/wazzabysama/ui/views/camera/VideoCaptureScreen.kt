@@ -10,7 +10,10 @@ import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -21,6 +24,8 @@ import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.MicOff
 import androidx.compose.material.icons.outlined.StopCircle
 import androidx.compose.material.icons.outlined.SwitchVideo
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -42,7 +47,6 @@ import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.utils.camera.createVideoCaptureUseCase
 import com.android.wazzabysama.ui.views.utils.camera.startRecordingVideo
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
 import java.io.File
@@ -92,11 +96,8 @@ fun VideoCaptureScreen(
             previewView = previewView
         )
     }
-    PermissionsRequired(
-        multiplePermissionsState = permissionState,
-        permissionsNotGrantedContent = { /* ... */ },
-        permissionsNotAvailableContent = { /* ... */ }
-    ) {
+
+    if(permissionState.allPermissionsGranted) {
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -194,6 +195,39 @@ fun VideoCaptureScreen(
                         modifier = Modifier.size(40.dp)
                     )
                 }
+            }
+        }
+    } else {
+        Column {
+            val allPermissionsRevoked =
+                permissionState.permissions.size ==
+                        permissionState.revokedPermissions.size
+
+            val textToShow = if (!allPermissionsRevoked) {
+                // If not all the permissions are revoked, it's because the user accepted the COARSE
+                // location permission, but not the FINE one.
+                "Yay! Thanks for letting me access your approximate location. " +
+                        "But you know what would be great? If you allow me to know where you " +
+                        "exactly are. Thank you!"
+            } else if (permissionState.shouldShowRationale) {
+                // Both location permissions have been denied
+                "Getting your exact location is important for this app. " +
+                        "Please grant us fine location. Thank you :D"
+            } else {
+                // First time the user sees this feature or the user doesn't want to be asked again
+                "This feature requires location permission"
+            }
+
+            val buttonText = if (!allPermissionsRevoked) {
+                "Allow precise location"
+            } else {
+                "Request permissions"
+            }
+
+            Text(text = textToShow)
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = { permissionState.launchMultiplePermissionRequest() }) {
+                Text(buttonText)
             }
         }
     }

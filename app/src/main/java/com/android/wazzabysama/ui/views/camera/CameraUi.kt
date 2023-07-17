@@ -63,7 +63,6 @@ import com.android.wazzabysama.ui.components.WazzabyNavigation
 import com.android.wazzabysama.ui.views.utils.camera.createVideoCaptureUseCase
 import com.android.wazzabysama.ui.views.utils.camera.getCameraProvider
 import com.android.wazzabysama.ui.views.utils.camera.startRecordingVideo
-import com.google.accompanist.permissions.PermissionsRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 
@@ -89,13 +88,50 @@ fun CameraUI(
         permissionState.launchMultiplePermissionRequest()
     }
     cameraExecutor = Executors.newSingleThreadExecutor()
-    PermissionsRequired(
+
+    if(permissionState.allPermissionsGranted) {
+        BindCameraUseCases(navController, cameraViewModel)
+    } else {
+        Column {
+            val allPermissionsRevoked =
+                permissionState.permissions.size ==
+                        permissionState.revokedPermissions.size
+
+            val textToShow = if (!allPermissionsRevoked) {
+                // If not all the permissions are revoked, it's because the user accepted the COARSE
+                // location permission, but not the FINE one.
+                "Yay! Thanks for letting me access your approximate location. " +
+                        "But you know what would be great? If you allow me to know where you " +
+                        "exactly are. Thank you!"
+            } else if (permissionState.shouldShowRationale) {
+                // Both location permissions have been denied
+                "Getting your exact location is important for this app. " +
+                        "Please grant us fine location. Thank you :D"
+            } else {
+                // First time the user sees this feature or the user doesn't want to be asked again
+                "This feature requires location permission"
+            }
+
+            val buttonText = if (!allPermissionsRevoked) {
+                "Allow precise location"
+            } else {
+                "Request permissions"
+            }
+
+            Text(text = textToShow)
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = { permissionState.launchMultiplePermissionRequest() }) {
+                Text(buttonText)
+            }
+        }
+    }
+    /*PermissionsRequired(
         multiplePermissionsState = permissionState,
         permissionsNotGrantedContent = { /* ... */ },
         permissionsNotAvailableContent = { /* ... */ }
     ) {
         BindCameraUseCases(navController, cameraViewModel)
-    }
+    }*/
 }
 
 fun BindVideoUI() {
