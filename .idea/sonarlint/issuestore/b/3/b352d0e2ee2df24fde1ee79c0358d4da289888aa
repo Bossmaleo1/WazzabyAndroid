@@ -1,0 +1,15 @@
+
+_kotlin:S1172ά"?Use "_" instead of this unused lambda parameter "innerPadding".(‹€ρ8†—”°–1
+=kotlin:S125_"Remove this commented out code.(ζΉ8—”°–1
+=kotlin:S125s"Remove this commented out code.(Ι¨πµ8—”°–1
+Ckotlin:S125€"Remove this commented out code.(κρ®¥ψÿÿÿÿ8‹—”°–1
+Ckotlin:S125"Remove this commented out code.(½ένϋÿÿÿÿ8‹—”°–1
+Ckotlin:S125Ό"Remove this commented out code.(‹ όÿÿÿÿ8—”°–1
+>kotlin:S125Θ"Remove this commented out code.(Κ¬ϊ8—”°–1
+Ckotlin:S125Χ"Remove this commented out code.(Ω™¦αÿÿÿÿÿ8—”°–1
+Jkotlin:S1481F"+Remove this unused "isDark" local variable.(ΏΎσ8—”°–1
+vkotlin:S1192΅"VDefine a constant instead of duplicating this literal "Localized description" 4 times.(¥Ί‚ζ8 —”°–1
+Ckotlin:S1874"#Deprecated code should not be used.(Ί‡8Ά—”°–1
+Ckotlin:S1874Ά"#Deprecated code should not be used.(κρ›8Ά—”°–1
+Ckotlin:S1874Ι"#Deprecated code should not be used.(η–χ8Ά—”°–1
+qkotlin:S3776B"RRefactor this method to reduce its Cognitive Complexity from 39 to the 15 allowed.(ίΌΦ“8£—”°–1

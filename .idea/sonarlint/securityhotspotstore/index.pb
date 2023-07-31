@@ -77,3 +77,15 @@ Bapp/src/main/java/com/android/wazzabysama/ui/views/MainHomeView.kt,b/8/b830bf0
 uapp/src/main/java/com/android/wazzabysama/ui/UIEvent/ScreenState/PublicMessageScreenState/PublicMessageScreenState.kt,c/a/cab39b9d6086611d83cd83824e662cb0da0c21b1
 y
 Iapp/src/main/java/com/android/wazzabysama/ui/views/camera/ImageDetails.kt,b/4/b4c700936b016a9ba51a4a0119db15a3dcc7a18f
+›
+kapp/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/publicmessage/PublicMessageView.kt,b/0/b0287d096a310ab5ee2a913d6ccac351cc9f4b59
+
+Oapp/src/main/java/com/android/wazzabysama/ui/views/camera/VideoCaptureScreen.kt,e/a/ea47c4756f1d018a92a9474195a3796528903418
+x
+Happ/src/main/java/com/android/wazzabysama/ui/views/utils/InfiniteList.kt,2/e/2edb2a0afe2d525c2830ef6d68c398e43abfbf9e
+q
+Aapp/src/main/java/com/android/wazzabysama/ui/views/HomeAppView.kt,9/9/99f66eb5e2278c315780f0c5595cd61292878a48
+«
+{app/src/main/java/com/android/wazzabysama/ui/views/bottomnavigationviews/publicmessage/newPublicMessage/NewPublicMessage.kt,b/3/b352d0e2ee2df24fde1ee79c0358d4da289888aa
+u
+Eapp/src/main/java/com/android/wazzabysama/ui/views/camera/CameraUi.kt,a/7/a77c868f75f2c8552b4735679fb82709d68b3a63

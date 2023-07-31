@@ -1,0 +1,8 @@
+
+7kotlin:S125ş"Remove this commented out code.(«ª
+dkotlin:S107C"HThis function has 10 parameters, which is greater than the 7 authorized.(²—¡áÿÿÿÿÿ
+Fkotlin:S108ù")Either remove or fill this block of code.(€¸¦’üÿÿÿÿ
+Gkotlin:S1874Y"#Deprecated code should not be used.(ŸÔØ¡úÿÿÿÿ8¸Ã¯–1
+Hkotlin:S1874¬"#Deprecated code should not be used.(¦É—ïıÿÿÿÿ8¸Ã¯–1
+Hkotlin:S1874¤"#Deprecated code should not be used.(˜ü–òüÿÿÿÿ8¸Ã¯–1
+okotlin:S3776C"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(²—¡áÿÿÿÿÿ
