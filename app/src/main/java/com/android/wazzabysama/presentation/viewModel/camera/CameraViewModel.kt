@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.android.wazzabysama.R
 import com.android.wazzabysama.presentation.util.filterBitmapUpsideDown
 import com.android.wazzabysama.presentation.util.generateFile
 import com.android.wazzabysama.ui.UIEvent.Event.CameraEvent
@@ -72,15 +73,10 @@ class CameraViewModel @Inject constructor(
 
         imageCapture.takePicture(outputOptions, executor, object: ImageCapture.OnImageSavedCallback {
             override fun onError(exception: ImageCaptureException) {
-                Log.e("kilo", "Take photo error:", exception)
                 onError(exception)
             }
 
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                /*val savedUri = Uri.fromFile(photoFile)
-                _screenState.value = _screenState.value.copy(
-                    imageFile = photoFile
-                )*/
                 onImageCaptured(photoFile)
                 viewModelScope.launch {
                     navController.navigate(WazzabyNavigation.CAMERA_IMAGE_DETAILS)
@@ -92,16 +88,13 @@ class CameraViewModel @Inject constructor(
     private fun getOutputDirectory(): File {
         val context = app.applicationContext
         val mediaDir = context.externalMediaDirs.firstOrNull()?.let {
-            File(it, "Hello World").apply { mkdirs() }
+            File(it, app.getString(R.string.app_name)).apply { mkdirs() }
         }
 
         return if (mediaDir != null && mediaDir.exists()) mediaDir else context.filesDir
     }
 
     private fun handleImageCapture(file: File) {
-        /*_screenState.value = _screenState.value.copy(
-            imageCapturedUri = uri
-        )*/
         _screenState.value = _screenState.value.copy(
             photoFile = file
         )
@@ -134,6 +127,15 @@ class CameraViewModel @Inject constructor(
                     photoFile = screenState.value.photoFile?.let { getRotateFile(it) }
                 )
                 //getRotateBitmap(bitmap = screenState.value.imageCapturedUri, rotateValue = 90)
+            }
+
+            is  CameraEvent.InitElement -> {
+                _screenState.value = _screenState.value.copy(
+                    imageCapturedUri = null,
+                    photoFile = null,
+                    videoFile = null,
+                    videoCaptureUriEncoded = null
+                )
             }
 
             else -> {}

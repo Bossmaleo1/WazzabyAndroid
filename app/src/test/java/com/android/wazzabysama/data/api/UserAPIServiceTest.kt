@@ -56,7 +56,7 @@ class UserAPIServiceTest {
             val responseBody = service.getToken(ApiLogin("sidneymaleoregis@gmail.com", "Nfkol3324012020@!")).body()
             val request = server.takeRequest()
             assertThat(responseBody).isNotNull()
-            assertThat(request.path).isEqualTo("/api/login_check?username=sidneymaleoregis%40gmail.com&password=Nfkol3324012020%40%21")
+            assertThat(request.path).isEqualTo("/api/login_check")
         }
     }
 

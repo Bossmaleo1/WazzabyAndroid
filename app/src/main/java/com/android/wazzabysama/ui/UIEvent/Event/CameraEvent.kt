@@ -12,7 +12,7 @@ sealed class CameraEvent {
         val fileNameFormat: String,
         val imageCapture: ImageCapture,
         val executor: Executor,
-        val navController: NavController
+        val navController: NavController,
     ): CameraEvent()
 
     data class ChangeCamera(
@@ -20,5 +20,7 @@ sealed class CameraEvent {
     ): CameraEvent()
 
     object Rotate: CameraEvent()
+
+    object InitElement: CameraEvent()
 
 }
